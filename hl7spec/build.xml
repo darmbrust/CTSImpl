@@ -1,0 +1,825 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="HL7 CTS" default="buildWithVarNames" basedir=".">
+	<!-- For this build script to work properly, you must have Python (www.python.org) installed -->
+
+	<!--Axis server configuration-->
+	<property name="axis.adminClient" value="org.apache.axis.client.AdminClient" />
+
+	<!--CUSTOMIZE - set this to the location of your axis server - only necessary if you are installing-->
+	<property name="axis.port" value="8080" />
+	<property name="axis.host" value="localhost" />
+
+	<property name="tomcat.common.libs" value="common\lib" />
+	<property name="axis.home" value="webapps\axis" />
+
+	<!-- IDL compiler related properties -->
+	<property name="idl.compiler" value="com.sun.tools.corba.se.idl.toJavaPortable.Compile" />
+	<path id="java.tools" path="${java.home}/../lib/tools.jar" />
+	<!--java.home points to the jre folder-->
+	<patternset id="corbaFiles">
+		<include name="*Holder.java" />
+		<include name="*Helper.java" />
+		<include name="_*Stub.java" />
+		<include name="*POA.java" />
+		<include name="*POATie.java" />
+	</patternset>
+
+	<!-- WSDL java compilers -->
+	<property name="wsdl.java2wsdl" value="org.apache.axis.wsdl.Java2WSDL" />
+	<property name="wsdl.wsdl2java" value="org.apache.axis.wsdl.WSDL2Java" />
+
+	<!-- Saxon transform engine - Saxon is required for HL7 documents -->
+	<property name="saxon.engine" value="com.icl.saxon.StyleSheet" />
+	<property name="saxon.jar" value="saxon.jar" />
+
+	<!-- Build directory layout -->
+	<property name="build.dir" value="build" />
+	<property name="bin.dir" value="../bin" />
+	<property name="idl.src.dir" value="idl" />
+	<property name="idl.java.target.dir" value="${build.dir}/idljava" />
+	<property name="idl.compile.target.dir" value="${idl.java.target.dir}/classes" />
+	<property name="lib.dir" value="${build.dir}/lib" />
+	<property name="idlJava.jar" value="${lib.dir}/CTS_jdk4.jar" />
+	<property name="wsdlJava.jar" value="${lib.dir}/wsdljava.jar" />
+	<property name="wsdl.target.dir" value="${build.dir}/wsdl" />
+	<property name="wsdl.java.target.dir" value="${build.dir}/wsdljava/src" />
+	<property name="wsdl.compile.target.dir" value="${wsdl.java.target.dir}/../classes" />
+	<property name="wddl.target.dir" value="${build.dir}/wddl" />
+	<property name="impl.src.dir" value="../src" />
+	<property name="test.src.dir" value="../test" />
+	<property name="impl.target.dir" value="${build.dir}/implclasses" />
+	<property name="test.target.dir" value="${build.dir}/testclasses" />
+	<property name="impl.jar" value="${lib.dir}/ctsImpl.jar" />
+	<property name="externalLib.dir" value="extLib" />
+	<property name="ctsUtility.jar" value="${externalLib.dir}/CTSUtility.jar" />
+	<property name="ctsDemoBuild.dir" value="${lib.dir}/ctsDemoBuild" />
+	<property name="implAndDepend.jar" value="${lib.dir}/ctsImplAndDepend.jar" />
+	<property name="depenLicenses.zip" value="${lib.dir}/DependancyLicenses.zip" />
+	<property name="docs.dir" value="docs" />
+	<property name="javadocs.dir" value="${docs.dir}/javadocs" />
+	<property name="cleanWeb.dir" value="${build.dir}/webSite" />
+	<property name="spec.dir" value="spec" />
+	<property name="spec.idl.dir" value="${spec.dir}/idl" />
+	<property name="spec.code.dir" value="${spec.dir}/code" />
+	<property name="spec.wsdl.dir" value="${spec.dir}/wsdl" />
+
+	<!-- package to urn maps for namespaces (this could be cleaned up) -->
+	<property name="v3dt.package" value="org.hl7.cts.types" />
+	<property name="v3dt.urn" value="urn://cts.hl7.org/types" />
+	<property name="CTSMAPI.package" value="org.hl7.CTSMAPI" />
+	<property name="CTSMAPI.urn" value="urn://hl7.org/CTSMAPI" />
+	<property name="CTSVAPI.package" value="org.hl7.CTSVAPI" />
+	<property name="CTSVAPI.urn" value="urn://hl7.org/CTSVAPI" />
+
+	<!--Sets up all of the classpaths, etc-->
+	<target name="init">
+		<path id="allJars">
+			<fileset dir="${externalLib.dir}" id="packageJars">
+				<include name="*.jar" />
+				<exclude name="saxon.jar" />
+			</fileset>
+			<fileset dir="${externalLib.dir}" id="xml.parser">
+				<include name="xerces.jar" />
+				<include name="xml-apis.jar" />
+			</fileset>
+
+			<fileset dir="${externalLib.dir}/axis/" id="axisJars">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir="${externalLib.dir}/converter libraries/" id="convertJars">
+				<include name="**/*.jar" />
+			</fileset>
+			<fileset dir="${externalLib.dir}/lucene/" id="luceneJars">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir="${externalLib.dir}/DistribSQLDrivers" id="distribSqlLibs">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir="${externalLib.dir}/OtherSQLDrivers" id="otherSqlLibs">
+				<include name="*.jar" />
+			</fileset>
+		</path>
+
+		<!-- Make sure the python scripts have the "right" line returns (since python dies if it has the wrong ending)-->
+		<condition property="lineEndingType" value="crlf">
+			<and>
+				<os family="windows" />
+			</and>
+		</condition>
+
+		<condition property="lineEndingType" value="lf">
+			<and>
+				<os family="unix" />
+			</and>
+		</condition>
+
+		<property name="temp" refid="allJars" />
+		<!-- There must be a better way to echo a refid, but I don't know it...-->
+		<!--echo>Using classpath: ${temp}</echo-->
+
+		<fixcrlf srcdir="tools/" eol="${lineEndingType}" includes="**/*.py" />
+	</target>
+
+	<!-- Reset the project back to an unbuilt state -->
+	<target name="cleanAll" description="Reset project back to unbuilt state">
+		<delete dir="${build.dir}" />
+		<delete dir="${javadocs.dir}" />
+		<delete dir="${bin.dir}" />
+		<delete dir="${spec.idl.dir}" />
+		<delete dir="${spec.wsdl.dir}" />
+		<delete file="${spec.dir}/cts.htm" />
+	</target>
+
+	<!-- Remove all intermediate build targets -->
+	<target name="clean" description="Remove intermediate build targets">
+		<delete dir="${idl.compile.target.dir}" />
+		<delete dir="${idl.java.target.dir}" />
+		<delete dir="${wsdl.target.dir}" />
+		<delete dir="${wsdl.java.target.dir}" />
+		<delete dir="${wsdl.compile.target.dir}" />
+		<delete dir="${spec.code.dir}" />
+	</target>
+
+	<!-- Compile an idl file into java and tweak the output
+		$packageDir	   - the package pathname for the idl target
+	     	$compileTarget	   - the target idl file
+	-->
+	<target name="compileIdlFileToJava">
+		<echo>Compiling idl file: ${compileTarget} into: ${packageDir}/${compileTarget}</echo>
+		<mkdir dir="${idl.java.target.dir}/${packageDir}/${compileTarget}" />
+
+		<java fork="true" classname="${idl.compiler}">
+			<classpath refid="java.tools" />
+			<arg line="-fallTIE" />
+			<arg line="-td ${idl.java.target.dir}" />
+			<arg line="-pkgPrefix types org.hl7.cts" />
+			<arg line="-pkgPrefix CTSMAPI org.hl7" />
+			<arg line="-pkgPrefix CTSVAPI org.hl7" />
+			<arg line="-i ${idl.src.dir}" />
+			<arg line="${idl.src.dir}/${compileTarget}.idl" />
+		</java>
+
+		<!-- Delete all files that have corresponding *Operations entries -->
+		<!-- What we are really doing is a mapper delete - not supported by Ant, unfortunately -->
+
+		<exec executable="python" dir=".">
+			<arg line="tools/del_operations.py" />
+			<arg line="${idl.java.target.dir}/${packageDir}/${compileTarget}" />
+		</exec>
+
+		<!-- Remove all of the other CORBA specific files -->
+		<delete>
+			<fileset dir="${idl.java.target.dir}/${packageDir}/${compileTarget}">
+				<patternset refid="corbaFiles" />
+			</fileset>
+		</delete>
+
+		<!-- Clean the CORBA out of the exceptions -->
+		<exec executable="python" dir=".">
+			<arg line="tools/fix_exceptions.py" />
+			<arg line="${idl.java.target.dir}/${packageDir}/${compileTarget}" />
+			<arg line="${idl.java.target.dir}/${packageDir}/${compileTarget}" />
+		</exec>
+
+		<!-- Make the comments mo' nice -->
+		<exec executable="python" dir=".">
+			<arg line="tools/fix_comments.py" />
+			<arg line="${idl.java.target.dir}/${packageDir}/${compileTarget}" />
+		</exec>
+
+	</target>
+
+	<!-- Compile the java generated by the idl
+	     	packageDir	   - the package pathname for the target
+	     	compileTarget	   - the target idl file
+	-->
+	<target name="compileIdlJavaOutput" depends="compileIdlFileToJava">
+		<echo>Compiling ${idl.java.target.dir}/${packageDir}/${compileTarget}</echo>
+		<mkdir dir="${idl.compile.target.dir}" />
+
+		<javac debug="true" classpath="${idl.compile.target.dir}" srcdir="${idl.java.target.dir}/${packageDir}/${compileTarget}" destdir="${idl.compile.target.dir}" />
+	</target>
+
+	<!-- Convert the specified java class into wsdl
+	     	wsdlTarget	- target name (w/o wsdl suffix)
+	     	wsdlClass	- java class to compile into wsdl
+	     	wsdlUrn		- urn of wsdl (note: has to match -pkgPrefix & - p args...)
+	     	wsdlImplClass	- name of the implementation class (if any)
+	-->
+	<target name="genWsdlTarget">
+		<echo>Generating ${wsdl.target.dir}/${wsdlTarget}.wsdl from ${wsdlClass}</echo>
+		<mkdir dir="${wsdl.target.dir}" />
+
+		<!--If the implementation jar exists, add a parameter to the java2wsdl program to tell
+		it to load the parameter names from there-->
+		<condition property="implExists" value="-i ${wsdlImplClass}">
+			<available file="${impl.jar}" />
+		</condition>
+		<condition property="implExists" value="">
+			<not>
+				<isset property="implExists" />
+			</not>
+		</condition>
+
+		<!-- We have to fork here because of log4j conflicts -->
+		<java classname="${wsdl.java2wsdl}" fork="true">
+			<classpath>
+				<pathelement location="${idl.compile.target.dir}" />
+				<fileset refid="xml.parser" />
+				<pathelement location="${impl.jar}" />
+				<pathelement location="${ctsUtility.jar}" />
+				<pathelement location="${wsdl.compile.target.dir}" />
+				<fileset refid="axisJars" />
+			</classpath>
+			<arg line="-o ${wsdl.target.dir}/${wsdlTarget}.wsdl" />
+			<arg line="-n ${wsdlUrn}" />
+			<arg line="${implExists}" />
+			<arg line="-lhttp://${axis.host}:${axis.port}/axis/services/${wsdlTarget}Service" />
+			<arg line="-p${v3dt.package}=${v3dt.urn}" />
+			<arg line="-p${CTSMAPI.package}=${CTSMAPI.urn}" />
+			<arg line="-p${CTSVAPI.package}=${CTSVAPI.urn}" />
+			<arg line="-y WRAPPED" />
+			<arg line="${wsdlClass}" />
+		</java>
+	</target>
+
+	<!-- Convert a wsdl file back into java
+	     wsdlSource	- source wsdl file to convert (w/o WSDL suffix)
+	     packageDir	- package name for target
+	     wsdlImplClass - implementation class name file
+	-->
+	<target name="genWddl">
+		<echo>Generating java from ${wsdl.target.dir}/${wsdlSource}.wsdl</echo>
+		<mkdir dir="${wsdl.java.target.dir}" />
+		<mkdir dir="${wddl.target.dir}" />
+		<java classname="${wsdl.wsdl2java}" fork="true">
+			<classpath>
+				<fileset refid="axisJars" />
+				<fileset refid="xml.parser" />
+			</classpath>
+			<arg line="-o ${wsdl.java.target.dir}" />
+			<arg line="-d Application" />
+			<arg line="-N${v3dt.urn}=${v3dt.package}" />
+			<arg line="-N${CTSMAPI.urn}=${CTSMAPI.package}" />
+			<arg line="-N${CTSVAPI.urn}=${CTSVAPI.package}" />
+			<arg line="-s" />
+			<arg line="file:${wsdl.target.dir}/${wsdlSource}.wsdl" />
+		</java>
+
+		<move file="${wsdl.java.target.dir}/${packageDir}/deploy.wsdd" tofile="${wddl.target.dir}/${wsdlSource}deploy.wsdd" />
+		<replaceregexp file="${wddl.target.dir}/${wsdlSource}deploy.wsdd" match='(parameter name="className".*value=").*?(".*)' replace="\1${wsdlImplClass}\2" byline="true" />
+
+		<move file="${wsdl.java.target.dir}/${packageDir}/undeploy.wsdd" toFile="${wddl.target.dir}/${wsdlSource}undeploy.wsdd" />
+	</target>
+
+	<!-- registerWsdd - register a service
+		wddlSource	- name used to construct deployment descriptor
+	-->
+	<target name="registerWsdd">
+		<echo>Registering ${wddl.target.dir}/${wddlSource}deploy.wsdd with service</echo>
+		<java classname="${axis.adminClient}" fork="true">
+			<classpath>
+				<fileset refid="axisJars" />
+				<fileset refid="tomcatCommonJars" />
+				<fileset refid="xml.parser" />
+			</classpath>
+			<arg line="${wddl.target.dir}/${wddlSource}deploy.wsdd" />
+			<arg line="-p ${axis.port}" />
+			<arg line="-h ${axis.host}" />
+		</java>
+	</target>
+
+	<!-- Convert the idl into java and compile it -->
+	<target name="idlToJava">
+		<echo>Creating ${idlJava.jar}</echo>
+		<condition property="is-jdk14">
+			<or>
+				<equals arg1="${ant.java.version}" arg2="1.4" />
+				<equals arg1="${ant.java.version}" arg2="1.5" />
+			</or>
+		</condition>
+
+		<fail message="The IDL must be compiled with a 1.4 or greater version of java." unless="is-jdk14" />
+
+		<echo>Checking for Python.  If this fails, it means python could not be found on your PATH.</echo>
+		<exec executable="python" dir=".">
+			<arg line="-V" />
+		</exec>
+
+		<antcall target="compileIdlJavaOutput">
+			<param name="packageDir" value="org/hl7/cts" />
+			<param name="compileTarget" value="types" />
+		</antcall>
+		<antcall target="compileIdlJavaOutput">
+			<param name="packageDir" value="org/hl7" />
+			<param name="compileTarget" value="CTSVAPI" />
+		</antcall>
+		<antcall target="compileIdlJavaOutput">
+			<param name="packageDir" value="org/hl7" />
+			<param name="compileTarget" value="CTSMAPI" />
+		</antcall>
+
+		<mkdir dir="${build.dir}/lib" />
+		<jar jarfile="${idlJava.jar}" basedir="${idl.compile.target.dir}" includes="**/*.class" />
+	</target>
+
+	<!-- Create wsdl from the idl java -->
+	<target name="genWsdl" depends="init">
+		<antcall inheritrefs="true" target="genWsdlTarget">
+			<reference refid="axisJars" />
+			<reference refid="xml.parser" />
+			<param name="wsdlTarget" value="VocabRuntime" />
+			<param name="wsdlClass" value="org.hl7.CTSVAPI.RuntimeOperations" />
+			<param name="wsdlUrn" value="${CTSVAPI.urn}" />
+			<param name="wsdlImplClass" value="org.hl7.CTSVAPI.refImpl.RuntimeOperationsImpl" />
+		</antcall>
+		<antcall target="genWsdlTarget">
+			<reference refid="axisJars" />
+			<reference refid="xml.parser" />
+			<param name="wsdlTarget" value="VocabBrowser" />
+			<param name="wsdlClass" value="org.hl7.CTSVAPI.BrowserOperations" />
+			<param name="wsdlUrn" value="${CTSVAPI.urn}" />
+			<param name="wsdlImplClass" value="org.hl7.CTSVAPI.refImpl.BrowserOperationsImpl" />
+		</antcall>
+		<antcall target="genWsdlTarget">
+			<reference refid="axisJars" />
+			<reference refid="xml.parser" />
+			<param name="wsdlTarget" value="CodeMapping" />
+			<param name="wsdlClass" value="org.hl7.CTSVAPI.CodeMappingOperations" />
+			<param name="wsdlUrn" value="${CTSVAPI.urn}" />
+			<param name="wsdlImplClass" value="org.hl7.CTSVAPI.refImpl.CodeMappingOperationsImpl" />
+		</antcall>
+		<antcall target="genWsdlTarget">
+			<reference refid="axisJars" />
+			<reference refid="xml.parser" />
+			<param name="wsdlTarget" value="MessageRuntime" />
+			<param name="wsdlClass" value="org.hl7.CTSMAPI.RuntimeOperations" />
+			<param name="wsdlUrn" value="${CTSMAPI.urn}" />
+			<param name="wsdlImplClass" value="org.hl7.CTSMAPI.refImpl.RuntimeOperationsImpl" />
+		</antcall>
+		<antcall target="genWsdlTarget">
+			<reference refid="axisJars" />
+			<reference refid="xml.parser" />
+			<param name="wsdlTarget" value="MessageBrowser" />
+			<param name="wsdlClass" value="org.hl7.CTSMAPI.BrowserOperations" />
+			<param name="wsdlUrn" value="${CTSMAPI.urn}" />
+			<param name="wsdlImplClass" value="org.hl7.CTSMAPI.refImpl.BrowserOperationsImpl" />
+		</antcall>
+	</target>
+
+	<!-- Convert wsdl back into a java target -->
+	<target name="wsdlToJava" depends="init">
+		<echo>Creating ${wsdlJava.jar}"</echo>
+		<antcall target="genWddl">
+			<reference refid="axisJars" />
+			<reference refid="xml.parser" />
+			<param name="wsdlSource" value="VocabRuntime" />
+			<param name="packageDir" value="org/hl7/CTSVAPI" />
+			<param name="wsdlImplClass" value="org.hl7.CTSVAPI.refImpl.RuntimeOperationsImpl" />
+		</antcall>
+		<antcall target="genWddl">
+			<reference refid="axisJars" />
+			<reference refid="xml.parser" />
+			<param name="wsdlSource" value="VocabBrowser" />
+			<param name="packageDir" value="org/hl7/CTSVAPI" />
+			<param name="wsdlImplClass" value="org.hl7.CTSVAPI.refImpl.BrowserOperationsImpl" />
+		</antcall>
+		<antcall target="genWddl">
+			<reference refid="axisJars" />
+			<reference refid="xml.parser" />
+			<param name="wsdlSource" value="CodeMapping" />
+			<param name="packageDir" value="org/hl7/CTSVAPI" />
+			<param name="wsdlImplClass" value="org.hl7.CTSVAPI.refImpl.CodeMappingOperationsImpl" />
+		</antcall>
+		<antcall target="genWddl">
+			<reference refid="axisJars" />
+			<reference refid="xml.parser" />
+			<param name="wsdlSource" value="MessageRuntime" />
+			<param name="packageDir" value="org/hl7/CTSMAPI" />
+			<param name="wsdlImplClass" value="org.hl7.CTSMAPI.refImpl.RuntimeOperationsImpl" />
+		</antcall>
+		<antcall target="genWddl">
+			<reference refid="axisJars" />
+			<reference refid="xml.parser" />
+			<param name="wsdlSource" value="MessageBrowser" />
+			<param name="packageDir" value="org/hl7/CTSMAPI" />
+			<param name="wsdlImplClass" value="org.hl7.CTSMAPI.refImpl.BrowserOperationsImpl" />
+		</antcall>
+	</target>
+
+	<!-- Register the generated services with axis -->
+	<target name="registerServices">
+		<antcall target="registerWsdd">
+			<reference refid="axisJars" />
+			<reference refid="xml.parser" />
+			<reference refid="tomcatCommonJars" />
+			<param name="wddlSource" value="VocabBrowser" />
+		</antcall>
+		<antcall target="registerWsdd">
+			<reference refid="axisJars" />
+			<reference refid="xml.parser" />
+			<reference refid="tomcatCommonJars" />
+			<param name="wddlSource" value="VocabRuntime" />
+		</antcall>
+		<antcall target="registerWsdd">
+			<reference refid="axisJars" />
+			<reference refid="xml.parser" />
+			<reference refid="tomcatCommonJars" />
+			<param name="wddlSource" value="CodeMapping" />
+		</antcall>
+		<antcall target="registerWsdd">
+			<reference refid="axisJars" />
+			<reference refid="xml.parser" />
+			<reference refid="tomcatCommonJars" />
+			<param name="wddlSource" value="MessageBrowser" />
+		</antcall>
+		<antcall target="registerWsdd">
+			<reference refid="axisJars" />
+			<reference refid="xml.parser" />
+			<reference refid="tomcatCommonJars" />
+			<param name="wddlSource" value="MessageRuntime" />
+		</antcall>
+	</target>
+
+	<!--
+	Compile the final wsdl output
+	-->
+	<target name="compileWsdlJava" depends="wsdlToJava">
+		<mkdir dir="${wsdl.compile.target.dir}" />
+		<javac source="1.4" debug="true" srcdir="${wsdl.java.target.dir}" destdir="${wsdl.compile.target.dir}">
+			<classpath>
+				<fileset refid="axisJars" />
+				<fileset refid="xml.parser" />
+				<pathelement location="${wsdl.compile.target.dir}" />
+			</classpath>
+		</javac>
+		<jar jarfile="${wsdlJava.jar}" basedir="${wsdl.compile.target.dir}" includes="**/*.class" />
+	</target>
+
+	<target name="regenImpl" description="Compile the implementation of the API" depends="init">
+		<mkdir dir="${impl.target.dir}" />
+		<javac source="1.4" debug="true" srcdir="${impl.src.dir}" destdir="${impl.target.dir}">
+			<classpath>
+				<pathelement location="${wsdlJava.jar}" />
+			</classpath>
+			<classpath refid="allJars" />
+		</javac>
+		<jar jarfile="${impl.jar}" basedir="${impl.target.dir}" includes="**/*.class" />
+
+	</target>
+
+	<target name="jarDependForDistrib" description="Create a jar file that includes everything - but not jars we can't distribute" depends="regenImpl">
+		<jar jarfile="${implAndDepend.jar}" basedir="${impl.target.dir}" includes="**/*.class" duplicate="preserve">
+			<zipgroupfileset refid="packageJars" />
+			<zipgroupfileset refid="axisJars" />
+			<zipgroupfileset refid="luceneJars" />
+			<zipgroupfileset refid="distribSqlLibs" />
+			<zipgroupfileset dir="">
+				<include name="${wsdlJava.jar}" />
+			</zipgroupfileset>
+		</jar>
+		<!-- make a zip file of all of the runtime licenses-->
+		<zip basedir="${externalLib.dir}" destfile="${depenLicenses.zip}">
+			<include name="**/*.txt" />
+			<include name="**/*.htm" />
+			<include name="**/*.html" />
+			<exclude name="saxon.license.txt" />
+			<!-- saxon is only used for creating the spec - not runtime-->
+			<exclude name="converter libraries/**/*" />
+			<!--only used for populating test dbs, not runtime-->
+			<exclude name="OtherSQLDrivers/**/*" />
+			<!--not distributed-->
+		</zip>
+	</target>
+
+	<target name="jarDependInternalUse" description="Create a jar file that includes everything" depends="regenImpl">
+		<jar jarfile="${implAndDepend.jar}" basedir="${impl.target.dir}" includes="**/*.class" duplicate="preserve">
+			<zipgroupfileset refid="packageJars" />
+			<zipgroupfileset refid="axisJars" />
+			<zipgroupfileset refid="luceneJars" />
+			<zipgroupfileset refid="distribSqlLibs" />
+			<zipgroupfileset refid="otherSqlLibs" />
+			<zipgroupfileset dir="">
+				<include name="${wsdlJava.jar}" />
+			</zipgroupfileset>
+		</jar>
+	</target>
+
+	<!-- Create a clean copy of the website (get rid of CVS folders, etc) -->
+	<target name="buildCleanWeb" description="Create a clean copy of the website (get rid of CVS folders, etc)" depends="init, spec">
+
+		<!-- Copy all the web site files into place -->
+		<mkdir dir="${cleanWeb.dir}/jspApp/" />
+		<copy toDir="${cleanWeb.dir}/jspApp/" verbose="false">
+			<fileset dir="../web/axis/hl7/">
+				<include name="**/*.jsp" />
+				<include name="WEB-INF/**/*" />
+			</fileset>
+		</copy>
+
+		<!-- create and copy the appropriate files into the WEB-INF folder -->
+		<mkdir dir="${cleanWeb.dir}/jspApp/WEB-INF/lib/" />
+		<mkdir dir="${cleanWeb.dir}/jspApp/WEB-INF/resources/" />
+		<mkdir dir="${cleanWeb.dir}/jspApp/WEB-INF/logs/" />
+
+		<copy toDir="${cleanWeb.dir}/jspApp/WEB-INF/lib/" file="${implAndDepend.jar}" />
+		<copy toDir="${cleanWeb.dir}/jspApp/WEB-INF/resources/" file="../resources/CTSProperties.prps" />
+		<copy toDir="${cleanWeb.dir}/jspApp/WEB-INF/resources/" file="../resources/CTSLogConfig.log4j" />
+
+		<!-- put the specification into place -->
+		<mkdir dir="${cleanWeb.dir}/LexGrid/downloads/CTS/specification/ctsSpec/" />
+		<copy toDir="${cleanWeb.dir}/LexGrid/downloads/CTS/specification/ctsSpec/">
+			<fileset dir="${spec.dir}">
+				<exclude name="code/" />
+				<exclude name="gen_graphics/" />
+			</fileset>
+		</copy>
+
+		<!-- put the wsdl files into place -->
+		<!--mkdir dir="${cleanWeb.dir}/informatics_pages/standards/cts/specification/ctsSpec/wsdl/"/>
+		<copy toDir="${cleanWeb.dir}/informatics_pages/standards/cts/specification/ctsSpec/wsdl/">
+			<fileset dir="${wsdl.target.dir}">
+				<include name="**/*.wsdl"/>
+			</fileset>
+		</copy-->
+
+		<!-- put the javadoc into place -->
+		<mkdir dir="${cleanWeb.dir}\LexGrid\downloads\CTS\refImpl\javadocs" />
+		<copy toDir="${cleanWeb.dir}\LexGrid\downloads\CTS\refImpl\javadocs">
+			<fileset dir="${javadocs.dir}">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+
+		<!-- create the reference implementation zip -->
+		<mkdir dir="${cleanWeb.dir}\LexGrid\downloads\CTS\refImpl\data\" />
+		<zip destfile="${cleanWeb.dir}\LexGrid\downloads\CTS\refImpl\data\refImpl.zip">
+			<fileset dir="../">
+				<exclude name="**/refImpl.zip" />
+				<include name="**/*" />
+				<exclude name="classes/" />
+				<exclude name="${ctsDemoBuild.dir}" />
+				<exclude name=".classpath" />
+				<exclude name=".project" />
+				<exclude name="logs/**/*.log" />
+				<exclude name="resources/**/*.launch" />
+				<exclude name="web/ROOT/" />
+				<exclude name="web/_notes/" />
+				<exclude name="hl7spec/build/webSite/" />
+				<exclude name="resources/**/*.ldb" />
+				<exclude name="hl7spec/extLib/OtherSQLDrivers/**/*" />
+				<exclude name="resources/data/testDBs/**/*.mdb"/>
+				<exclude name="resources/data/testDBs/HS-*/**/*"/>
+			</fileset>
+		</zip>
+
+		<!-- create java specificaiton zip -->
+		<zip destfile="${cleanWeb.dir}/LexGrid/downloads/CTS/specification/ctsSpec/javaSpec.zip">
+			<fileset dir="${wsdl.java.target.dir}">
+				<include name="**/*" />
+			</fileset>
+		</zip>
+
+		<!-- create javadocs for the specification -->
+		<mkdir dir="${cleanWeb.dir}/LexGrid/downloads/CTS/specification/ctsSpec/javadocs" />
+		<!--Create the javadocs-->
+		<javadoc source="1.4" destdir="${cleanWeb.dir}/LexGrid/downloads/CTS/specification/ctsSpec/javadocs" windowtitle="CTS 1.2 Specification" additionalparam="-breakiterator">
+			<package name="*" />
+			<classpath>
+				<pathelement location="${implAndDepend.jar}" />
+			</classpath>
+			<sourcepath location="${wsdl.java.target.dir}" />
+
+		</javadoc>
+
+		<!-- put the apache .htaccess files in place *- no longer used -* -->
+		<!--copy toDir="${cleanWeb.dir}/data_and_implementation/data/" file="${cleanWeb.dir}/WEB-INF/.htaccess"/>
+		<copy toDir="${cleanWeb.dir}/soapClient/source/" file="${cleanWeb.dir}/WEB-INF/.htaccess"/-->
+	</target>
+
+
+	<!-- Install the results of the build -->
+	<target name="installToTomcat" description="Install build output into your axis server" depends="init, buildCleanWeb">
+		<!--CUSTOMIZE - make sure you use the right path for your OS - C:\foo on windows, /usr/local/foo on unix-->
+		<property name="tomcat.root.dir" value="C:\Program Files\jakarta-tomcat-5.5.4\" />
+
+		<fileset dir="${tomcat.root.dir}" id="tomcatCommonJars">
+			<include name="${tomcat.common.libs}/servlet.jar" />
+		</fileset>
+
+		<!--Had to turn off the deletion, since windows won't let you do it if it is in use-->
+		<copy toDir="${tomcat.root.dir}/${axis.home}/WEB-INF/lib/" verbose="true">
+			<fileset dir="${lib.dir}">
+				<include name="ctsImplAndDepend.jar" />
+			</fileset>
+		</copy>
+
+		<mkdir dir="${tomcat.root.dir}/${axis.home}/WEB-INF/resources/" />
+		<mkdir dir="${tomcat.root.dir}/${axis.home}/WEB-INF/logs/" />
+
+		<copy toDir="${tomcat.root.dir}/${axis.home}/WEB-INF/lib/" file="${implAndDepend.jar}" />
+		<copy toDir="${tomcat.root.dir}/${axis.home}/WEB-INF/resources/" file="../resources/CTSProperties.prps" />
+		<copy toDir="${tomcat.root.dir}/${axis.home}/WEB-INF/resources/" file="../resources/CTSLogConfig.log4j" />
+
+		<copy toDir="${tomcat.root.dir}/webapps/cts/">
+			<fileset dir="${cleanWeb.dir}/">
+				<include name="**/*" />
+				<exclude name="informatics_pages/**/*" />
+			</fileset>
+		</copy>
+
+		<!-- wait for the server to pick up the jar file changes-->
+		<sleep seconds="10" />
+
+		<antcall target="registerServices">
+			<reference refid="axisJars" />
+			<reference refid="tomcatCommonJars" />
+			<reference refid="xml.parser" />
+		</antcall>
+	</target>
+
+
+	<target name="scripts" description="Generate the launch scripts">
+		<!-- Write out the startup scripts-->
+		<mkdir dir="${bin.dir}" />
+
+		<echo>Creating launch scripts</echo>
+
+		<echo file="${bin.dir}/VapiBrowserOperationsLDAP.bat">
+cd ..
+java -DPropFileLocation=resources/CTSProperties.prps -cp hl7spec/build/lib/ctsImplAndDepend.jar org.hl7.CTSVAPI.refImpl.test.TestBrowser
+cd bin
+pause
+		</echo>
+		<copy overwrite="true" file="${bin.dir}/VapiBrowserOperationsLDAP.bat" tofile="${bin.dir}/VapiBrowserOperationsLDAP.sh" />
+
+		<echo file="${bin.dir}/MapiBrowserOperations.bat">
+cd ..
+java -DPropFileLocation=resources/CTSProperties.prps -cp hl7spec/build/lib/ctsImplAndDepend.jar org.hl7.CTSMAPI.refImpl.test.TestBrowser
+cd bin
+pause
+		</echo>
+		<copy overwrite="true" file="${bin.dir}/MapiBrowserOperations.bat" tofile="${bin.dir}/MapiBrowserOperations.sh" />
+
+		<echo file="${bin.dir}/VapiRuntimeOperationsLDAP.bat">
+cd ..
+java -DPropFileLocation=resources/CTSProperties.prps -cp hl7spec/build/lib/ctsImplAndDepend.jar org.hl7.CTSVAPI.refImpl.test.TestRuntime
+cd bin
+pause
+		</echo>
+		<copy overwrite="true" file="${bin.dir}/VapiRuntimeOperationsLDAP.bat" tofile="${bin.dir}/VapiRuntimeOperationsLDAP.sh" />
+
+		<echo file="${bin.dir}/MapiRuntimeOperations.bat">
+cd ..
+java -DPropFileLocation=resources/CTSProperties.prps -cp hl7spec/build/lib/ctsImplAndDepend.jar org.hl7.CTSMAPI.refImpl.test.TestRuntime
+cd bin
+pause
+		</echo>
+		<copy overwrite="true" file="${bin.dir}/MapiRuntimeOperations.bat" tofile="${bin.dir}/MapiRuntimeOperations.sh" />
+
+		<echo file="${bin.dir}/VapiRuntimeOperationsSQLLite.bat">
+cd ..
+java -DPropFileLocation=resources/CTSProperties.prps -cp hl7spec/build/lib/ctsImplAndDepend.jar org.hl7.CTSVAPI.sqlLite.refImpl.test.TestRuntime
+cd bin
+pause
+		</echo>
+		<copy overwrite="true" file="${bin.dir}/VapiRuntimeOperationsSQLLite.bat" tofile="${bin.dir}/VapiRuntimeOperationsSQLLite.sh" />
+
+		<echo file="${bin.dir}/VapiBrowserOperationsSQLLite.bat">
+cd ..
+java -DPropFileLocation=resources/CTSProperties.prps -cp hl7spec/build/lib/ctsImplAndDepend.jar org.hl7.CTSVAPI.sqlLite.refImpl.test.TestBrowser
+cd bin
+pause
+		</echo>
+		<copy overwrite="true" file="${bin.dir}/VapiBrowserOperationsSQLLite.bat" tofile="${bin.dir}/VapiBrowserOperationsSQLLite.sh" />
+
+		<echo file="${bin.dir}/VapiRuntimeOperationsSQL.bat">
+cd ..
+java -DPropFileLocation=resources/CTSProperties.prps -cp hl7spec/build/lib/ctsImplAndDepend.jar org.hl7.CTSVAPI.sql.refImpl.test.TestRuntime
+cd bin
+pause
+		</echo>
+		<copy overwrite="true" file="${bin.dir}/VapiRuntimeOperationsSQL.bat" tofile="${bin.dir}/VapiRuntimeOperationsSQL.sh" />
+
+		<echo file="${bin.dir}/VapiBrowserOperationsSQL.bat">
+cd ..
+java -DPropFileLocation=resources/CTSProperties.prps -cp hl7spec/build/lib/ctsImplAndDepend.jar org.hl7.CTSVAPI.sql.refImpl.test.TestBrowser
+cd bin
+pause
+		</echo>
+		<copy overwrite="true" file="${bin.dir}/VapiBrowserOperationsSQL.bat" tofile="${bin.dir}/VapiBrowserOperationsSQL.sh" />
+
+		<!-- give them the right line endings-->
+		<fixcrlf srcdir="${bin.dir}" eol="crlf" includes="**/*.bat" />
+		<fixcrlf srcdir="${bin.dir}" eol="lf" includes="**/*.sh" />
+	</target>
+
+
+
+	<!-- Compile everything -->
+	<target name="regenAPI" description="Compile the CTS API" depends="init,idlToJava,genWsdl,compileWsdlJava" />
+
+	<!-- Do a _full_ build-->
+	<target name="buildAndInstall" description="Rebuild the service, and install it" depends="buildWithVarNames, installToTomcat" />
+
+	<target name="build" description="Do a full rebuild of the service" depends="cleanAll, regenAPI, regenImpl, jarDependInternalUse, scripts, docs" />
+
+	<!-- Do a full build that brings in the variable names, includes all jar files-->
+	<target name="buildWithVarNames" description="Do a full rebuild of the service and pull the variable names through." depends="build">
+		<delete dir="${wsdl.target.dir}" />
+		<antcall target="genWsdl">
+		</antcall>
+		<antcall target="compileWsdlJava">
+		</antcall>
+		<antcall target="jarDependInternalUse">
+		</antcall>
+	</target>
+
+	<!-- Do a full build that brings in the variable names, excludes jar files we can't distribute -->
+	<target name="buildForDistrib" description="Build CTS in a way that is ready to be redistributed" depends="build">
+		<delete dir="${wsdl.target.dir}" />
+		<antcall target="genWsdl">
+		</antcall>
+		<antcall target="compileWsdlJava">
+		</antcall>
+		<antcall target="jarDependForDistrib">
+		</antcall>
+		<antcall target="buildCleanWeb">
+		</antcall>
+	</target>
+	
+	<target name="buildForCTSDemo" depends="buildForDistrib" description="Builds the jars to put into the cts demo app" >
+		<mkdir dir="${ctsDemoBuild.dir}" />
+		<copy file="${impl.jar}" todir="${ctsDemoBuild.dir}"/>
+		<copy file="${wsdlJava.jar}" todir="${ctsDemoBuild.dir}"/>
+		<copy file="${depenLicenses.zip}" todir="${ctsDemoBuild.dir}"/>
+		<jar jarfile="${ctsDemoBuild.dir}/packageJars.jar" duplicate="preserve">
+			<zipgroupfileset refid="packageJars" />
+		</jar>
+		<jar jarfile="${ctsDemoBuild.dir}/luceneJars.jar" duplicate="preserve">
+			<zipgroupfileset refid="luceneJars" />
+		</jar>
+		<jar jarfile="${ctsDemoBuild.dir}/axisJars.jar" duplicate="preserve">
+			<zipgroupfileset refid="axisJars" />
+		</jar>
+		<jar jarfile="${ctsDemoBuild.dir}/sqlDrivers.jar" duplicate="preserve">
+			<zipgroupfileset refid="distribSqlLibs" />
+		</jar>
+	</target>
+
+
+	<target name="docs" depends="init,regenImpl" description="Generate the javadocs">
+		<mkdir dir="${javadocs.dir}" />
+		<!--Create the javadocs-->
+		<javadoc source="1.4" destdir="${javadocs.dir}" windowtitle="HL7 Soap Implementation" additionalparam="-breakiterator">
+			<package name="*" />
+			<classpath>
+				<pathelement location="${wsdlJava.jar}" />
+				<pathelement location="${impl.jar}" />
+			</classpath>
+			<classpath refid="allJars" />
+			<sourcepath location="${impl.src.dir}" />
+			<sourcepath location="${idl.java.target.dir}" />
+		</javadoc>
+	</target>
+
+	<target name="spec" depends="init" description="Generate HL7 CTS Specification">
+		<mkdir dir="${spec.idl.dir}" />
+		<mkdir dir="${spec.code.dir}" />
+		<mkdir dir="${spec.wsdl.dir}" />
+		<!--Copy an image of the idl and code for reference from the spec -->
+		<copy toDir="${spec.idl.dir}/" verbose="false">
+			<fileset dir="${idl.src.dir}/">
+				<include name="CTSMAPI.idl" />
+				<include name="CTSVAPI.idl" />
+				<include name="types.idl" />
+			</fileset>
+		</copy>
+		<!--Copy an image of the wsdl for reference from the spec -->
+		<copy toDir="${spec.wsdl.dir}/" verbose="false">
+			<fileset dir="${wsdl.target.dir}/">
+				<include name="*.wsdl" />
+			</fileset>
+		</copy>
+		<!--Strip the comments out of the idl and xml-ize it -->
+		<exec executable="python" dir=".">
+			<arg line="tools/stripModule.py" />
+			<arg line="${idl.src.dir}/CTSMAPI.idl" />
+			<arg line="${spec.code.dir}/CTSMAPI.xml" />
+		</exec>
+		<exec executable="python" dir=".">
+			<arg line="tools/stripModule.py" />
+			<arg line="${idl.src.dir}/CTSVAPI.idl" />
+			<arg line="${spec.code.dir}/CTSVAPI.xml" />
+		</exec>
+		<!--Transform the xml into html -->
+		<java dir="${spec.dir}" fork="true" classname="${saxon.engine}">
+			<classpath location="${externalLib.dir}/${saxon.jar}" />
+			<arg line="-o cts.htm" />
+			<arg line="cts.xml" />
+			<arg line="V3mLayoutHTML.xsl" />
+		</java>
+		<!-- Package up the result for distribution -->
+		<zip destfile="${spec.dir}/ctsspec.zip" basedir="${spec.dir}" excludes="code/, gen_graphics/, ctsspec.zip" />
+	</target>
+</project>

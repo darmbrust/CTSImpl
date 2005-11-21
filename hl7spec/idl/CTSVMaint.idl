@@ -1,0 +1,132 @@
+
+
+	exception CodeSystemAlreadyExists { };
+	
+	exception MissingRequiredField {
+		types::ST fieldDescription;
+	};
+
+	exception CodeAlreadyExists {
+		CTSCommon::ConceptCode theCode;
+	};
+	
+	
+	exception DesignationNotPresent {
+		Designation missingDesignation;
+	};
+
+	exception DescriptionNotPresent {
+		Description missingDescription;
+	};
+
+	exception PropertyNotPresent {
+		CodedTermProperty missingProperty;
+	};
+
+	exception RelationshipNotPresent {
+		RelationshipEntry missingRelationship;
+	};
+	
+/***********************************************
+ *     Maintenance interface                   *
+ ***********************************************/
+        interface Maintenance {
+
+                /* Identification */
+                readonly attribute types::ST     toolName;
+                readonly attribute types::ST     toolVersion;
+                readonly attribute types::ST     HL7ReleaseVersion;
+                readonly attribute types::ST     toolDescription;
+
+		
+		types::BL createCodeSystem(
+                	in CTSCommon::CodeSystem_id id,
+                	in CTSCommon::CodeSystem_name name,
+                	in types::ST fullName,
+                	in types::ST description
+			)
+			raises (CodeSystemAlreadyExists,
+				MissingRequiredField);
+				
+		types::BL removeCodeSystem(
+			in CTSCommon::CodeSystem_name codeSystem
+			)
+			raises (CTSCommon::UnknownCodeSystem);
+	
+		types::BL addCodedTerms (
+			in CTSCommon::CodeSystem_name codeSystem,
+			in CodedTermList terms
+			)
+                        raises (CTSCommon::UnknownCodeSystem,
+				CTSCommon::UnknownRelationship,
+				CTSCommon::UnknownLanguage,
+				UnknownUsageContextClass,
+				UnknownUsageContextValue,
+				UnknownPropertyId,
+				UnknownPropertyQualifierClass,
+				UnknownPropertyQualifierValue,
+				MissingRequiredField,
+				CodeAlreadyExists);
+		
+		types::BL inactivateCodedTerms (
+			in CTSCommon::CodeSystem_name codeSystem,
+                	in CTSCommon::ConceptCodeList codes
+			)
+			raises (CTSCommon::UnknownCode);
+
+		types::BL removeCodedTerms (
+			in CTSCommon::CodeSystem_name codeSystem,
+                	in CTSCommon::ConceptCodeList codes
+			)
+			raises (CTSCommon::UnknownCode);
+
+		types::BL addPropertiesToCodedTerm (
+			in CTSCommon::CodeSystem_name codeSystem,
+			in CTSCommon::ConceptCode theCode,
+                	in DesignationList designatedBy,
+                	in DescriptionList describedBy,
+                	in CodedTermPropertyList codedTermProperty
+			)
+			raises (CTSCommon::UnknownCode,
+				CTSCommon::UnknownLanguage,
+				UnknownUsageContextClass,
+				UnknownUsageContextValue,
+				UnknownPropertyId,
+				UnknownPropertyQualifierClass,
+				UnknownPropertyQualifierValue,
+				MissingRequiredField);
+
+		types::BL addRelationshipsToCodedTerm (
+			in CTSCommon::CodeSystem_name codeSystem,
+			in CTSCommon::ConceptCode theCode,
+                	in RelationshipEntryList sourceFor,
+                	in RelationshipEntryList targetOf
+			)
+			raises (CTSCommon::UnknownCode,
+				CTSCommon::UnknownRelationship,
+				UnknownRelationQualifierClass,
+				UnknownRelationQualifierValue,
+				MissingRequiredField);
+
+		types::BL removePropertiesFromCodedTerm (
+			in CTSCommon::CodeSystem_name codeSystem,
+			in CTSCommon::ConceptCode theCode,
+                	in DesignationList designatedBy,
+                	in DescriptionList describedBy,
+                	in CodedTermPropertyList codedTermProperty
+			)
+			raises (CTSCommon::UnknownCode,
+				DesignationNotPresent,
+				DescriptionNotPresent,
+				PropertyNotPresent);
+		
+
+		types::BL removeRelationshipsFromCodedTerm (
+			in CTSCommon::CodeSystem_name codeSystem,
+			in CTSCommon::ConceptCode theCode,
+                	in RelationshipEntryList sourceFor,
+                	in RelationshipEntryList targetOf
+			)
+			raises (CTSCommon::UnknownCode,
+				RelationshipNotPresent);
+	};

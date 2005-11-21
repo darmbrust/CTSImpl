@@ -1,0 +1,44 @@
+#Log the refimpl errors to the error file, and to the screen, everything to full_logging
+log4j.logger.org.hl7=DEBUG,  exceptions, stout2, full_logging
+log4j.logger.edu.mayo.informatics.cts.utility=DEBUG, stout2, exceptions, full_logging
+log4j.logger.edu.mayo.informatics.cts.utility.parameters.configuration=WARN, stout2, exceptions, full_logging
+
+#Comment this OUT to get full debug statements for all SQL queries (the logger org.hl7 is set to debug above)
+#having this here set to warn turns it off)
+log4j.logger.org.hl7.utility.sqlReconnect=WARN, stout2, exceptions, full_logging
+
+
+log4j.rootCategory=ERROR, stout2, exceptions
+
+#stout - log to the screen
+log4j.appender.stout=org.apache.log4j.ConsoleAppender
+log4j.appender.stout.Threshold=DEBUG
+log4j.appender.stout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stout.layout.ConversionPattern=%-5p [%t] [%c] (%F:%L): %m\t%d{dd MMM yyyy HH:mm:ss,SSS}\n
+
+#stout2 - log to the screen - only errors and warnings
+log4j.appender.stout2=org.apache.log4j.ConsoleAppender
+log4j.appender.stout2.Threshold=WARN
+log4j.appender.stout2.layout=org.apache.log4j.PatternLayout
+log4j.appender.stout2.layout.ConversionPattern=%-5p [%t] [%c] (%F:%L): %m\t%d{dd MMM yyyy HH:mm:ss,SSS}\n
+
+
+#full_logging - Log to a file
+log4j.appender.full_logging=org.apache.log4j.RollingFileAppender
+log4j.appender.full_logging.MaxFileSize=10MB
+log4j.appender.full_logging.MaxBackupIndex=5
+log4j.appender.full_logging.File=../logs/CTS.log
+log4j.appender.full_logging.Threshold=DEBUG
+log4j.appender.full_logging.Append=false
+log4j.appender.full_logging.layout=org.apache.log4j.PatternLayout
+log4j.appender.full_logging.layout.ConversionPattern=%-5p [%t] [%c] (%F:%L): %m\t%d{dd MMM yyyy HH:mm:ss,SSS}\n
+
+#exceptions - Log to a file - just Exceptions and warnings
+log4j.appender.exceptions=org.apache.log4j.RollingFileAppender
+log4j.appender.exceptions.MaxFileSize=10MB
+log4j.appender.exceptions.MaxBackupIndex=5
+log4j.appender.exceptions.Threshold=WARN
+log4j.appender.exceptions.File=../logs/CTS_Errors.log
+log4j.appender.exceptions.Append=false
+log4j.appender.exceptions.layout=org.apache.log4j.PatternLayout
+log4j.appender.exceptions.layout.ConversionPattern=%-5p [%t] [%c] (%F:%L): %m\t%d{dd MMM yyyy HH:mm:ss,SSS}\n
