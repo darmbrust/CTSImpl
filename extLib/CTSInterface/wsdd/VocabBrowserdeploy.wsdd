@@ -1,0 +1,317 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from BrowserOperationsService WSDL service -->
+
+  <service name="VocabBrowserService" provider="java:RPC" style="wrapped" use="literal">
+      <parameter name="wsdlTargetNamespace" value="urn://hl7.org/CTSVAPI"/>
+      <parameter name="wsdlServiceElement" value="BrowserOperationsService"/>
+      <parameter name="schemaQualified" value="urn://hl7.org/CTSVAPI"/>
+      <parameter name="wsdlServicePort" value="VocabBrowserService"/>
+      <parameter name="className" value="edu.mayo.informatics.cts.CTSVAPI.sql.refImpl.BrowserOperationsImpl"/>
+      <parameter name="wsdlPortType" value="BrowserOperations"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <operation name="getSupportedMatchAlgorithms" qname="operNS:getSupportedMatchAlgorithms" xmlns:operNS="urn://hl7.org/CTSVAPI" returnQName="retNS:getSupportedMatchAlgorithmsReturn" xmlns:retNS="urn://hl7.org/CTSVAPI" returnType="rtns:string" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+        <fault name="UnexpectedError" qname="fns:fault" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+      </operation>
+      <operation name="expandCodeExpansionContext" qname="operNS:expandCodeExpansionContext" xmlns:operNS="urn://hl7.org/CTSVAPI" returnQName="retNS:expandCodeExpansionContextReturn" xmlns:retNS="urn://hl7.org/CTSVAPI" returnType="rtns:RelatedCode" xmlns:rtns="urn://hl7.org/CTSVAPI" soapAction="" >
+        <parameter qname="pns:contextToExpand" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:base64Binary" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <fault name="InvalidExpansionContext" qname="fns:fault1" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.InvalidExpansionContext" type="tns:InvalidExpansionContext" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnexpectedError" qname="fns:fault" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="TimeoutError" qname="fns:fault2" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.TimeoutError" type="tns:TimeoutError" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+      </operation>
+      <operation name="lookupCodeExpansion" qname="operNS:lookupCodeExpansion" xmlns:operNS="urn://hl7.org/CTSVAPI" returnQName="retNS:lookupCodeExpansionReturn" xmlns:retNS="urn://hl7.org/CTSVAPI" returnType="rtns:RelatedCode" xmlns:rtns="urn://hl7.org/CTSVAPI" soapAction="" >
+        <parameter qname="pns:expandConcept_id" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:ConceptId" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <parameter qname="pns:relationship_code" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:sourceToTarget" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:directRelationsOnly" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:designationLanguage_code" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:timeout" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:sizeLimit" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <fault name="UnknownRelationshipCode" qname="fns:fault3" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownRelationshipCode" type="tns:UnknownRelationshipCode" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnexpectedError" qname="fns:fault" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnknownConceptCode" qname="fns:fault4" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownConceptCode" type="tns:UnknownConceptCode" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnknownCodeSystem" qname="fns:fault5" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownCodeSystem" type="tns:UnknownCodeSystem" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="TimeoutError" qname="fns:fault2" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.TimeoutError" type="tns:TimeoutError" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnknownLanguageCode" qname="fns:fault6" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownLanguageCode" type="tns:UnknownLanguageCode" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+      </operation>
+      <operation name="getSupportedCodeSystems" qname="operNS:getSupportedCodeSystems" xmlns:operNS="urn://hl7.org/CTSVAPI" returnQName="retNS:getSupportedCodeSystemsReturn" xmlns:retNS="urn://hl7.org/CTSVAPI" returnType="rtns:CodeSystemIdAndVersions" xmlns:rtns="urn://hl7.org/CTSVAPI" soapAction="" >
+        <parameter qname="pns:timeout" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:sizeLimit" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <fault name="UnexpectedError" qname="fns:fault" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="TimeoutError" qname="fns:fault2" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.TimeoutError" type="tns:TimeoutError" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+      </operation>
+      <operation name="lookupCompleteCodedConcept" qname="operNS:lookupCompleteCodedConcept" xmlns:operNS="urn://hl7.org/CTSVAPI" returnQName="retNS:lookupCompleteCodedConceptReturn" xmlns:retNS="urn://hl7.org/CTSVAPI" returnType="rtns:CompleteCodedConceptDescription" xmlns:rtns="urn://hl7.org/CTSVAPI" soapAction="" >
+        <parameter qname="pns:concept_id" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:ConceptId" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnexpectedError" qname="fns:fault" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnknownConceptCode" qname="fns:fault4" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownConceptCode" type="tns:UnknownConceptCode" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnknownCodeSystem" qname="fns:fault5" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownCodeSystem" type="tns:UnknownCodeSystem" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+      </operation>
+      <operation name="lookupConceptCodesByDesignation" qname="operNS:lookupConceptCodesByDesignation" xmlns:operNS="urn://hl7.org/CTSVAPI" returnQName="retNS:lookupConceptCodesByDesignationReturn" xmlns:retNS="urn://hl7.org/CTSVAPI" returnType="rtns:ConceptId" xmlns:rtns="urn://hl7.org/CTSVAPI" soapAction="" >
+        <parameter qname="pns:codeSystem_id" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:matchText" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:matchAlgorithm_code" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:language_code" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:activeConceptsOnly" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:timeout" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:sizeLimit" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <fault name="UnknownMatchAlgorithm" qname="fns:fault8" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownMatchAlgorithm" type="tns:UnknownMatchAlgorithm" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnexpectedError" qname="fns:fault" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="BadlyFormedMatchText" qname="fns:fault7" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.BadlyFormedMatchText" type="tns:BadlyFormedMatchText" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnknownCodeSystem" qname="fns:fault5" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownCodeSystem" type="tns:UnknownCodeSystem" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="TimeoutError" qname="fns:fault2" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.TimeoutError" type="tns:TimeoutError" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnknownLanguageCode" qname="fns:fault6" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownLanguageCode" type="tns:UnknownLanguageCode" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+      </operation>
+      <operation name="lookupConceptCodesByProperty" qname="operNS:lookupConceptCodesByProperty" xmlns:operNS="urn://hl7.org/CTSVAPI" returnQName="retNS:lookupConceptCodesByPropertyReturn" xmlns:retNS="urn://hl7.org/CTSVAPI" returnType="rtns:ConceptId" xmlns:rtns="urn://hl7.org/CTSVAPI" soapAction="" >
+        <parameter qname="pns:codeSystem_id" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:matchText" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:matchAlgorithm_code" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:language_code" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:activeConceptsOnly" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:properties" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:mimeTypes" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:timeout" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:sizeLimit" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <fault name="UnknownMatchAlgorithm" qname="fns:fault8" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownMatchAlgorithm" type="tns:UnknownMatchAlgorithm" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnexpectedError" qname="fns:fault" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnknownMimeTypeCode" qname="fns:fault9" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownMimeTypeCode" type="tns:UnknownMimeTypeCode" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="BadlyFormedMatchText" qname="fns:fault7" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.BadlyFormedMatchText" type="tns:BadlyFormedMatchText" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnknownCodeSystem" qname="fns:fault5" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownCodeSystem" type="tns:UnknownCodeSystem" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="TimeoutError" qname="fns:fault2" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.TimeoutError" type="tns:TimeoutError" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnknownLanguageCode" qname="fns:fault6" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownLanguageCode" type="tns:UnknownLanguageCode" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnknownPropertyCode" qname="fns:fault10" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownPropertyCode" type="tns:UnknownPropertyCode" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+      </operation>
+      <operation name="lookupDesignations" qname="operNS:lookupDesignations" xmlns:operNS="urn://hl7.org/CTSVAPI" returnQName="retNS:lookupDesignationsReturn" xmlns:retNS="urn://hl7.org/CTSVAPI" returnType="rtns:ConceptDesignation" xmlns:rtns="urn://hl7.org/CTSVAPI" soapAction="" >
+        <parameter qname="pns:conceptCode" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:ConceptId" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <parameter qname="pns:matchText" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:matchAlgorithm_code" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:languageCode" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <fault name="UnknownMatchAlgorithm" qname="fns:fault8" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownMatchAlgorithm" type="tns:UnknownMatchAlgorithm" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnexpectedError" qname="fns:fault" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnknownConceptCode" qname="fns:fault4" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownConceptCode" type="tns:UnknownConceptCode" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="BadlyFormedMatchText" qname="fns:fault7" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.BadlyFormedMatchText" type="tns:BadlyFormedMatchText" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnknownCodeSystem" qname="fns:fault5" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownCodeSystem" type="tns:UnknownCodeSystem" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnknownLanguageCode" qname="fns:fault6" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownLanguageCode" type="tns:UnknownLanguageCode" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+      </operation>
+      <operation name="lookupProperties" qname="operNS:lookupProperties" xmlns:operNS="urn://hl7.org/CTSVAPI" returnQName="retNS:lookupPropertiesReturn" xmlns:retNS="urn://hl7.org/CTSVAPI" returnType="rtns:ConceptProperty" xmlns:rtns="urn://hl7.org/CTSVAPI" soapAction="" >
+        <parameter qname="pns:concept_id" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:ConceptId" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <parameter qname="pns:properties" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:matchText" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:matchAlgorithm_code" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:language_code" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:mimeTypes" xmlns:pns="urn://hl7.org/CTSVAPI" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <fault name="UnknownMatchAlgorithm" qname="fns:fault8" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownMatchAlgorithm" type="tns:UnknownMatchAlgorithm" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnexpectedError" qname="fns:fault" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnknownMimeTypeCode" qname="fns:fault9" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownMimeTypeCode" type="tns:UnknownMimeTypeCode" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnknownConceptCode" qname="fns:fault4" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownConceptCode" type="tns:UnknownConceptCode" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="BadlyFormedMatchText" qname="fns:fault7" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.BadlyFormedMatchText" type="tns:BadlyFormedMatchText" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnknownCodeSystem" qname="fns:fault5" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownCodeSystem" type="tns:UnknownCodeSystem" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnknownLanguageCode" qname="fns:fault6" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownLanguageCode" type="tns:UnknownLanguageCode" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+        <fault name="UnknownPropertyCode" qname="fns:fault10" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnknownPropertyCode" type="tns:UnknownPropertyCode" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+      </operation>
+      <operation name="getCTSVersion" qname="operNS:getCTSVersion" xmlns:operNS="urn://hl7.org/CTSVAPI" returnQName="retNS:getCTSVersionReturn" xmlns:retNS="urn://hl7.org/CTSVAPI" returnType="rtns:CTSVersionId" xmlns:rtns="urn://hl7.org/CTSVAPI" soapAction="" >
+        <fault name="UnexpectedError" qname="fns:fault" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+      </operation>
+      <operation name="getServiceDescription" qname="operNS:getServiceDescription" xmlns:operNS="urn://hl7.org/CTSVAPI" returnQName="retNS:getServiceDescriptionReturn" xmlns:retNS="urn://hl7.org/CTSVAPI" returnType="rtns:string" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+        <fault name="UnexpectedError" qname="fns:fault" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+      </operation>
+      <operation name="getServiceName" qname="operNS:getServiceName" xmlns:operNS="urn://hl7.org/CTSVAPI" returnQName="retNS:getServiceNameReturn" xmlns:retNS="urn://hl7.org/CTSVAPI" returnType="rtns:string" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+        <fault name="UnexpectedError" qname="fns:fault" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+      </operation>
+      <operation name="getServiceVersion" qname="operNS:getServiceVersion" xmlns:operNS="urn://hl7.org/CTSVAPI" returnQName="retNS:getServiceVersionReturn" xmlns:retNS="urn://hl7.org/CTSVAPI" returnType="rtns:string" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+        <fault name="UnexpectedError" qname="fns:fault" xmlns:fns="urn://hl7.org/CTSVAPI" class="org.hl7.CTSVAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSVAPI"/>
+      </operation>
+      <parameter name="allowedMethods" value="lookupConceptCodesByDesignation lookupCodeExpansion getSupportedCodeSystems getServiceDescription getCTSVersion expandCodeExpansionContext lookupDesignations lookupConceptCodesByProperty getServiceName lookupProperties getServiceVersion lookupCompleteCodedConcept getSupportedMatchAlgorithms"/>
+      <parameter name="scope" value="Application"/>
+
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSVAPI"
+        qname="ns:CTSVersionId"
+        type="java:org.hl7.CTSVAPI.CTSVersionId"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSVAPI"
+        qname="ns:UnknownPropertyCode"
+        type="java:org.hl7.CTSVAPI.UnknownPropertyCode"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <arrayMapping
+        xmlns:ns="urn://hl7.org/CTSVAPI"
+        qname="ns:ArrayOfConceptDesignation"
+        type="java:org.hl7.CTSVAPI.ConceptDesignation[]"
+        innerType="cmp-ns:ConceptDesignation" xmlns:cmp-ns="urn://hl7.org/CTSVAPI"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSVAPI"
+        qname="ns:UnknownRelationshipCode"
+        type="java:org.hl7.CTSVAPI.UnknownRelationshipCode"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSVAPI"
+        qname="ns:UnknownLanguageCode"
+        type="java:org.hl7.CTSVAPI.UnknownLanguageCode"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSVAPI"
+        qname="ns:UnknownConceptCode"
+        type="java:org.hl7.CTSVAPI.UnknownConceptCode"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSVAPI"
+        qname="ns:UnexpectedError"
+        type="java:org.hl7.CTSVAPI.UnexpectedError"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSVAPI"
+        qname="ns:UnknownCodeSystem"
+        type="java:org.hl7.CTSVAPI.UnknownCodeSystem"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSVAPI"
+        qname="ns:UnknownMimeTypeCode"
+        type="java:org.hl7.CTSVAPI.UnknownMimeTypeCode"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSVAPI"
+        qname="ns:TimeoutError"
+        type="java:org.hl7.CTSVAPI.TimeoutError"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSVAPI"
+        qname="ns:ConceptProperty"
+        type="java:org.hl7.CTSVAPI.ConceptProperty"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSVAPI"
+        qname="ns:InvalidExpansionContext"
+        type="java:org.hl7.CTSVAPI.InvalidExpansionContext"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSVAPI"
+        qname="ns:ConceptId"
+        type="java:org.hl7.CTSVAPI.ConceptId"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSVAPI"
+        qname="ns:ConceptRelationship"
+        type="java:org.hl7.CTSVAPI.ConceptRelationship"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSVAPI"
+        qname="ns:UnknownMatchAlgorithm"
+        type="java:org.hl7.CTSVAPI.UnknownMatchAlgorithm"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <arrayMapping
+        xmlns:ns="urn://hl7.org/CTSVAPI"
+        qname="ns:ArrayOfConceptRelationship"
+        type="java:org.hl7.CTSVAPI.ConceptRelationship[]"
+        innerType="cmp-ns:ConceptRelationship" xmlns:cmp-ns="urn://hl7.org/CTSVAPI"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSVAPI"
+        qname="ns:ConceptDesignation"
+        type="java:org.hl7.CTSVAPI.ConceptDesignation"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <arrayMapping
+        xmlns:ns="urn://hl7.org/CTSVAPI"
+        qname="ns:ArrayOf_xsd_string"
+        type="java:java.lang.String[]"
+        innerType="cmp-ns:string" xmlns:cmp-ns="http://www.w3.org/2001/XMLSchema"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSVAPI"
+        qname="ns:CodeSystemIdAndVersions"
+        type="java:org.hl7.CTSVAPI.CodeSystemIdAndVersions"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSVAPI"
+        qname="ns:CompleteCodedConceptDescription"
+        type="java:org.hl7.CTSVAPI.CompleteCodedConceptDescription"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <arrayMapping
+        xmlns:ns="urn://hl7.org/CTSVAPI"
+        qname="ns:ArrayOfConceptProperty"
+        type="java:org.hl7.CTSVAPI.ConceptProperty[]"
+        innerType="cmp-ns:ConceptProperty" xmlns:cmp-ns="urn://hl7.org/CTSVAPI"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSVAPI"
+        qname="ns:RelatedCode"
+        type="java:org.hl7.CTSVAPI.RelatedCode"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSVAPI"
+        qname="ns:BadlyFormedMatchText"
+        type="java:org.hl7.CTSVAPI.BadlyFormedMatchText"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+  </service>
+</deployment>

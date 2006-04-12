@@ -1,0 +1,420 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from RuntimeOperationsService WSDL service -->
+
+  <service name="MessageRuntimeService" provider="java:RPC" style="wrapped" use="literal">
+      <parameter name="wsdlTargetNamespace" value="urn://hl7.org/CTSMAPI"/>
+      <parameter name="wsdlServiceElement" value="RuntimeOperationsService"/>
+      <parameter name="schemaQualified" value="urn://hl7.org/CTSMAPI,urn://cts.hl7.org/types"/>
+      <parameter name="wsdlServicePort" value="MessageRuntimeService"/>
+      <parameter name="className" value="edu.mayo.informatics.cts.CTSMAPI.refImpl.RuntimeOperationsImpl"/>
+      <parameter name="wsdlPortType" value="RuntimeOperations"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <operation name="subsumes" qname="operNS:subsumes" xmlns:operNS="urn://hl7.org/CTSMAPI" returnQName="retNS:subsumesReturn" xmlns:retNS="urn://hl7.org/CTSMAPI" returnType="rtns:BL" xmlns:rtns="urn://cts.hl7.org/types" soapAction="" >
+        <parameter qname="pns:parentCode" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:CD" xmlns:tns="urn://cts.hl7.org/types"/>
+        <parameter qname="pns:childCode" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:CD" xmlns:tns="urn://cts.hl7.org/types"/>
+        <fault name="UnexpectedError" qname="fns:fault5" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="SubsumptionNotSupported" qname="fns:fault" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.SubsumptionNotSupported" type="tns:SubsumptionNotSupported" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="QualifiersNotSupported" qname="fns:fault1" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.QualifiersNotSupported" type="tns:QualifiersNotSupported" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnknownConceptCode" qname="fns:fault2" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnknownConceptCode" type="tns:UnknownConceptCode" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnknownCodeSystem" qname="fns:fault3" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnknownCodeSystem" type="tns:UnknownCodeSystem" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnrecognizedQualifier" qname="fns:fault4" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnrecognizedQualifier" type="tns:UnrecognizedQualifier" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+      </operation>
+      <operation name="getSupportedMatchAlgorithms" qname="operNS:getSupportedMatchAlgorithms" xmlns:operNS="urn://hl7.org/CTSMAPI" returnQName="retNS:getSupportedMatchAlgorithmsReturn" xmlns:retNS="urn://hl7.org/CTSMAPI" returnType="rtns:ST" xmlns:rtns="urn://cts.hl7.org/types" soapAction="" >
+        <fault name="UnexpectedError" qname="fns:fault5" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+      </operation>
+      <operation name="getSupportedVocabularyDomains" qname="operNS:getSupportedVocabularyDomains" xmlns:operNS="urn://hl7.org/CTSMAPI" returnQName="retNS:getSupportedVocabularyDomainsReturn" xmlns:retNS="urn://hl7.org/CTSMAPI" returnType="rtns:ST" xmlns:rtns="urn://cts.hl7.org/types" soapAction="" >
+        <parameter qname="pns:matchText" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:ST" xmlns:tns="urn://cts.hl7.org/types"/>
+        <parameter qname="pns:matchAlgorithm_code" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:ST" xmlns:tns="urn://cts.hl7.org/types"/>
+        <parameter qname="pns:timeout" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:sizeLimit" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <fault name="UnknownMatchAlgorithm" qname="fns:fault7" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnknownMatchAlgorithm" type="tns:UnknownMatchAlgorithm" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnexpectedError" qname="fns:fault5" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="BadlyFormedMatchText" qname="fns:fault8" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.BadlyFormedMatchText" type="tns:BadlyFormedMatchText" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="TimeoutError" qname="fns:fault6" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.TimeoutError" type="tns:TimeoutError" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+      </operation>
+      <operation name="validateCode" qname="operNS:validateCode" xmlns:operNS="urn://hl7.org/CTSMAPI" returnQName="retNS:validateCodeReturn" xmlns:retNS="urn://hl7.org/CTSMAPI" returnType="rtns:ValidateCodeReturn" xmlns:rtns="urn://hl7.org/CTSMAPI" soapAction="" >
+        <parameter qname="pns:vocabularyDomain_name" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:ST" xmlns:tns="urn://cts.hl7.org/types"/>
+        <parameter qname="pns:codeToValidate" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:CD" xmlns:tns="urn://cts.hl7.org/types"/>
+        <parameter qname="pns:applicationContext_code" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:ST" xmlns:tns="urn://cts.hl7.org/types"/>
+        <parameter qname="pns:activeConceptsOnly" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:BL" xmlns:tns="urn://cts.hl7.org/types"/>
+        <parameter qname="pns:errorCheckOnly" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:BL" xmlns:tns="urn://cts.hl7.org/types"/>
+        <fault name="NoApplicableValueSet" qname="fns:fault11" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.NoApplicableValueSet" type="tns:NoApplicableValueSet" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnexpectedError" qname="fns:fault5" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnknownApplicationContextCode" qname="fns:fault9" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnknownApplicationContextCode" type="tns:UnknownApplicationContextCode" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnknownVocabularyDomain" qname="fns:fault10" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnknownVocabularyDomain" type="tns:UnknownVocabularyDomain" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+      </operation>
+      <operation name="validateTranslation" qname="operNS:validateTranslation" xmlns:operNS="urn://hl7.org/CTSMAPI" returnQName="retNS:validateTranslationReturn" xmlns:retNS="urn://hl7.org/CTSMAPI" returnType="rtns:ValidateCodeReturn" xmlns:rtns="urn://hl7.org/CTSMAPI" soapAction="" >
+        <parameter qname="pns:parm1" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:ST" xmlns:tns="urn://cts.hl7.org/types"/>
+        <parameter qname="pns:parm2" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:CD" xmlns:tns="urn://cts.hl7.org/types"/>
+        <parameter qname="pns:parm3" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:ST" xmlns:tns="urn://cts.hl7.org/types"/>
+        <parameter qname="pns:parm4" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:BL" xmlns:tns="urn://cts.hl7.org/types"/>
+        <parameter qname="pns:parm5" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:BL" xmlns:tns="urn://cts.hl7.org/types"/>
+        <fault name="UnexpectedError" qname="fns:fault5" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnknownApplicationContextCode" qname="fns:fault9" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnknownApplicationContextCode" type="tns:UnknownApplicationContextCode" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnknownVocabularyDomain" qname="fns:fault10" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnknownVocabularyDomain" type="tns:UnknownVocabularyDomain" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+      </operation>
+      <operation name="translateCode" qname="operNS:translateCode" xmlns:operNS="urn://hl7.org/CTSMAPI" returnQName="retNS:translateCodeReturn" xmlns:retNS="urn://hl7.org/CTSMAPI" returnType="rtns:CD" xmlns:rtns="urn://cts.hl7.org/types" soapAction="" >
+        <parameter qname="pns:parm1" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:ST" xmlns:tns="urn://cts.hl7.org/types"/>
+        <parameter qname="pns:parm2" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:CD" xmlns:tns="urn://cts.hl7.org/types"/>
+        <parameter qname="pns:param5" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:UID" xmlns:tns="urn://cts.hl7.org/types"/>
+        <parameter qname="pns:parm3" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:ST" xmlns:tns="urn://cts.hl7.org/types"/>
+        <fault name="UnexpectedError" qname="fns:fault5" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnableToTranslate" qname="fns:fault12" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnableToTranslate" type="tns:UnableToTranslate" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnknownCodeSystem" qname="fns:fault3" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnknownCodeSystem" type="tns:UnknownCodeSystem" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnknownApplicationContextCode" qname="fns:fault9" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnknownApplicationContextCode" type="tns:UnknownApplicationContextCode" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnknownVocabularyDomain" qname="fns:fault10" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnknownVocabularyDomain" type="tns:UnknownVocabularyDomain" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+      </operation>
+      <operation name="areEquivalent" qname="operNS:areEquivalent" xmlns:operNS="urn://hl7.org/CTSMAPI" returnQName="retNS:areEquivalentReturn" xmlns:retNS="urn://hl7.org/CTSMAPI" returnType="rtns:BL" xmlns:rtns="urn://cts.hl7.org/types" soapAction="" >
+        <parameter qname="pns:parm1" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:CD" xmlns:tns="urn://cts.hl7.org/types"/>
+        <parameter qname="pns:parm2" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:CD" xmlns:tns="urn://cts.hl7.org/types"/>
+        <fault name="UnexpectedError" qname="fns:fault5" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="SubsumptionNotSupported" qname="fns:fault" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.SubsumptionNotSupported" type="tns:SubsumptionNotSupported" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="QualifiersNotSupported" qname="fns:fault1" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.QualifiersNotSupported" type="tns:QualifiersNotSupported" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnknownConceptCode" qname="fns:fault2" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnknownConceptCode" type="tns:UnknownConceptCode" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnknownCodeSystem" qname="fns:fault3" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnknownCodeSystem" type="tns:UnknownCodeSystem" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnrecognizedQualifier" qname="fns:fault4" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnrecognizedQualifier" type="tns:UnrecognizedQualifier" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+      </operation>
+      <operation name="fillInDetails" qname="operNS:fillInDetails" xmlns:operNS="urn://hl7.org/CTSMAPI" returnQName="retNS:fillInDetailsReturn" xmlns:retNS="urn://hl7.org/CTSMAPI" returnType="rtns:CD" xmlns:rtns="urn://cts.hl7.org/types" soapAction="" >
+        <parameter qname="pns:codeToFillIn" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:CD" xmlns:tns="urn://cts.hl7.org/types"/>
+        <parameter qname="pns:displayLanguage_code" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:ST" xmlns:tns="urn://cts.hl7.org/types"/>
+        <fault name="UnexpectedError" qname="fns:fault5" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnknownLanguage" qname="fns:fault13" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnknownLanguage" type="tns:UnknownLanguage" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnknownConceptCode" qname="fns:fault2" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnknownConceptCode" type="tns:UnknownConceptCode" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnknownCodeSystem" qname="fns:fault3" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnknownCodeSystem" type="tns:UnknownCodeSystem" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="NoApplicableDesignationFound" qname="fns:fault14" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.NoApplicableDesignationFound" type="tns:NoApplicableDesignationFound" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+      </operation>
+      <operation name="lookupValueSetExpansion" qname="operNS:lookupValueSetExpansion" xmlns:operNS="urn://hl7.org/CTSMAPI" returnQName="retNS:lookupValueSetExpansionReturn" xmlns:retNS="urn://hl7.org/CTSMAPI" returnType="rtns:ValueSetExpansion" xmlns:rtns="urn://hl7.org/CTSMAPI" soapAction="" >
+        <parameter qname="pns:vocabularyDomain_name" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:ST" xmlns:tns="urn://cts.hl7.org/types"/>
+        <parameter qname="pns:applicationContext_code" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:ST" xmlns:tns="urn://cts.hl7.org/types"/>
+        <parameter qname="pns:language_code" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:ST" xmlns:tns="urn://cts.hl7.org/types"/>
+        <parameter qname="pns:expandAll" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:BL" xmlns:tns="urn://cts.hl7.org/types"/>
+        <parameter qname="pns:timeout" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="pns:sizeLimit" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <fault name="NoApplicableValueSet" qname="fns:fault11" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.NoApplicableValueSet" type="tns:NoApplicableValueSet" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnexpectedError" qname="fns:fault5" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnknownLanguage" qname="fns:fault13" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnknownLanguage" type="tns:UnknownLanguage" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="TimeoutError" qname="fns:fault6" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.TimeoutError" type="tns:TimeoutError" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnknownApplicationContextCode" qname="fns:fault9" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnknownApplicationContextCode" type="tns:UnknownApplicationContextCode" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnknownVocabularyDomain" qname="fns:fault10" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnknownVocabularyDomain" type="tns:UnknownVocabularyDomain" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+      </operation>
+      <operation name="expandValueSetExpansionContext" qname="operNS:expandValueSetExpansionContext" xmlns:operNS="urn://hl7.org/CTSMAPI" returnQName="retNS:expandValueSetExpansionContextReturn" xmlns:retNS="urn://hl7.org/CTSMAPI" returnType="rtns:ValueSetExpansion" xmlns:rtns="urn://hl7.org/CTSMAPI" soapAction="" >
+        <parameter qname="pns:expansionContext" xmlns:pns="urn://hl7.org/CTSMAPI" type="tns:base64Binary" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <fault name="InvalidExpansionContext" qname="fns:fault15" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.InvalidExpansionContext" type="tns:InvalidExpansionContext" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="UnexpectedError" qname="fns:fault5" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+        <fault name="TimeoutError" qname="fns:fault6" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.TimeoutError" type="tns:TimeoutError" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+      </operation>
+      <operation name="getServiceName" qname="operNS:getServiceName" xmlns:operNS="urn://hl7.org/CTSMAPI" returnQName="retNS:getServiceNameReturn" xmlns:retNS="urn://hl7.org/CTSMAPI" returnType="rtns:ST" xmlns:rtns="urn://cts.hl7.org/types" soapAction="" >
+        <fault name="UnexpectedError" qname="fns:fault5" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+      </operation>
+      <operation name="getServiceVersion" qname="operNS:getServiceVersion" xmlns:operNS="urn://hl7.org/CTSMAPI" returnQName="retNS:getServiceVersionReturn" xmlns:retNS="urn://hl7.org/CTSMAPI" returnType="rtns:ST" xmlns:rtns="urn://cts.hl7.org/types" soapAction="" >
+        <fault name="UnexpectedError" qname="fns:fault5" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+      </operation>
+      <operation name="getServiceDescription" qname="operNS:getServiceDescription" xmlns:operNS="urn://hl7.org/CTSMAPI" returnQName="retNS:getServiceDescriptionReturn" xmlns:retNS="urn://hl7.org/CTSMAPI" returnType="rtns:ST" xmlns:rtns="urn://cts.hl7.org/types" soapAction="" >
+        <fault name="UnexpectedError" qname="fns:fault5" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+      </operation>
+      <operation name="getCTSVersion" qname="operNS:getCTSVersion" xmlns:operNS="urn://hl7.org/CTSMAPI" returnQName="retNS:getCTSVersionReturn" xmlns:retNS="urn://hl7.org/CTSMAPI" returnType="rtns:CTSVersionId" xmlns:rtns="urn://hl7.org/CTSMAPI" soapAction="" >
+        <fault name="UnexpectedError" qname="fns:fault5" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+      </operation>
+      <operation name="getHL7ReleaseVersion" qname="operNS:getHL7ReleaseVersion" xmlns:operNS="urn://hl7.org/CTSMAPI" returnQName="retNS:getHL7ReleaseVersionReturn" xmlns:retNS="urn://hl7.org/CTSMAPI" returnType="rtns:ST" xmlns:rtns="urn://cts.hl7.org/types" soapAction="" >
+        <fault name="UnexpectedError" qname="fns:fault5" xmlns:fns="urn://hl7.org/CTSMAPI" class="org.hl7.CTSMAPI.UnexpectedError" type="tns:UnexpectedError" xmlns:tns="urn://hl7.org/CTSMAPI"/>
+      </operation>
+      <parameter name="allowedMethods" value="getHL7ReleaseVersion subsumes expandValueSetExpansionContext areEquivalent fillInDetails validateTranslation getServiceDescription lookupValueSetExpansion getCTSVersion getSupportedVocabularyDomains getServiceName getServiceVersion translateCode validateCode getSupportedMatchAlgorithms"/>
+      <parameter name="scope" value="Application"/>
+
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:UnknownMatchAlgorithm"
+        type="java:org.hl7.CTSMAPI.UnknownMatchAlgorithm"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://cts.hl7.org/types"
+        qname="ns:CS"
+        type="java:org.hl7.cts.types.CS"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:UnexpectedError"
+        type="java:org.hl7.CTSMAPI.UnexpectedError"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:UnrecognizedQualifier"
+        type="java:org.hl7.CTSMAPI.UnrecognizedQualifier"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://cts.hl7.org/types"
+        qname="ns:CD"
+        type="java:org.hl7.cts.types.CD"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:ConceptId"
+        type="java:org.hl7.CTSMAPI.ConceptId"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:UnknownConceptCode"
+        type="java:org.hl7.CTSMAPI.UnknownConceptCode"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:ValueSetDescriptor"
+        type="java:org.hl7.CTSMAPI.ValueSetDescriptor"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:UnknownCodeSystem"
+        type="java:org.hl7.CTSMAPI.UnknownCodeSystem"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:UnableToTranslate"
+        type="java:org.hl7.CTSMAPI.UnableToTranslate"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <arrayMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:ArrayOf_tns2_ED"
+        type="java:org.hl7.cts.types.ED[]"
+        innerType="cmp-ns:ED" xmlns:cmp-ns="urn://cts.hl7.org/types"
+        encodingStyle=""
+      />
+      <arrayMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:ArrayOfValidationDetail"
+        type="java:org.hl7.CTSMAPI.ValidationDetail[]"
+        innerType="cmp-ns:ValidationDetail" xmlns:cmp-ns="urn://hl7.org/CTSMAPI"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:TimeoutError"
+        type="java:org.hl7.CTSMAPI.TimeoutError"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:ValidationDetail"
+        type="java:org.hl7.CTSMAPI.ValidationDetail"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://cts.hl7.org/types"
+        qname="ns:INT"
+        type="java:org.hl7.cts.types.INT"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <arrayMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:ArrayOf_tns2_CD"
+        type="java:org.hl7.cts.types.CD[]"
+        innerType="cmp-ns:CD" xmlns:cmp-ns="urn://cts.hl7.org/types"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:CTSVersionId"
+        type="java:org.hl7.CTSMAPI.CTSVersionId"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://cts.hl7.org/types"
+        qname="ns:UID"
+        type="java:org.hl7.cts.types.UID"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:ValidateCodeReturn"
+        type="java:org.hl7.CTSMAPI.ValidateCodeReturn"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <arrayMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:ArrayOf_tns2_CR"
+        type="java:org.hl7.cts.types.CR[]"
+        innerType="cmp-ns:CR" xmlns:cmp-ns="urn://cts.hl7.org/types"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:InvalidExpansionContext"
+        type="java:org.hl7.CTSMAPI.InvalidExpansionContext"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:UnknownLanguage"
+        type="java:org.hl7.CTSMAPI.UnknownLanguage"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:NoApplicableDesignationFound"
+        type="java:org.hl7.CTSMAPI.NoApplicableDesignationFound"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:UnknownApplicationContextCode"
+        type="java:org.hl7.CTSMAPI.UnknownApplicationContextCode"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://cts.hl7.org/types"
+        qname="ns:binary_or_text"
+        type="java:org.hl7.cts.types.Binary_or_text"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://cts.hl7.org/types"
+        qname="ns:ST"
+        type="java:org.hl7.cts.types.ST"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:QualifiersNotSupported"
+        type="java:org.hl7.CTSMAPI.QualifiersNotSupported"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://cts.hl7.org/types"
+        qname="ns:CV"
+        type="java:org.hl7.cts.types.CV"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:NoApplicableValueSet"
+        type="java:org.hl7.CTSMAPI.NoApplicableValueSet"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://cts.hl7.org/types"
+        qname="ns:CR"
+        type="java:org.hl7.cts.types.CR"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:ValueSetExpansion"
+        type="java:org.hl7.CTSMAPI.ValueSetExpansion"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:SubsumptionNotSupported"
+        type="java:org.hl7.CTSMAPI.SubsumptionNotSupported"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:BadlyFormedMatchText"
+        type="java:org.hl7.CTSMAPI.BadlyFormedMatchText"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://cts.hl7.org/types"
+        qname="ns:ED"
+        type="java:org.hl7.cts.types.ED"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://hl7.org/CTSMAPI"
+        qname="ns:UnknownVocabularyDomain"
+        type="java:org.hl7.CTSMAPI.UnknownVocabularyDomain"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="urn://cts.hl7.org/types"
+        qname="ns:BL"
+        type="java:org.hl7.cts.types.BL"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+  </service>
+</deployment>

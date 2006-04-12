@@ -1,0 +1,65 @@
+********
+Forge Bug # 360
+http://forge.mayo.edu/tracker/index.php?func=detail&aid=360&group_id=18&atid=157
+
+lookupCodeExpansion and areCodesRelates assume "dc=Relations"
+Both of the above methods simply assume that the relationships are under the dc=Relations node, rather than searching
+for the native relationship as they should.
+
+********
+The ant task to build the project will not work under a 1.3 release of java.
+
+If you run the build the project using a 1.5 release of java, the cts.htm file for the specification can 
+end up in the wrong location if you are building from a path that has spaces in it. We recommend running 
+the ant process under a 1.4 release of java.
+
+
+********
+Forge Bug # 495
+The isAnonymous flag (in the data backend) is ignored by the SQL, SQLLite and LDAP implementations of VAPI.
+Methods that search the database are returning results from items that are marked anonymous, when they 
+shouldn't be.  The LuceneSearch plugin does follow the isAnonymous flag properly.  This bug cannont be fixed
+in sqlLite - because the table schema doesn't support recording the information.  It will not be fixed at this 
+time in ldap or SQL, because it introduce a signifigant performance setback.  If you do not want to return results
+from items flagged as "anonymous" we recommend that you use the Lucene Search option, or remove the anonymous 
+items from the DB.
+
+
+********
+If you are using PostgreSQL as your SQL backend, it enforces cAsE sEnSiTiVitY throughout the tables, so all
+coding scheme names, concept codes, etc, will be case sensitive.
+
+If you are using MySQL as your SQL backend, by default, it does not enforce cAsE sEnSiTiVitY - So, it will 
+complain about duplicates if you try to load concept codes that only differ by case, etc.  
+We have never tested MySQL in a case-sensitive mode - enabling it may cause other problems.
+
+If you are using an LDAP backend, it also does not enforce case senstivity, in general.
+
+All of the backends will behave the same through the CTS API - as long as you keep the case 
+sensitivity on your end.  So, if one CTS call returned "EN" as a valid language, send it back in as "EN" 
+to methods that have a language parameter.  Do not expect it to work if you pass in "en".
+
+Methods that allow you to choose a search algorithm (such as "StartsWithIgnoreCase") work exactly as advertised,
+across all backend types with respect to case sensitivity.
+
+
+*****
+The Exception BadlyFormedMatchText is not thrown by the SQL implementations.
+
+***** 
+Mapi - Runtime - Validate code does not throw all of the exceptions that it should per spec.
+
+*****
+Lucene searching is not yet supported with the SQLLite implementation.
+
+*****
+VAPI - Browser - lookupDesignations
+Our implementation currently does not look for a more general language match if the requested language is not
+found - in violation of the spec.
+
+***** 
+VAPI - Browser - lookupCodeExpansion - cycles are not handled per spec.
+
+*****
+CodeMapping Operations and translation functions are not yet implemented.
+

@@ -1,0 +1,116 @@
+#The location of the file that contains the Log4j formatted config file.
+LOG4J_CONTROL_FILE=CTSLogConfig.log4j
+
+#Implementation options
+edu.mayo.informatics.cts.utility.CTSConstants.SEARCH_RESULT_LIMIT=30000
+
+#Searches that are supposed to be 'quick' can't longer than this.
+edu.mayo.informatics.cts.utility.CTSConstants.SHORT_SEARCH_TIMEOUT=8000
+
+#Searches that may take longer can't be longer than this.
+edu.mayo.informatics.cts.utility.CTSConstants.LONG_SEARCH_TIMEOUT=30000
+
+#Size of the LRU cache for information that is frequently looked up for internal use.
+edu.mayo.informatics.cts.utility.CTSConstants.CACHE_SIZE=500
+
+#Enabling lucene search has many benefits, but it requires a lucene index.
+#The index can be created with the LexGrid Converter: 
+#http://informatics.mayo.edu/LexGrid/index.php?page=convert
+
+edu.mayo.informatics.cts.utility.CTSConstants.LUCENE_SEARCH_ENABLED=false
+
+#If your index has normlized fields, you can enable this.
+edu.mayo.informatics.cts.utility.CTSConstants.LUCENE_NORM_SEARCH_ENABLED=false 
+
+#If you index had double metaphone fields, you can enable this.
+edu.mayo.informatics.cts.utility.CTSConstants.LUCENE_DOUBLE_METAPHONE_SEARCH_ENABLED=false
+
+#The path to the index (folder containing the metadata.xml file)
+edu.mayo.informatics.cts.utility.CTSConstants.LUCENE_INDEX_LOCATION=
+
+#EVS mode is a non-CTS compliant mode that allows (among other things) seaching
+#multiple code systems at the same time.  With EVS mode enabled you can provide '*'
+#for the code system all of the methods that take in a code system.
+edu.mayo.informatics.cts.utility.CTSConstants.EVSModeEnabled=false
+
+# *** The location of your configuration file for LVG (required for normalized Lucene searches)
+#edu.mayo.informatics.indexer.lucene.analyzers.NormAnalyzer.LVG_CONFIG_FILE_ABSOLUTE=\\\\mir04\\LargeData\\LargeInstallers\\lvg2005Portable\\lvg2005\\data\\config\\lvg.properties
+
+
+
+######################################################################
+#  VAPI has multiple implementations - LDAP, SQLLite, and SQL.
+#  Connect the appropriate implementation, if you wish to use VAPI.
+######################################################################
+
+######################################################################
+#  VAPI LDAP Implementation
+
+#Connect VAPI to the LDAP server on informatics.mayo.edu
+edu.mayo.informatics.cts.utility.CTSConstants.VAPI_LDAP_ADDRESS=ldap://informatics.mayo.edu:31900/
+edu.mayo.informatics.cts.utility.CTSConstants.VAPI_LDAP_USERNAME=cn=HL7User,dc=Users,service=userValidation,dc=LexGrid,dc=org
+edu.mayo.informatics.cts.utility.CTSConstants.VAPI_LDAP_PASSWORD=terminology
+edu.mayo.informatics.cts.utility.CTSConstants.VAPI_LDAP_SERVICE=service=CTS,dc=LexGrid,dc=org
+
+######################################################################
+# VAPI SQLLite Implementation - connect to local hypersonic database
+edu.mayo.informatics.cts.utility.CTSConstants.VAPI_SQLLITE_URL=jdbc:hsqldb:file:resources\\data\\HS-RimDB\\LexGridLite;shutdown=true;hsqldb.default_table_type=cached
+edu.mayo.informatics.cts.utility.CTSConstants.VAPI_SQLLITE_DRIVER=org.hsqldb.jdbcDriver
+edu.mayo.informatics.cts.utility.CTSConstants.VAPI_SQLLITE_USERNAME=sa
+edu.mayo.informatics.cts.utility.CTSConstants.VAPI_SQLLITE_PASSWORD=
+
+######################################################################
+# VAPI SQL Implementation - connect to local hypersonic database
+edu.mayo.informatics.cts.utility.CTSConstants.VAPI_SQL_URL=jdbc:hsqldb:file:resources\\data\\HS-RimDB\\LexGrid;shutdown=true;hsqldb.default_table_type=cached
+edu.mayo.informatics.cts.utility.CTSConstants.VAPI_SQL_DRIVER=org.hsqldb.jdbcDriver
+edu.mayo.informatics.cts.utility.CTSConstants.VAPI_SQL_USERNAME=sa
+edu.mayo.informatics.cts.utility.CTSConstants.VAPI_SQL_PASSWORD=
+
+
+######################################################################
+#  MAPI only has one implementation - that must be connected to the 
+#  HL7 SQL database.  Several database examples are provided.
+######################################################################
+
+#Connect MAPI to a mysql server
+#edu.mayo.informatics.cts.utility.CTSConstants.MAPI_DB_URL=jdbc:mysql://localhost/rim0202dv1
+#edu.mayo.informatics.cts.utility.CTSConstants.MAPI_DB_DRIVER=org.gjt.mm.mysql.Driver
+#edu.mayo.informatics.cts.utility.CTSConstants.MAPI_DB_USERNAME=hl7
+#edu.mayo.informatics.cts.utility.CTSConstants.MAPI_DB_PASSWORD=hl7
+
+#Connect MAPI to a postgres server
+#edu.mayo.informatics.cts.utility.CTSConstants.MAPI_DB_URL=jdbc:postgresql://localhost:5432/rim0202dv1
+#edu.mayo.informatics.cts.utility.CTSConstants.MAPI_DB_DRIVER=org.postgresql.Driver
+#edu.mayo.informatics.cts.utility.CTSConstants.MAPI_DB_USERNAME=hl7
+#edu.mayo.informatics.cts.utility.CTSConstants.MAPI_DB_PASSWORD=hl7
+
+# Connect MAPI to MSAccess database local on the machine it is running on 
+# only works when executed on a windows machine
+edu.mayo.informatics.cts.utility.CTSConstants.MAPI_DB_URL=jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=resources\\data\\rim0202d.mdb
+edu.mayo.informatics.cts.utility.CTSConstants.MAPI_DB_DRIVER=sun.jdbc.odbc.JdbcOdbcDriver
+
+
+
+######################################################################
+#
+#  Everything else is for mayo internal use.
+#  they are meaningless outside of mayo
+
+#VAPI test setups...
+#edu.mayo.informatics.cts.utility.CTSConstants.VAPI_LDAP_ADDRESS=ldap://mir04.mayo.edu:31900/
+#edu.mayo.informatics.cts.utility.CTSConstants.VAPI_LDAP_USERNAME=cn=HL7User,dc=Users,service=userValidation,dc=LexGrid,dc=org
+#edu.mayo.informatics.cts.utility.CTSConstants.VAPI_LDAP_PASSWORD=terminology
+#edu.mayo.informatics.cts.utility.CTSConstants.VAPI_LDAP_SERVICE=service=CTS,dc=LexGrid,dc=org
+
+#edu.mayo.informatics.cts.utility.CTSConstants.VAPI_SQL_URL=jdbc:mysql://mir04/LexGrid
+#edu.mayo.informatics.cts.utility.CTSConstants.VAPI_SQL_DRIVER=org.gjt.mm.mysql.Driver
+#edu.mayo.informatics.cts.utility.CTSConstants.VAPI_SQL_USERNAME=mirpub
+#edu.mayo.informatics.cts.utility.CTSConstants.VAPI_SQL_PASSWORD=mirpub
+
+#edu.mayo.informatics.cts.utility.CTSConstants.VAPI_SQL_URL=jdbc:postgresql://mir04/LexGrid
+#edu.mayo.informatics.cts.utility.CTSConstants.VAPI_SQL_DRIVER=org.postgresql.Driver
+#edu.mayo.informatics.cts.utility.CTSConstants.VAPI_SQL_USERNAME=mirpub
+#edu.mayo.informatics.cts.utility.CTSConstants.VAPI_SQL_PASSWORD=mirpub
+
+
+######################################################################

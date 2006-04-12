@@ -1,0 +1,120 @@
+# This file is where you specify the configuration for each database that you want to 
+# run the Junit Tests against.  Lines starting with '#' are ignored.
+#
+# The username that you provide for the database must have write permissions to to DB, as the 
+# test process will create and populate the necessary tables.
+#
+# To add additional databases, follow the pattern:
+#
+# {TYPE}_{IMPLEMENTATION}_{NUMBER}_{VARIABLE}={VALUE}
+#
+# TYPE - either "VAPI" or "MAPI"
+# IMPLEMENTATION - if VAPI - can be "SQL", "SQLLITE" or "LDAP"
+#				   if MAPI - can be "SQL"
+# NUMBER - Any number, 1 - 20.  You can skip numbers, but you cannot reuse numbers within a 
+#		   {TYPE}_{IMPLEMENTATION} sub-section.
+# VARIABLE - You need one line representing each of the following: "NAME", "URL", "USERNAME", "PASSWORD"
+#		     and either "DRIVER" for a sql connection, or "SERVICE for an ldap connection.
+# VALUE - The value for your variable.
+#
+
+#VAPI SQL Configs
+
+VAPI_SQL_1_NAME=Access
+VAPI_SQL_1_URL=jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=resources/data/testDBs/LexGridJUnitTestDB.mdb
+VAPI_SQL_1_DRIVER=sun.jdbc.odbc.JdbcOdbcDriver
+VAPI_SQL_1_USERNAME=
+VAPI_SQL_1_PASSWORD=
+
+VAPI_SQL_2_NAME=MySql
+VAPI_SQL_2_URL=jdbc:mysql://mir04/LexGrid
+VAPI_SQL_2_DRIVER=org.gjt.mm.mysql.Driver
+VAPI_SQL_2_USERNAME=mirpub
+VAPI_SQL_2_PASSWORD=mirpub
+
+VAPI_SQL_3_NAME=Postgresql
+VAPI_SQL_3_URL=jdbc:postgresql://mir04/LexGrid
+VAPI_SQL_3_DRIVER=org.postgresql.Driver
+VAPI_SQL_3_USERNAME=mirpub
+VAPI_SQL_3_PASSWORD=mirpub
+
+VAPI_SQL_4_NAME=HyperSonic
+VAPI_SQL_4_URL=jdbc:hsqldb:file:resources/data/testDBs/HS-LexGridJUnitTestDB/LexGrid
+VAPI_SQL_4_DRIVER=org.hsqldb.jdbcDriver
+VAPI_SQL_4_USERNAME=sa
+VAPI_SQL_4_PASSWORD=
+
+#VAPI_SQL_5_NAME=DB2
+#VAPI_SQL_5_URL=jdbc:db2://localhost:50000/LexGrid
+#VAPI_SQL_5_DRIVER=com.ibm.db2.jcc.DB2Driver
+#VAPI_SQL_5_USERNAME=
+#VAPI_SQL_5_PASSWORD=
+
+#VAPI_SQL_6_NAME=Oracle
+#VAPI_SQL_6_URL=jdbc:oracle:thin:@localhost:1521:MAYOLG
+#VAPI_SQL_6_DRIVER=oracle.jdbc.driver.OracleDriver
+#VAPI_SQL_6_USERNAME=
+#VAPI_SQL_6_PASSWORD=
+
+#VAPI SQL Lite Configs
+
+VAPI_SQLLITE_1_NAME=Access
+VAPI_SQLLITE_1_URL=jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=resources/data/testDBs/LexGridLiteJUnitTestDB.mdb
+VAPI_SQLLITE_1_DRIVER=sun.jdbc.odbc.JdbcOdbcDriver
+VAPI_SQLLITE_1_USERNAME=
+VAPI_SQLLITE_1_PASSWORD=
+
+VAPI_SQLLITE_2_NAME=Mysql
+VAPI_SQLLITE_2_URL=jdbc:mysql://mir04/LexGridLite
+VAPI_SQLLITE_2_DRIVER=org.gjt.mm.mysql.Driver
+VAPI_SQLLITE_2_USERNAME=mirpub
+VAPI_SQLLITE_2_PASSWORD=mirpub
+
+VAPI_SQLLITE_3_NAME=Postgresql
+VAPI_SQLLITE_3_URL=jdbc:postgresql://mir04/LexGridLite
+VAPI_SQLLITE_3_DRIVER=org.postgresql.Driver
+VAPI_SQLLITE_3_USERNAME=mirpub
+VAPI_SQLLITE_3_PASSWORD=mirpub
+
+VAPI_SQLLITE_4_NAME=HyperSonic
+VAPI_SQLLITE_4_URL=jdbc:hsqldb:file:resources/data/testDBs/HS-LexGridLiteJUnitTestDB/LexGridLite
+VAPI_SQLLITE_4_DRIVER=org.hsqldb.jdbcDriver
+VAPI_SQLLITE_4_USERNAME=sa
+VAPI_SQLLITE_4_PASSWORD=
+
+#VAPI_SQLLITE_5_NAME=DB2
+#VAPI_SQLLITE_5_URL=jdbc:db2://localhost:50000/LexLite
+#VAPI_SQLLITE_5_DRIVER=com.ibm.db2.jcc.DB2Driver
+#VAPI_SQLLITE_5_USERNAME=
+#VAPI_SQLLITE_5_PASSWORD=
+
+#VAPI LDAP Configs
+
+VAPI_LDAP_1_NAME=OpenLDAP
+VAPI_LDAP_1_URL=ldap://mir04.mayo.edu:34900/
+VAPI_LDAP_1_SERVICE=service=test,dc=LexGrid,dc=org
+VAPI_LDAP_1_USERNAME=cn=test,service=test,dc=LexGrid,dc=org
+VAPI_LDAP_1_PASSWORD=test
+
+#MAPI Configs
+
+MAPI_SQL_1_NAME=Access
+MAPI_SQL_1_URL=jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=resources/data/rim0202d.mdb
+MAPI_SQL_1_DRIVER=sun.jdbc.odbc.JdbcOdbcDriver
+MAPI_SQL_1_USERNAME=
+MAPI_SQL_1_PASSWORD=
+
+MAPI_SQL_2_NAME=MySQL
+MAPI_SQL_2_URL=jdbc:mysql://mir04/rim0202dv1
+MAPI_SQL_2_DRIVER=org.gjt.mm.mysql.Driver
+MAPI_SQL_2_USERNAME=hl7
+MAPI_SQL_2_PASSWORD=hl7
+
+MAPI_SQL_3_NAME=PostgreSQL
+MAPI_SQL_3_URL=jdbc:postgresql://mir04/rim0202dv1
+MAPI_SQL_3_DRIVER=org.postgresql.Driver
+MAPI_SQL_3_USERNAME=hl7
+MAPI_SQL_3_PASSWORD=hl7
+
+
+

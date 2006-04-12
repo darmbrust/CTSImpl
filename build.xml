@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="LexGRID CTS Implementation" default="fullBuild" basedir=".">
+	<!-- For this build script to work properly, you must have Python (www.python.org) installed -->
+
+	<!--Axis server configuration - only necessary if you are installing-->
+	<property name="axis.adminClient" value="org.apache.axis.client.AdminClient" />
+
+	<!--CUSTOMIZE - set this to the location of your axis server - only necessary if you are installing-->
+	<property name="axis.port" value="8080" />
+	<property name="axis.host" value="localhost" />
+	
+	<!--CUSTOMIZE - make sure you use the right path for your OS - C:\foo on windows, /usr/local/foo on unix-->
+	<property name="tomcat.root.dir" value="C:\Program Files\jakarta-tomcat-5.5.4\" />
+	
+	<property name="tomcat.common.libs" value="common\lib" />
+	<property name="axis.home" value="webapps\axis" />
+	
+	<!-- CUSTOMIZE - this is where you set the names of your implementation classes for each of the interfaces -->
+	<!-- This is the class that Axis instantiates to answer SOAP requests -->
+	<property name="CodeMappingImpl" value="edu.mayo.informatics.cts.CTSVAPI.sql.refImpl.CodeMappingOperationsImpl"/>
+	<property name="MessageBrowserImpl" value="edu.mayo.informatics.cts.CTSMAPI.refImpl.BrowserOperationsImpl"/>
+	<property name="MessageRuntimeImpl" value="edu.mayo.informatics.cts.CTSMAPI.refImpl.RuntimeOperationsImpl"/>
+	<property name="VocabBrowserImpl" value="edu.mayo.informatics.cts.CTSVAPI.sql.refImpl.BrowserOperationsImpl"/>
+	<property name="VocabRuntimeImpl" value="edu.mayo.informatics.cts.CTSVAPI.sql.refImpl.RuntimeOperationsImpl"/>
+
+	<!-- Build directory layout -->
+	<property name="build.dir" value="build" />
+	<property name="bin.dir" value="bin" />
+	<property name="externalLib.dir" value="extLib" />
+	<property name="wsdlJava.jar" value="${externalLib.dir}/CTSInterface/wsdl_CTSInterface.jar" />
+	<property name="impl.src.dir" value="src" />
+	<property name="test.src.dir" value="test" />
+	<property name="impl.target.dir" value="${build.dir}/implclasses" />
+	<property name="test.target.dir" value="${build.dir}/testclasses" />
+	<property name="impl.jar" value="${build.dir}/ctsImpl.jar" />
+	<property name="wsdd.dir" value="${externalLib.dir}/CTSInterface/wsdd"/>
+	
+	<property name="ctsDemoBuild.dir" value="${build.dir}/ctsDemoBuild" />
+	<property name="implAndDepend.jar" value="${build.dir}/ctsImplAndDepend.jar" />
+	<property name="depenLicenses.zip" value="${build.dir}/DependancyLicenses.zip" />
+	<property name="docs.dir" value="docs" />
+	<property name="javadocs.dir" value="${docs.dir}/javadocs" />
+	<property name="cleanWeb.dir" value="${build.dir}/webSite" />
+
+	<!-- package to urn maps for namespaces (this could be cleaned up) -->
+	<property name="v3dt.package" value="org.hl7.cts.types" />
+	<property name="v3dt.urn" value="urn://cts.hl7.org/types" />
+	<property name="CTSMAPI.package" value="org.hl7.CTSMAPI" />
+	<property name="CTSMAPI.urn" value="urn://hl7.org/CTSMAPI" />
+	<property name="CTSVAPI.package" value="org.hl7.CTSVAPI" />
+	<property name="CTSVAPI.urn" value="urn://hl7.org/CTSVAPI" />
+
+	<!--Sets up all of the classpaths, etc-->
+	<target name="init">
+		<path id="allJars">
+			<fileset dir="${externalLib.dir}" id="packageJars">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir="${externalLib.dir}" id="xml.parser">
+				<include name="xerces.jar" />
+				<include name="xml-apis.jar" />
+			</fileset>
+			<fileset dir="${externalLib.dir}/axis/" id="axisJars">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir="${externalLib.dir}/CTSInterface/" id="interfaceJar">
+				<include name="wsdl_CTSInterface.jar" />
+			</fileset>
+			<fileset dir="${externalLib.dir}/converter libraries/" id="convertJars">
+				<include name="**/*.jar" />
+			</fileset>
+			<fileset dir="${externalLib.dir}/JUnit/" id="testJars">
+				<include name="**/*.jar" />
+			</fileset>
+			<fileset dir="${externalLib.dir}/lucene/" id="luceneJars">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir="${externalLib.dir}/DistribSQLDrivers" id="distribSqlLibs">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir="${externalLib.dir}/OtherSQLDrivers" id="otherSqlLibs">
+				<include name="*.jar" />
+			</fileset>
+		</path>
+	</target>
+
+	<!-- Reset the project back to an unbuilt state -->
+	<target name="cleanAll" description="Reset project back to unbuilt state">
+		<delete dir="${build.dir}" />
+		<delete dir="${javadocs.dir}" />
+		<delete dir="${bin.dir}" />
+		<delete dir="${deploy.dir}" />
+	</target>
+
+	<!-- Register the generated services with axis -->
+	<target name="registerServices">
+		<!-- Modify the deploy scripts to have to desired implementation classes -->
+		<mkdir dir="${build.dir}/wsddTemp"/>
+		<copy todir="${build.dir}/wsddTemp">
+			<fileset dir="${wsdd.dir}">
+				<include name="*deploy.wsdd"/>
+				<exclude name="*undeploy.wsdd"/>
+			</fileset>
+		</copy>
+		<replaceregexp file="${build.dir}/wsddTemp/CodeMappingdeploy.wsdd" match='(parameter name="className".*value=").*?(".*)' replace="\1${CodeMappingImpl}\2" byline="true" />
+		<replaceregexp file="${build.dir}/wsddTemp/MessageBrowserdeploy.wsdd" match='(parameter name="className".*value=").*?(".*)' replace="\1${MessageBrowserImpl}\2" byline="true" />
+		<replaceregexp file="${build.dir}/wsddTemp/MessageRuntimedeploy.wsdd" match='(parameter name="className".*value=").*?(".*)' replace="\1${MessageRuntimeImpl}\2" byline="true" />
+		<replaceregexp file="${build.dir}/wsddTemp/VocabBrowserdeploy.wsdd" match='(parameter name="className".*value=").*?(".*)' replace="\1${VocabBrowserImpl}\2" byline="true" />
+		<replaceregexp file="${build.dir}/wsddTemp/VocabRuntimedeploy.wsdd" match='(parameter name="className".*value=").*?(".*)' replace="\1${VocabRuntimeImpl}\2" byline="true" />
+	
+		<antcall target="registerWsdd">
+			<reference refid="axisJars" />
+			<reference refid="xml.parser" />
+			<reference refid="tomcatCommonJars" />
+			<param name="wddlSource" value="VocabBrowser" />
+		</antcall>
+		<antcall target="registerWsdd">
+			<reference refid="axisJars" />
+			<reference refid="xml.parser" />
+			<reference refid="tomcatCommonJars" />
+			<param name="wddlSource" value="VocabRuntime" />
+		</antcall>
+		<antcall target="registerWsdd">
+			<reference refid="axisJars" />
+			<reference refid="xml.parser" />
+			<reference refid="tomcatCommonJars" />
+			<param name="wddlSource" value="CodeMapping" />
+		</antcall>
+		<antcall target="registerWsdd">
+			<reference refid="axisJars" />
+			<reference refid="xml.parser" />
+			<reference refid="tomcatCommonJars" />
+			<param name="wddlSource" value="MessageBrowser" />
+		</antcall>
+		<antcall target="registerWsdd">
+			<reference refid="axisJars" />
+			<reference refid="xml.parser" />
+			<reference refid="tomcatCommonJars" />
+			<param name="wddlSource" value="MessageRuntime" />
+		</antcall>
+	</target>
+	
+	<!-- registerWsdd - register a service
+		wddlSource	- name used to construct deployment descriptor
+	-->
+	<target name="registerWsdd">
+		<echo>Registering ${build.dir}/wsddTemp/${wddlSource}deploy.wsdd with service</echo>
+		<java classname="${axis.adminClient}" fork="true">
+			<classpath>
+				<fileset refid="axisJars" />
+				<fileset refid="tomcatCommonJars" />
+				<fileset refid="xml.parser" />
+			</classpath>
+			<arg line="${build.dir}/wsddTemp/${wddlSource}deploy.wsdd" />
+			<arg line="-p ${axis.port}" />
+			<arg line="-h ${axis.host}" />
+		</java>
+	</target>
+
+	<target name="compile" description="Compile the implementation of the API" depends="init">
+		<mkdir dir="${impl.target.dir}" />
+		<javac source="1.3" target="1.3" debug="true" srcdir="${impl.src.dir}" destdir="${impl.target.dir}">
+			<classpath>
+				<pathelement location="${wsdlJava.jar}" />
+			</classpath>
+			<classpath refid="allJars" />
+		</javac>
+		<jar jarfile="${impl.jar}" basedir="${impl.target.dir}" includes="**/*.class" />
+
+	</target>
+
+	<target name="jarDependForDistrib" description="Create a jar file that includes everything - but not jars we can't distribute" depends="compile">
+		<jar jarfile="${implAndDepend.jar}" basedir="${impl.target.dir}" includes="**/*.class" duplicate="preserve">
+			<zipgroupfileset refid="packageJars" />
+			<zipgroupfileset refid="axisJars" />
+			<zipgroupfileset refid="luceneJars" />
+			<zipgroupfileset refid="distribSqlLibs" />
+			<zipgroupfileset dir="">
+				<include name="${wsdlJava.jar}" />
+			</zipgroupfileset>
+		</jar>
+		<!-- make a zip file of all of the runtime licenses-->
+		<zip basedir="${externalLib.dir}" destfile="${depenLicenses.zip}">
+			<include name="**/*.txt" />
+			<include name="**/*.htm" />
+			<include name="**/*.html" />
+			<!--only used for populating test dbs, not runtime-->
+			<exclude name="converter libraries/**/*" />
+			<!--not distributed-->
+			<exclude name="OtherSQLDrivers/**/*" />
+		</zip>
+	</target>
+
+	<target name="jarDependInternalUse" description="Create a jar file that includes everything" depends="compile">
+		<jar jarfile="${implAndDepend.jar}" basedir="${impl.target.dir}" includes="**/*.class" duplicate="preserve">
+			<zipgroupfileset refid="packageJars" />
+			<zipgroupfileset refid="axisJars" />
+			<zipgroupfileset refid="luceneJars" />
+			<zipgroupfileset refid="distribSqlLibs" />
+			<zipgroupfileset refid="otherSqlLibs" />
+			<zipgroupfileset dir="">
+				<include name="${wsdlJava.jar}" />
+			</zipgroupfileset>
+		</jar>
+	</target>
+
+	<!-- Create a clean copy of the website (get rid of CVS folders, etc) -->
+	<target name="buildCleanWeb" description="Create a clean copy of the website (get rid of CVS folders, etc)" depends="init, jarDependForDistrib, scripts, docs">
+
+		<!-- Copy all the web site files into place -->
+		<mkdir dir="${cleanWeb.dir}/jspApp/" />
+		<copy toDir="${cleanWeb.dir}/jspApp/" verbose="false">
+			<fileset dir="web/axis/hl7/">
+				<include name="**/*.jsp" />
+				<include name="WEB-INF/**/*" />
+			</fileset>
+		</copy>
+
+		<!-- create and copy the appropriate files into the WEB-INF folder -->
+		<mkdir dir="${cleanWeb.dir}/jspApp/WEB-INF/lib/" />
+		<mkdir dir="${cleanWeb.dir}/jspApp/WEB-INF/resources/" />
+		<mkdir dir="${cleanWeb.dir}/jspApp/WEB-INF/logs/" />
+
+		<copy toDir="${cleanWeb.dir}/jspApp/WEB-INF/lib/" file="${implAndDepend.jar}" />
+		<copy toDir="${cleanWeb.dir}/jspApp/WEB-INF/resources/" file="resources/CTSProperties.prps" />
+		<copy toDir="${cleanWeb.dir}/jspApp/WEB-INF/resources/" file="resources/CTSLogConfig.log4j" />
+
+		<!-- put the javadoc into place -->
+		<mkdir dir="${cleanWeb.dir}\LexGrid\downloads\CTS\refImpl\javadocs" />
+		<copy toDir="${cleanWeb.dir}\LexGrid\downloads\CTS\refImpl\javadocs">
+			<fileset dir="${javadocs.dir}">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+
+		<!-- create the reference implementation zip -->
+		<mkdir dir="${cleanWeb.dir}\LexGrid\downloads\CTS\refImpl\data\" />
+		<zip destfile="${cleanWeb.dir}\LexGrid\downloads\CTS\refImpl\data\refImpl.zip">
+			<fileset dir=".">
+				<exclude name="**/refImpl.zip" />
+				<include name="**/*" />
+				<exclude name="classes/" />
+				<exclude name="build/*/**/*" />
+				<exclude name=".classpath" />
+				<exclude name=".project" />
+				<exclude name="logs/**/*.log" />
+				<exclude name="resources/**/*.launch" />
+				<exclude name="web/ROOT/" />
+				<exclude name="web/_notes/" />
+				<exclude name="resources/**/*.ldb" />
+				<exclude name="extLib/OtherSQLDrivers/**/*" />
+				<exclude name="resources/data/testDBs/**/*.mdb"/>
+				<exclude name="resources/data/testDBs/HS-*/**/*"/>
+			</fileset>
+		</zip>
+	</target>
+
+
+	<!-- Install the results of the build -->
+	<target name="installToTomcat" description="Install build output into your axis server" depends="init, buildCleanWeb">
+		<fileset dir="${tomcat.root.dir}" id="tomcatCommonJars">
+			<include name="${tomcat.common.libs}/servlet.jar" />
+		</fileset>
+
+		<!--Had to turn off the deletion, since windows won't let you do it if it is in use-->
+		<copy toDir="${tomcat.root.dir}/${axis.home}/WEB-INF/lib/" verbose="true">
+			<fileset dir="${build.dir}">
+				<include name="ctsImplAndDepend.jar" />
+			</fileset>
+		</copy>
+
+		<mkdir dir="${tomcat.root.dir}/${axis.home}/WEB-INF/resources/" />
+		<mkdir dir="${tomcat.root.dir}/${axis.home}/WEB-INF/logs/" />
+
+		<copy toDir="${tomcat.root.dir}/${axis.home}/WEB-INF/lib/" file="${implAndDepend.jar}" />
+		<copy toDir="${tomcat.root.dir}/${axis.home}/WEB-INF/resources/" file="resources/CTSProperties.prps" />
+		<copy toDir="${tomcat.root.dir}/${axis.home}/WEB-INF/resources/" file="resources/CTSLogConfig.log4j" />
+
+		<copy toDir="${tomcat.root.dir}/webapps/cts/">
+			<fileset dir="${cleanWeb.dir}/">
+				<include name="**/*" />
+				<exclude name="informatics_pages/**/*" />
+			</fileset>
+		</copy>
+
+		<!-- wait for the server to pick up the jar file changes-->
+		<sleep seconds="10" />
+
+		<antcall target="registerServices">
+			<reference refid="axisJars" />
+			<reference refid="tomcatCommonJars" />
+			<reference refid="xml.parser" />
+		</antcall>
+	</target>
+
+
+	<target name="scripts" description="Generate the launch scripts">
+		<!-- Write out the startup scripts-->
+		<mkdir dir="${bin.dir}" />
+
+		<echo>Creating launch scripts</echo>
+
+		<echo file="${bin.dir}/VapiBrowserOperationsLDAP.bat">
+cd ..
+java -DPropFileLocation=resources/CTSProperties.prps -cp build/ctsImplAndDepend.jar edu.mayo.informatics.cts.CTSVAPI.ldap.refImpl.test.TestBrowser
+cd bin
+pause
+		</echo>
+		<copy overwrite="true" file="${bin.dir}/VapiBrowserOperationsLDAP.bat" tofile="${bin.dir}/VapiBrowserOperationsLDAP.sh" />
+
+		<echo file="${bin.dir}/MapiBrowserOperations.bat">
+cd ..
+java -DPropFileLocation=resources/CTSProperties.prps -cp build/ctsImplAndDepend.jar edu.mayo.informatics.cts.CTSMAPI.refImpl.test.TestBrowser
+cd bin
+pause
+		</echo>
+		<copy overwrite="true" file="${bin.dir}/MapiBrowserOperations.bat" tofile="${bin.dir}/MapiBrowserOperations.sh" />
+
+		<echo file="${bin.dir}/VapiRuntimeOperationsLDAP.bat">
+cd ..
+java -DPropFileLocation=resources/CTSProperties.prps -cp build/ctsImplAndDepend.jar edu.mayo.informatics.cts.CTSVAPI.ldap.refImpl.test.TestRuntime
+cd bin
+pause
+		</echo>
+		<copy overwrite="true" file="${bin.dir}/VapiRuntimeOperationsLDAP.bat" tofile="${bin.dir}/VapiRuntimeOperationsLDAP.sh" />
+
+		<echo file="${bin.dir}/MapiRuntimeOperations.bat">
+cd ..
+java -DPropFileLocation=resources/CTSProperties.prps -cp build/ctsImplAndDepend.jar edu.mayo.informatics.cts.CTSMAPI.refImpl.test.TestRuntime
+cd bin
+pause
+		</echo>
+		<copy overwrite="true" file="${bin.dir}/MapiRuntimeOperations.bat" tofile="${bin.dir}/MapiRuntimeOperations.sh" />
+
+		<echo file="${bin.dir}/VapiRuntimeOperationsSQLLite.bat">
+cd ..
+java -DPropFileLocation=resources/CTSProperties.prps -cp build/ctsImplAndDepend.jar edu.mayo.informatics.cts.CTSVAPI.sqlLite.refImpl.test.TestRuntime
+cd bin
+pause
+		</echo>
+		<copy overwrite="true" file="${bin.dir}/VapiRuntimeOperationsSQLLite.bat" tofile="${bin.dir}/VapiRuntimeOperationsSQLLite.sh" />
+
+		<echo file="${bin.dir}/VapiBrowserOperationsSQLLite.bat">
+cd ..
+java -DPropFileLocation=resources/CTSProperties.prps -cp build/ctsImplAndDepend.jar edu.mayo.informatics.cts.CTSVAPI.sqlLite.refImpl.test.TestBrowser
+cd bin
+pause
+		</echo>
+		<copy overwrite="true" file="${bin.dir}/VapiBrowserOperationsSQLLite.bat" tofile="${bin.dir}/VapiBrowserOperationsSQLLite.sh" />
+
+		<echo file="${bin.dir}/VapiRuntimeOperationsSQL.bat">
+cd ..
+java -DPropFileLocation=resources/CTSProperties.prps -cp build/ctsImplAndDepend.jar edu.mayo.informatics.cts.CTSVAPI.sql.refImpl.test.TestRuntime
+cd bin
+pause
+		</echo>
+		<copy overwrite="true" file="${bin.dir}/VapiRuntimeOperationsSQL.bat" tofile="${bin.dir}/VapiRuntimeOperationsSQL.sh" />
+
+		<echo file="${bin.dir}/VapiBrowserOperationsSQL.bat">
+cd ..
+java -DPropFileLocation=resources/CTSProperties.prps -cp build/ctsImplAndDepend.jar edu.mayo.informatics.cts.CTSVAPI.sql.refImpl.test.TestBrowser
+cd bin
+pause
+		</echo>
+		<copy overwrite="true" file="${bin.dir}/VapiBrowserOperationsSQL.bat" tofile="${bin.dir}/VapiBrowserOperationsSQL.sh" />
+
+		<!-- give them the right line endings-->
+		<fixcrlf srcdir="${bin.dir}" eol="crlf" includes="**/*.bat" />
+		<fixcrlf srcdir="${bin.dir}" eol="lf" includes="**/*.sh" />
+	</target>
+
+	
+	<target name="buildForCTSDemo" depends="jarDependForDistrib" description="Builds the jars to put into the cts demo app" >
+		<mkdir dir="${ctsDemoBuild.dir}" />
+		<copy file="${impl.jar}" todir="${ctsDemoBuild.dir}"/>
+		<copy file="${wsdlJava.jar}" todir="${ctsDemoBuild.dir}"/>
+		<copy file="${depenLicenses.zip}" todir="${ctsDemoBuild.dir}"/>
+		<jar jarfile="${ctsDemoBuild.dir}/packageJars.jar" duplicate="preserve">
+			<zipgroupfileset refid="packageJars" />
+		</jar>
+		<jar jarfile="${ctsDemoBuild.dir}/luceneJars.jar" duplicate="preserve">
+			<zipgroupfileset refid="luceneJars" />
+		</jar>
+		<jar jarfile="${ctsDemoBuild.dir}/axisJars.jar" duplicate="preserve">
+			<zipgroupfileset refid="axisJars" />
+		</jar>
+		<jar jarfile="${ctsDemoBuild.dir}/sqlDrivers.jar" duplicate="preserve">
+			<zipgroupfileset refid="distribSqlLibs" />
+		</jar>
+	</target>
+	
+	<target name="fullBuild" depends="cleanAll, init, compile, jarDependForDistrib, scripts, docs" description="Rebuild the implementation"/>
+
+
+	<target name="docs" depends="init,compile" description="Generate the javadocs">
+		<mkdir dir="${javadocs.dir}" />
+		<!--Create the javadocs-->
+		<javadoc source="1.4" destdir="${javadocs.dir}" windowtitle="LexGRID CTS Implementation" additionalparam="-breakiterator">
+			<package name="*" />
+			<classpath>
+				<pathelement location="${wsdlJava.jar}" />
+			</classpath>
+			<classpath refid="allJars" />
+			<sourcepath location="${impl.src.dir}" />
+			<sourcepath location="${test.src.dir}" />
+		</javadoc>
+	</target>
+</project>
