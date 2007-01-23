@@ -72,12 +72,8 @@ import edu.mayo.informatics.cts.utility.Utility.SQLConnectionInfo;
  */
 public class RuntimeOperationsImpl implements RuntimeOperations
 {
-    private String             booleanWrapper_;
-    // mysql, postgres, and msaccess do not play nice with booleans, some
-    // require them to be wrapped with "'" while others don't.
-
     private SQLStatements      queries_;
-
+    
     public final static Logger logger                    = Logger.getLogger("edu.mayo.informatics.cts.MAPI_Runtime");
 
     private final ST[]         supportedMatchAlgorithms_ = Constructors.stArray(
@@ -95,6 +91,19 @@ public class RuntimeOperationsImpl implements RuntimeOperations
     {
         RuntimeOperationsImpl svc = new RuntimeOperationsImpl(null, null, null, null, false, false);
         return (RuntimeOperations) svc;
+    }
+    
+    /**
+     * In some use cases (Russ's HL7 harmonization tool) there is a need to shut down
+     * the underlying SQL connections.  This method will close all open SQL connections
+     * and invalidate this Browser.  No other method from this RuntimeOperationsImpl may 
+     * be used after calling this method.
+     */
+    public void close()
+    {
+        logger.debug("close method was called on interface");
+        queries_.close();
+        queries_ = null;
     }
     
     /**
@@ -146,7 +155,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm("Problem parsing the the XML connection info. "
                     + e.toString()
                     + " "
@@ -166,14 +175,6 @@ public class RuntimeOperationsImpl implements RuntimeOperations
             CTSConfigurator._instance().initialize();
             logger.debug("CTSMAPI.RuntimeOperationImpl Constructor called");
             queries_ = SQLStatements.instance(null, null, null, null);
-            if (queries_.isAccess())
-            {
-                booleanWrapper_ = "";
-            }
-            else
-            {
-                booleanWrapper_ = "'";
-            }
             populateValidateCodeReturns();
         }
         catch (Exception e)
@@ -194,14 +195,6 @@ public class RuntimeOperationsImpl implements RuntimeOperations
             }
             logger.debug("CTSMAPI.RuntimeOperationImpl Constructor called");
             queries_ = SQLStatements.instance(username, password, server, driver);
-            if (queries_.isAccess())
-            {
-                booleanWrapper_ = "";
-            }
-            else
-            {
-                booleanWrapper_ = "'";
-            }
             populateValidateCodeReturns();
         }
         catch (Exception e)
@@ -221,7 +214,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -236,7 +229,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -255,7 +248,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -273,7 +266,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -297,7 +290,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -353,7 +346,24 @@ public class RuntimeOperationsImpl implements RuntimeOperations
                 return Constructors.blm(true);
             }
 
-            getTargetsOfSourceCode = queries_.checkOutStatement(queries_.GET_TARGETS_OF_SOURCE_CODE);
+            StringBuffer query = new StringBuffer();
+            query.append("SELECT VCS_concept_code_xref_1.conceptCode2 as targetCode FROM ");
+            
+            //access insists on another set of parenthesis.
+            if (queries_.getDBName().equals("ACCESS"))
+            {
+                query.append("(");
+            }
+            query.append("VCS_concept_code_xref INNER JOIN VCS_concept_relationship ON VCS_concept_code_xref.internalId = VCS_concept_relationship.sourceInternalId");
+            if (queries_.getDBName().equals("ACCESS"))
+            {
+                query.append(")");
+            }
+            query.append(" INNER JOIN VCS_concept_code_xref AS VCS_concept_code_xref_1 ON VCS_concept_relationship.targetInternalId = VCS_concept_code_xref_1.internalId"
+            + " WHERE ((VCS_concept_code_xref.codeSystemId2=?) AND (VCS_concept_code_xref.conceptCode2=?)"
+            + " AND (VCS_concept_relationship.relationCode='hasSubtype'))");
+            
+            getTargetsOfSourceCode = queries_.getArbitraryStatement(query.toString());
             getTargetsOfSourceCode.setString(1, parentCode.getCodeSystem());
             getTargetsOfSourceCode.setString(2, parentCode.getCode());
             ResultSet results = getTargetsOfSourceCode.executeQuery();
@@ -370,7 +380,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
                     throw new UnknownConceptCode(conceptId);
                 }
             }
-            return Constructors.blm(subsumesHelper(temp, childCode, parentCode.getCodeSystem()));
+            return Constructors.blm(subsumesHelper(temp, childCode, parentCode.getCodeSystem(), query.toString()));
         }
         catch (SubsumptionNotSupported e)
         {
@@ -404,7 +414,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
     }
 
-    private boolean subsumesHelper(ArrayList codes, CD targetCode, String sourceCodeSystem) throws UnexpectedError
+    private boolean subsumesHelper(ArrayList codes, CD targetCode, String sourceCodeSystem, String queryString) throws UnexpectedError
     {
         if (codes.size() == 0)
             return false;
@@ -418,7 +428,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         PreparedStatement getTargetsOfSourceCode = null;
         try
         {
-            getTargetsOfSourceCode = queries_.checkOutStatement(queries_.GET_TARGETS_OF_SOURCE_CODE);
+            getTargetsOfSourceCode = queries_.getArbitraryStatement(queryString);
             for (int i = 0; i < codes.size(); i++)
             {
                 ArrayList temp = new ArrayList();
@@ -431,13 +441,13 @@ public class RuntimeOperationsImpl implements RuntimeOperations
                     temp.add(results.getString("targetCode"));
                 }
 
-                if (subsumesHelper(temp, targetCode, sourceCodeSystem))
+                if (subsumesHelper(temp, targetCode, sourceCodeSystem, queryString))
                     return true;
             }
         }
         catch (SQLException e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.getMessage() + e.toString()));
         }
         finally
@@ -455,7 +465,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -499,7 +509,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (SQLException e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             timeup(startTime, timeout);
             // throw new BadlyFormedMatchText(matchText.getV());
             // TODO throw badly formed match text when necessary
@@ -683,7 +693,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
 
@@ -915,7 +925,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
 
@@ -1115,6 +1125,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
             }
 
             // validate the language
+               
             if (language_code == null || !isLanguageValidForValueSetId(valueSetId, language_code.getV()))
             {
                 throw new UnknownLanguage(language_code);
@@ -1133,16 +1144,14 @@ public class RuntimeOperationsImpl implements RuntimeOperations
                             + "'"
                             + " Or VCS_concept_designation.language Is Null)"
                             + " AND (VCS_concept_designation.preferredforlanguage="
-                            + booleanWrapper_
-                            + "true"
-                            + booleanWrapper_
+                            + getTrueBoolean()
                             + " Or VCS_concept_designation.preferredforlanguage Is Null)"
-                            + " AND (VOC_nested_value_set.nestingdepth>=1)");
+                            + " AND (VOC_nested_value_set.nestingdepth>=0)");
             if (!expandAll.isV())
             {
-                sql.append(" AND (VOC_nested_value_set.nestingdepth<4)");
-                // I'm getting the 1's 2s and 3s because I need the 3's to
-                // find out if the 2s can expand
+                sql.append(" AND (VOC_nested_value_set.nestingdepth<3)");
+                // I'm getting the 0's 1s and 2s because I need the 2's to
+                // find out if the 1s can expand
             }
             sql.append(") ORDER BY VOC_nested_value_set.huid");
             logger.debug("Generated SQL " + sql.toString());
@@ -1164,12 +1173,12 @@ public class RuntimeOperationsImpl implements RuntimeOperations
             // Don't set a size limit on this one, the query returns more than I use - I discard some
             // in the post query filtering.
             results = blankStatement.executeQuery();
-            resultsToReturn = codeSetExpansionHelper(results, !expandAll.isV(), 3, language_code.getV(), null, timeout,
+            resultsToReturn = codeSetExpansionHelper(results, !expandAll.isV(), 2, language_code.getV(), null, timeout,
                                                      sizeLimit, startTime);
         }
         catch (SQLException e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             timeup(startTime, timeout);
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
@@ -1277,40 +1286,48 @@ public class RuntimeOperationsImpl implements RuntimeOperations
                  */
                 for (int i = 0; i < resultsToReturn.size(); i++)
                 {
-                    if (((ValueSetExpansion) resultsToReturn.get(i)).getValueSet().getValueSet_id().getV()
-                            .equals(nestedValueSetId))
-                    {
-                        // If the valueSet Id is the one we want, I need to
-                        // remove the current item - I want
-                        // to keep the expanded code(s) - not the code we were
-                        // expanding.
-                        // I also need to keep all of the following codes until
-                        // the nesting depth drops again.
-                        int temp = ((ValueSetExpansion) resultsToReturn.get(i)).getPathLength().getV();
-                        resultsToReturn.remove(i);
-                        for (int j = 0; i + j < resultsToReturn.size(); j++)
-                        {
-                            if (temp != ((ValueSetExpansion) resultsToReturn.get(i + j)).getPathLength().getV())
-                            {
-                                // Don't remove all of the items with a greater
-                                // path length than the one we
-                                // were looking for. (do nothing)
-                            }
-                            else
-                            {
-                                // If the path links were equal, then we are
-                                // done saving results. All others should be
-                                // removed.
-                                i = i + j - 1;
-                                break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        resultsToReturn.remove(i);
-                        i--;
-                    }
+//                    if (((ValueSetExpansion) resultsToReturn.get(i)).getValueSet().getValueSet_id().getV()
+//                            .equals(nestedValueSetId))
+//                    {
+//                        // If the valueSet Id is the one we want, I need to
+//                        // remove the current item - I want
+//                        // to keep the expanded code(s) - not the code we were
+//                        // expanding.
+//                        // I also need to keep all of the following codes until
+//                        // the nesting depth drops again.
+//                        int temp = ((ValueSetExpansion) resultsToReturn.get(i)).getPathLength().getV();
+//                        resultsToReturn.remove(i);
+//                        for (int j = 0; i + j < resultsToReturn.size(); j++)
+//                        {
+//                            if (temp != ((ValueSetExpansion) resultsToReturn.get(i + j)).getPathLength().getV())
+//                            {
+//                                // Don't remove all of the items with a greater
+//                                // path length than the one we
+//                                // were looking for. (do nothing)
+//                            }
+//                            else
+//                            {
+//                                // If the path links were equal, then we are
+//                                // done saving results. All others should be
+//                                // removed.
+//                                i = i + j - 1;
+//                                break;
+//                            }
+//                        }
+//                    }
+//                    else
+//                    {
+//                        resultsToReturn.remove(i);
+//                        i--;
+//                    }
+                	if ((((ValueSetExpansion) resultsToReturn.get(i))
+							.getPathLength().getV() < (maxNestingDepthPlusOne - 1)) ||
+							(((ValueSetExpansion) resultsToReturn.get(i)).getNodeType_code().getV().equals("C")  && !(((ValueSetExpansion) resultsToReturn.get(i)).getValueSet().getValueSet_id().getV()
+		                            .equals(nestedValueSetId)))){
+                		
+						resultsToReturn.remove(i);
+						i--;
+					}
                     timeup(startTime, timeout);
                 }
             }
@@ -1328,7 +1345,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (SQLException e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             timeup(startTime, timeout);
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
@@ -1368,9 +1385,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
                             + "'"
                             + " Or VCS_concept_designation.language Is Null)"
                             + " AND (VCS_concept_designation.preferredforlanguage="
-                            + booleanWrapper_
-                            + "true"
-                            + booleanWrapper_
+                            + getTrueBoolean()
                             + " Or VCS_concept_designation.preferredforlanguage Is Null)"
                             + " AND (VOC_nested_value_set.nestingdepth >= "
                             + myExpansionContext.nestingDepth_
@@ -1407,7 +1422,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (SQLException e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             timeup(startTime, myExpansionContext.timeout_);
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
@@ -1442,7 +1457,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (SQLException e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -1470,7 +1485,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (SQLException e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -1502,7 +1517,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (SQLException e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -1532,7 +1547,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (SQLException e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -1565,7 +1580,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -1596,7 +1611,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -1628,7 +1643,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -1660,7 +1675,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -1701,7 +1716,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -1738,7 +1753,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -1775,7 +1790,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -1829,6 +1844,23 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
 
     }
+    
+    private String getTrueBoolean()
+    {
+        if (queries_.getDBName().equals("Access"))
+        {
+            return "'true'";
+        }
+        else if (queries_.getDBName().equals("MySQL"))
+        {
+            return "'-1'";
+        }
+        else
+        {
+            return "true";
+        }
+    }
+    
 
     private void populateValidateCodeReturns()
     {

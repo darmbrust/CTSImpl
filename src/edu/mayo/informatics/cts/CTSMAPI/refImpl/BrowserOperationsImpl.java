@@ -137,7 +137,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);
             throw new UnexpectedError(Constructors.stm("Problem parsing the the XML connection info. " + e.toString() + " "
                     + (e.getCause() == null ? ""
                             : e.getCause().toString())));
@@ -193,7 +193,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -208,7 +208,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -226,7 +226,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -249,7 +249,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (SQLException e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -269,7 +269,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -283,7 +283,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -335,7 +335,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (SQLException e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             timeup(startTime, timeout);
             //throw new BadlyFormedMatchText(matchText);
             //TODO throw badly formed match text when necessary
@@ -352,7 +352,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -398,7 +398,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (SQLException e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             timeup(startTime, timeout);
             //throw new BadlyFormedMatchText(matchText.getV());
             //TODO throw badly formed match text when necessary
@@ -415,7 +415,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -474,7 +474,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (SQLException e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             timeup(startTime, timeout);
             //throw new BadlyFormedMatchText(matchText.getV());
             //TODO throw badly formed match text when necessary
@@ -483,7 +483,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -519,7 +519,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             //throw new BadlyFormedMatchText(matchText.getV());
             //TODO throw badly formed match text when necessary
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
@@ -589,7 +589,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (SQLException e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             timeup(startTime, timeout);
             //throw new BadlyFormedMatchText(matchText.getV());
             //TODO throw badly formed match text when necessary
@@ -637,14 +637,25 @@ public class BrowserOperationsImpl implements BrowserOperations
                     throw new CodeSystemNameIdMismatch(Constructors.uidm(codeSystemId), Constructors.stm(codeSystemName));
                 }
                 else
-                //didn't find anything this way either.
+                //didn't find anything this way either - try with just tne name
                 {
+                    results.close();
+                    getActiveCodeSystems.setString(1, codeSystemName);
+                    getActiveCodeSystems.setString(2, "%");
+                    results = getActiveCodeSystems.executeQuery();
+                    if (results.next())
+                    {
+                        //Found results when just using codeSystemName
+                        throw new CodeSystemNameIdMismatch(Constructors.uidm(codeSystemId), Constructors.stm(codeSystemName));
+                    }
+                    
+                    //still no results...
                     throw new UnknownCodeSystem(Constructors.uidm(codeSystemId));
                 }
             }
             catch (SQLException e)
             {
-                logger.error(e);
+                logger.error("Unexpected Error", e);;
                 timeup(startTime, timeout);
                 //throw new BadlyFormedMatchText(matchText.getV());
                 //TODO throw badly formed match text when necessary
@@ -682,7 +693,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -767,7 +778,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (SQLException e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -813,13 +824,13 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (SQLException e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -889,7 +900,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (SQLException e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -932,7 +943,7 @@ public class BrowserOperationsImpl implements BrowserOperations
             }
             catch (SQLException e)
             {
-                logger.error(e);
+                logger.error("Unexpected Error", e);;
                 throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                         : e.getCause().toString())));
             }
@@ -990,7 +1001,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (SQLException e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -1029,13 +1040,9 @@ public class BrowserOperationsImpl implements BrowserOperations
         PreparedStatement getRegisteredCodeSystems = null;
         try
         {
-            CodeSystemDescriptor[] codeSystem = codeSystemsHelper(codeSystemID.getV(), codeSystemName.getV(), 0, 0);
+            CodeSystemDescriptor[] codeSystem = codeSystemsHelper(codeSystemID == null ? null : codeSystemID.getV(), codeSystemName == null  ? null : codeSystemName.getV(), 0, 0);
             if ((codeSystem == null) || codeSystem.length != 1)
                 throw new UnknownCodeSystem(codeSystemID);
-            if (!codeSystem[0].getCodeSystem_name().getV().equalsIgnoreCase(codeSystemName.getV()))
-            {
-                throw new CodeSystemNameIdMismatch(codeSystemID, codeSystemName);
-            }
 
             csi.setDescription(codeSystem[0]);
             CodeSystemRegistration csr = new CodeSystemRegistration();
@@ -1083,7 +1090,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected error", e);
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -1127,7 +1134,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -1151,7 +1158,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (SQLException e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -1184,6 +1191,20 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         //Code must be valid if we got here, just didn't find any.
         throw new NoApplicableValueSet(vocabularyDomain_name, applicationContext_code);
+    }
+    
+    /**
+     * In some use cases (Russ's HL7 harmonization tool) there is a need to shut down
+     * the underlying SQL connections.  This method will close all open SQL connections
+     * and invalidate this Browser.   No other method from this RuntimeOperationsImpl may 
+     * be used after calling this method.
+     */
+    public void close()
+    {
+        logger.debug("BrowserOperationsImpl was closed");
+        queries_.close();
+        queries_ = null;
+        
     }
 
     private boolean isConceptValid(ConceptId codeToValidate) throws UnexpectedError, UnknownConceptCode,
@@ -1337,7 +1358,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (SQLException e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }
@@ -1359,7 +1380,7 @@ public class BrowserOperationsImpl implements BrowserOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(Constructors.stm(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString())));
         }

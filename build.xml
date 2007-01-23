@@ -10,7 +10,7 @@
 	<property name="axis.host" value="localhost" />
 	
 	<!--CUSTOMIZE - make sure you use the right path for your OS - C:\foo on windows, /usr/local/foo on unix-->
-	<property name="tomcat.root.dir" value="C:\Program Files\jakarta-tomcat-5.5.4\" />
+	<property name="tomcat.root.dir" value="C:\Program Files\apache-tomcat-5.5.20\" />
 	
 	<property name="tomcat.common.libs" value="common\lib" />
 	<property name="axis.home" value="webapps\axis" />
@@ -57,7 +57,7 @@
 				<include name="*.jar" />
 			</fileset>
 			<fileset dir="${externalLib.dir}" id="xml.parser">
-				<include name="xerces.jar" />
+				<include name="xerces*.jar" />
 				<include name="xml-apis.jar" />
 			</fileset>
 			<fileset dir="${externalLib.dir}/axis/" id="axisJars">
@@ -66,10 +66,7 @@
 			<fileset dir="${externalLib.dir}/CTSInterface/" id="interfaceJar">
 				<include name="wsdl_CTSInterface.jar" />
 			</fileset>
-			<fileset dir="${externalLib.dir}/converter libraries/" id="convertJars">
-				<include name="**/*.jar" />
-			</fileset>
-			<fileset dir="${externalLib.dir}/JUnit/" id="testJars">
+			<fileset dir="${externalLib.dir}/JUnitTestLibraries/" id="testJars">
 				<include name="**/*.jar" />
 			</fileset>
 			<fileset dir="${externalLib.dir}/lucene/" id="luceneJars">
@@ -179,29 +176,25 @@
 				<include name="${wsdlJava.jar}" />
 			</zipgroupfileset>
 		</jar>
+		
+		<!-- make a jar file without axis for deployment to axis-->
+		<jar jarfile="${build.dir}/ctsImplAndDependForAxis.jar" basedir="${impl.target.dir}" includes="**/*.class" duplicate="preserve">
+			<zipgroupfileset refid="packageJars" />
+			<zipgroupfileset refid="luceneJars" />
+			<zipgroupfileset refid="distribSqlLibs" />
+			<zipgroupfileset dir="">
+				<include name="${wsdlJava.jar}" />
+			</zipgroupfileset>
+		</jar>
 		<!-- make a zip file of all of the runtime licenses-->
 		<zip basedir="${externalLib.dir}" destfile="${depenLicenses.zip}">
 			<include name="**/*.txt" />
 			<include name="**/*.htm" />
 			<include name="**/*.html" />
-			<!--only used for populating test dbs, not runtime-->
-			<exclude name="converter libraries/**/*" />
 			<!--not distributed-->
 			<exclude name="OtherSQLDrivers/**/*" />
+			<exclude name="JUnitTestLibraries/**/*" />
 		</zip>
-	</target>
-
-	<target name="jarDependInternalUse" description="Create a jar file that includes everything" depends="compile">
-		<jar jarfile="${implAndDepend.jar}" basedir="${impl.target.dir}" includes="**/*.class" duplicate="preserve">
-			<zipgroupfileset refid="packageJars" />
-			<zipgroupfileset refid="axisJars" />
-			<zipgroupfileset refid="luceneJars" />
-			<zipgroupfileset refid="distribSqlLibs" />
-			<zipgroupfileset refid="otherSqlLibs" />
-			<zipgroupfileset dir="">
-				<include name="${wsdlJava.jar}" />
-			</zipgroupfileset>
-		</jar>
 	</target>
 
 	<!-- Create a clean copy of the website (get rid of CVS folders, etc) -->
@@ -243,7 +236,7 @@
 				<exclude name="build/*/**/*" />
 				<exclude name=".classpath" />
 				<exclude name=".project" />
-				<exclude name="logs/**/*.log" />
+				<exclude name="logs/**/*.log*" />
 				<exclude name="resources/**/*.launch" />
 				<exclude name="web/ROOT/" />
 				<exclude name="web/_notes/" />
@@ -260,19 +253,14 @@
 	<target name="installToTomcat" description="Install build output into your axis server" depends="init, buildCleanWeb">
 		<fileset dir="${tomcat.root.dir}" id="tomcatCommonJars">
 			<include name="${tomcat.common.libs}/servlet.jar" />
+			<include name="${axis.home}/WEB-INF/lib/activation.jar" />
+			<include name="${axis.home}/WEB-INF/lib/mail.jar" />
 		</fileset>
-
-		<!--Had to turn off the deletion, since windows won't let you do it if it is in use-->
-		<copy toDir="${tomcat.root.dir}/${axis.home}/WEB-INF/lib/" verbose="true">
-			<fileset dir="${build.dir}">
-				<include name="ctsImplAndDepend.jar" />
-			</fileset>
-		</copy>
 
 		<mkdir dir="${tomcat.root.dir}/${axis.home}/WEB-INF/resources/" />
 		<mkdir dir="${tomcat.root.dir}/${axis.home}/WEB-INF/logs/" />
 
-		<copy toDir="${tomcat.root.dir}/${axis.home}/WEB-INF/lib/" file="${implAndDepend.jar}" />
+		<copy toDir="${tomcat.root.dir}/${axis.home}/WEB-INF/lib/" file="${build.dir}/ctsImplAndDependForAxis.jar" />
 		<copy toDir="${tomcat.root.dir}/${axis.home}/WEB-INF/resources/" file="resources/CTSProperties.prps" />
 		<copy toDir="${tomcat.root.dir}/${axis.home}/WEB-INF/resources/" file="resources/CTSLogConfig.log4j" />
 

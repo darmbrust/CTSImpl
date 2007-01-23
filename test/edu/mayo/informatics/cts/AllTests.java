@@ -30,17 +30,26 @@ import java.util.Properties;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.LexGrid.convert.LgConvertException;
-import org.LexGrid.convert.ldap.LdapConnectionDesc;
-import org.LexGrid.convert.sql.SqlConnectionDesc;
+import org.LexGrid.messaging.impl.CommandLineMessageDirector;
+import org.LexGrid.messaging.impl.NullMessageDirector;
+import org.LexGrid.util.config.PropertiesUtility;
+import org.LexGrid.util.config.parameter.StringParameter;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import edu.mayo.informatics.cts.baseTests.MAPI.MAPISuite;
 import edu.mayo.informatics.cts.baseTests.VAPI.VAPISuite;
 import edu.mayo.informatics.cts.utility.CTSConfigurator;
-import edu.mayo.informatics.lexgrid.convert.apiWrapper.LgConvert;
-import edu.mayo.mir.utility.PropertiesUtility;
-import edu.mayo.mir.utility.parameter.StringParameter;
+import edu.mayo.informatics.lexgrid.convert.formats.InputFormatInterface;
+import edu.mayo.informatics.lexgrid.convert.formats.MinimalConversionLauncher;
+import edu.mayo.informatics.lexgrid.convert.formats.Option;
+import edu.mayo.informatics.lexgrid.convert.formats.OptionHolder;
+import edu.mayo.informatics.lexgrid.convert.formats.OutputFormatInterface;
+import edu.mayo.informatics.lexgrid.convert.formats.inputFormats.LexGridSQL;
+import edu.mayo.informatics.lexgrid.convert.formats.inputFormats.LexGridXML;
+import edu.mayo.informatics.lexgrid.convert.formats.outputFormats.LexGridLDAPOut;
+import edu.mayo.informatics.lexgrid.convert.formats.outputFormats.LexGridSQLLiteOut;
+import edu.mayo.informatics.lexgrid.convert.formats.outputFormats.LexGridSQLOut;
 
 /**
  * Class to help set up the JUnit Test Suite.
@@ -124,6 +133,9 @@ public class AllTests extends TestSuite
             throw e;
         }
 
+        //silence some extraneous warnings from a logger here:
+        Logger.getLogger("org.LexGrid.emf.base.xml.LgXMLHandlerImpl").setLevel(Level.ERROR);
+        
         String location = PropertiesUtility.locatePropFile(SERVER_CONFIG_FILE.toString());
         Properties props = new Properties();
         props.load(new FileInputStream(new File(location)));
@@ -169,7 +181,6 @@ public class AllTests extends TestSuite
         suite.addTest(subSuiteC);
         suite.addTest(subSuiteD);
 
-        LgConvert convert = new LgConvert();
         String xmlFileLocation = "resources/data/testDBs/LexGrid.xml";
 
         logger.debug("loading databases, creating lucene indexes");
@@ -193,7 +204,8 @@ public class AllTests extends TestSuite
                 return suite;
             }
 
-            logger.debug("Preparing " + name);
+            System.out.println("Preparing " + name);
+            logger.info("Preparing " + name);
             if (current.type == VAPI)
             {
                 TestSuite tempTestSuite = null;
@@ -203,14 +215,13 @@ public class AllTests extends TestSuite
                     if (current.implementation == SQL)
                     {
                         tempTestSuite = subSuiteA;
-
-                        SqlConnectionDesc scd = new SqlConnectionDesc();
-                        scd.setDriver(current.driver);
-                        scd.setUrl(current.url);
-                        scd.setUsername(current.username);
-                        scd.setPassword(current.password);
-
-                        convert.lgxml2sql(xmlFileLocation, scd, null, true);
+                        
+                        InputFormatInterface inputFormat = new LexGridXML(xmlFileLocation);
+                        OutputFormatInterface outputFormat = new LexGridSQLOut(current.username, current.password, current.url, current.driver, "");
+                        OptionHolder oh = new OptionHolder();
+                        oh.add(new Option(Option.FAIL_ON_ERROR, new Boolean(true)));
+                        
+                        MinimalConversionLauncher.startConversion(inputFormat, outputFormat, null, oh, new NullMessageDirector());
                     }
                     else if (current.implementation == SQLLITE)
                     {
@@ -226,22 +237,23 @@ public class AllTests extends TestSuite
                         // make sure it is empty.
                         File file = new File(hsLocation);
                         deleteRecursive(file);
-
-                        SqlConnectionDesc scd = new SqlConnectionDesc();
-                        scd.setDriver("org.hsqldb.jdbcDriver");
-                        scd.setUrl("jdbc:hsqldb:file:" + hsLocation + "\\temp");
-                        scd.setUsername("sa");
-                        scd.setPassword("");
-
-                        convert.lgxml2sql(xmlFileLocation, scd, null, true);
-
-                        SqlConnectionDesc scd2 = new SqlConnectionDesc();
-                        scd2.setDriver(current.driver);
-                        scd2.setUrl(current.url);
-                        scd2.setUsername(current.username);
-                        scd2.setPassword(current.password);
-
-                        convert.sql2sqllite(scd, scd2, null, true, null);
+                        
+                        InputFormatInterface inputFormat = new LexGridXML(xmlFileLocation);
+                        OutputFormatInterface outputFormat = new LexGridSQLOut("sa", "", "jdbc:hsqldb:file:" + hsLocation + "\\temp", "org.hsqldb.jdbcDriver", "");
+                        OptionHolder oh = new OptionHolder();
+                        oh.add(new Option(Option.FAIL_ON_ERROR, new Boolean(true)));
+                        
+                        MinimalConversionLauncher.startConversion(inputFormat, outputFormat, null, oh, new NullMessageDirector());
+                        
+                        oh = new OptionHolder();
+                        oh.add(new Option(Option.FAIL_ON_ERROR, new Boolean(true)));
+                        oh.add(new Option(Option.SQL_FETCH_SIZE, new String("1000")));
+                        oh.add(new Option(Option.ENFORCE_INTEGRITY, new Boolean(false)));
+                        
+                        inputFormat = new LexGridSQL("sa", "", "jdbc:hsqldb:file:" + hsLocation + "\\temp", "org.hsqldb.jdbcDriver", "");
+                        outputFormat = new LexGridSQLLiteOut(current.username, current.password, current.url, current.driver);
+                        
+                        MinimalConversionLauncher.startConversion(inputFormat, outputFormat, new String[] {"Automobiles", "German Made Parts", "ActClass", "ActCode", "CompressionAlgorithm", "Race"}, oh, new NullMessageDirector());
 
                         // clean up
                         deleteRecursive(file);
@@ -250,19 +262,28 @@ public class AllTests extends TestSuite
                     else if (current.implementation == LDAP)
                     {
                         tempTestSuite = subSuiteC;
-                        LdapConnectionDesc lcd = new LdapConnectionDesc();
-                        lcd.setPassword(current.password);
-                        lcd.setUrl(current.url);
-                        lcd.setService(current.service);
-                        lcd.setUsername(current.username);
-
-                        convert.lgxml2ldap(xmlFileLocation, lcd, null);
+                        String tempUrl = current.url;
+                        String port = current.url.substring(current.url.lastIndexOf(':') + 1);
+                        if (port.endsWith("/"))
+                        {
+                            port = port.substring(0, port.length() -1);
+                        }
+                        tempUrl = current.url.substring(0, current.url.lastIndexOf(':'));
+                        
+                        
+                        InputFormatInterface inputFormat = new LexGridXML(xmlFileLocation);
+                        OutputFormatInterface outputFormat = new LexGridLDAPOut(current.username, current.password, tempUrl, Integer.parseInt(port), current.service);
+                        
+                        OptionHolder oh = new OptionHolder();
+                        oh.add(new Option(Option.FAIL_ON_ERROR, new Boolean(true)));
+                        
+                        MinimalConversionLauncher.startConversion(inputFormat, outputFormat, null, oh, new NullMessageDirector());
                     }
                     VAPISuite.browserSetup(name, current, tempTestSuite);
                     VAPISuite.runtimeSetup(name, current, tempTestSuite);
                     VAPISuite.luceneSetup(name, current, tempTestSuite);
                 }
-                catch (LgConvertException e)
+                catch (Exception e)
                 {
                     logger.error("Error preparing tests", e);
                     tempTestSuite.addTest(new TestCreationError(name
@@ -287,7 +308,7 @@ public class AllTests extends TestSuite
         public int type;
         public int implementation;
         public int number;
-        public String name, url, driver, username, password, service;
+        public String name, url, driver, username, password, service, tablePrefix;
     }
 
     private static void deleteRecursive(File file)

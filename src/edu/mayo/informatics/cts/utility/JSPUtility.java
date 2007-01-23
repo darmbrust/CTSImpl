@@ -29,7 +29,6 @@ import org.hl7.cts.types.ST;
 
 import edu.mayo.informatics.cts.CTSMAPI.refImpl.BrowserOperationsImpl;
 import edu.mayo.informatics.cts.CTSMAPI.refImpl.RuntimeOperationsImpl;
-import edu.mayo.informatics.cts.utility.CTSConfigurator;
 
 /**
  * Some utility methods for the JSP Implementation.

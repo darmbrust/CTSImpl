@@ -115,7 +115,7 @@ public class CodeMappingOperationsImpl implements CodeMappingOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError("Problem parsing the the XML connection info. "
                     + e.toString()
                     + " "

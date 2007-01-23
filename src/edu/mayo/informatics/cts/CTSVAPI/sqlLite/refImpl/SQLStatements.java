@@ -32,12 +32,12 @@ import org.LexGrid.managedobj.ManagedObjIF;
 import org.LexGrid.managedobj.jdbc.JDBCBaseService;
 import org.LexGrid.managedobj.jdbc.JDBCConnectionDescriptor;
 import org.LexGrid.managedobj.jdbc.JDBCConnectionPoolPolicy;
+import org.LexGrid.util.sql.DBUtility;
+import org.LexGrid.util.sql.GenericSQLModifier;
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.log4j.Logger;
 
 import edu.mayo.informatics.cts.utility.CTSConstants;
-import edu.mayo.informatics.lexgrid.convert.utility.DBUtility;
-import edu.mayo.informatics.lexgrid.convert.utility.GenericSQLModifier;
 
 /**
  * All of the sql statements used in the vapi implementation are defined here.
@@ -47,7 +47,7 @@ import edu.mayo.informatics.lexgrid.convert.utility.GenericSQLModifier;
  */
 public class SQLStatements extends JDBCBaseService
 {
-    public final static Logger logger               = Logger.getLogger("edu.mayo.informatics.cts.VAPI_sqlLite_queries");
+    public final static Logger logger_               = Logger.getLogger("edu.mayo.informatics.cts.VAPI_sqlLite_queries");
 
     private static Hashtable   sqlStatementsHolder_ = new Hashtable();
     private GenericSQLModifier gSQLMod_;
@@ -87,7 +87,7 @@ public class SQLStatements extends JDBCBaseService
 
     private SQLStatements(String username, String password, String url, String driver) throws Exception
     {
-        logger.debug("Initializing sql and sql connections");
+        logger_.debug("Initializing sql and sql connections");
 
         JDBCConnectionDescriptor desc = getConnectionDescriptor();
 
@@ -97,7 +97,7 @@ public class SQLStatements extends JDBCBaseService
         }
         catch (ClassNotFoundException e)
         {
-            logger.error("The driver for your sql connection was not found.  I tried to load " + driver);
+            logger_.error("The driver for your sql connection was not found.  I tried to load " + driver);
             throw e;
         }
         desc.setDbUid(username);
@@ -171,7 +171,7 @@ public class SQLStatements extends JDBCBaseService
 
     public void initStatements()
     {
-        logger.debug("Registering sql statments");
+        logger_.debug("Registering sql statments");
         registerSQL(
                     GET_CODE_SYSTEM_DETAILS,
                     "SELECT codingScheme.codingSchemeName, codingScheme.codingSchemeId, codingScheme.copyright, codingScheme.formalName, codingScheme.entityDescription, codingScheme.representsVersion"

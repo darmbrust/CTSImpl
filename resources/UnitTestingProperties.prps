@@ -4,12 +4,9 @@ edu.mayo.informatics.cts.utility.CTSConstants.SHORT_SEARCH_LIMIT=8000
 edu.mayo.informatics.cts.utility.CTSConstants.LONG_SEARCH_LIMIT=30000
 
 edu.mayo.informatics.cts.utility.CTSConstants.LUCENE_THROW_ERROR_ON_MISSING_INDEX=false
-edu.mayo.informatics.cts.utility.CTSConstants.LUCENE_NORM_SEARCH_ENABLED=false
+edu.mayo.informatics.cts.utility.CTSConstants.LUCENE_STEMMED_SEARCH_ENABLED=true
 edu.mayo.informatics.cts.utility.CTSConstants.LUCENE_DOUBLE_METAPHONE_SEARCH_ENABLED=true
 edu.mayo.informatics.cts.utility.CTSConstants.LUCENE_SEARCH_ENABLED=true
-
-# *** The location of your configuration file for LVG (used for normalized lucene tests)
-edu.mayo.informatics.indexer.lucene.analyzers.NormAnalyzer.LVG_CONFIG_FILE_ABSOLUTE=\\\\mir04\\LargeData\\LargeInstallers\\lvg2005Portable\\lvg2005\\data\\config\\lvg.properties
 
 
 #The name of the properties file to load the Test Server DBs from:

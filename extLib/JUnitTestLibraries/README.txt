@@ -1,0 +1,1 @@
+All of the libraries in this folder are required to run the JUnit tests - but are not required for the runtime CTS code.

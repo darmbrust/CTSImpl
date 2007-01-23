@@ -24,13 +24,12 @@ package edu.mayo.informatics.cts.baseTests.MAPI.browser;
 
 import java.lang.reflect.Method;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 import org.hl7.CTSMAPI.BrowserOperations;
 
 import edu.mayo.informatics.cts.TestCreationError;
-import edu.mayo.informatics.cts.baseTests.MAPI.browser.TestBrowserOperations;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 /**
  * Class to help set up the JUnit test Suite.

@@ -26,9 +26,9 @@ package edu.mayo.informatics.cts.CTSVAPI.sqlLite.refImpl.test;
 import org.hl7.CTSVAPI.BrowserOperations;
 import org.hl7.CTSVAPI.ConceptId;
 
-import edu.mayo.informatics.cts.CTSVAPI.*;
-import edu.mayo.informatics.cts.CTSVAPI.sqlLite.refImpl.*;
-import edu.mayo.informatics.cts.utility.*;
+import edu.mayo.informatics.cts.CTSVAPI.sqlLite.refImpl.BrowserOperationsImpl;
+import edu.mayo.informatics.cts.utility.CTSConfigurator;
+import edu.mayo.informatics.cts.utility.VapiObjectToStrings;
 
 /**
  * Class for doing simple tests on the sql vapi runtime backend.

@@ -26,12 +26,8 @@ items from the DB.
 
 
 ********
-If you are using PostgreSQL as your SQL backend, it enforces cAsE sEnSiTiVitY throughout the tables, so all
-coding scheme names, concept codes, etc, will be case sensitive.
-
-If you are using MySQL as your SQL backend, by default, it does not enforce cAsE sEnSiTiVitY - So, it will 
-complain about duplicates if you try to load concept codes that only differ by case, etc.  
-We have never tested MySQL in a case-sensitive mode - enabling it may cause other problems.
+If you are using PostgreSQL, MySQL and Hypersonic SQL will enforce cAsE sEnSiTiVitY throughout the tables, so all
+coding scheme names, concept codes, etc, will be case sensitive.  MS Access will not.
 
 If you are using an LDAP backend, it also does not enforce case senstivity, in general.
 
@@ -50,7 +46,7 @@ The Exception BadlyFormedMatchText is not thrown by the SQL implementations.
 Mapi - Runtime - Validate code does not throw all of the exceptions that it should per spec.
 
 *****
-Lucene searching is not yet supported with the SQLLite implementation.
+Lucene searching is not supported with the SQLLite implementation.
 
 *****
 VAPI - Browser - lookupDesignations

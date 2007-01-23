@@ -25,11 +25,10 @@ package edu.mayo.informatics.cts.utility;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.LexGrid.util.config.Log4JUtility;
+import org.LexGrid.util.config.PropertiesUtility;
+import org.LexGrid.util.config.parameter.Parameters;
 import org.apache.log4j.Logger;
-
-import edu.mayo.mir.utility.Log4JUtility;
-import edu.mayo.mir.utility.PropertiesUtility;
-import edu.mayo.mir.utility.parameter.Parameters;
 
 /**
  * Singleton class to make sure that the it only attempts to load properties and config log4j once.

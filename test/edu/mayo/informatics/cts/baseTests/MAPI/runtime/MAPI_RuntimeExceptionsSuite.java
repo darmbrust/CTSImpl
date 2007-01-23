@@ -24,12 +24,12 @@ package edu.mayo.informatics.cts.baseTests.MAPI.runtime;
 
 import java.lang.reflect.Method;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 import org.hl7.CTSMAPI.RuntimeOperations;
 
 import edu.mayo.informatics.cts.TestCreationError;
-import edu.mayo.informatics.cts.baseTests.MAPI.runtime.TestRuntimeOperations;
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 /**
  * Class to help set up the JUnit test Suite.

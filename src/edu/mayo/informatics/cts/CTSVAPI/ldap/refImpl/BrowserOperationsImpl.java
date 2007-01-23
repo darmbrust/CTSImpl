@@ -35,9 +35,13 @@ import javax.naming.SizeLimitExceededException;
 import javax.naming.TimeLimitExceededException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
+import org.LexGrid.util.Utility;
+import org.LexGrid.util.ldap.AutoReconnectDirContext;
+import org.LexGrid.util.sql.DBUtility;
 import org.apache.log4j.Logger;
 import org.hl7.CTSVAPI.BadlyFormedMatchText;
 import org.hl7.CTSVAPI.BrowserOperations;
@@ -66,13 +70,9 @@ import edu.mayo.informatics.cts.CTSVAPI.lucene.LuceneSearch;
 import edu.mayo.informatics.cts.utility.CTSConfigurator;
 import edu.mayo.informatics.cts.utility.CTSConstants;
 import edu.mayo.informatics.cts.utility.ObjectCache;
-import edu.mayo.informatics.cts.utility.Utility;
 import edu.mayo.informatics.cts.utility.VAPIExpansionContext;
 import edu.mayo.informatics.cts.utility.Utility.LDAPConnectionInfo;
 import edu.mayo.informatics.cts.utility.lexGrid.SchemaConstants;
-import edu.mayo.informatics.lexgrid.convert.utility.DBUtility;
-import edu.mayo.mir.utility.AutoReconnectDirContext;
-import edu.mayo.mir.utility.StringArrayUtility;
 
 /**
  * A reference implementation of BrowserOperationsImpl - using an ldap backend.
@@ -81,8 +81,8 @@ import edu.mayo.mir.utility.StringArrayUtility;
  */
 public class BrowserOperationsImpl implements org.hl7.CTSVAPI.BrowserOperations
 {
-    private AutoReconnectDirContext rootContext_;
-    private AutoReconnectDirContext codingSchemesContext_;
+    private DirContext              rootContext_;
+    private DirContext              codingSchemesContext_;
     private SearchControls          searchControls;
     private NameParser              nameParser;
     private RuntimeOperationsImpl   roi_                      = null;
@@ -142,7 +142,7 @@ public class BrowserOperationsImpl implements org.hl7.CTSVAPI.BrowserOperations
         BrowserOperationsImpl svc;
         try
         {
-            LDAPConnectionInfo temp = Utility.parseLDAPXML(xmlLexGridLDAPString);
+            LDAPConnectionInfo temp = edu.mayo.informatics.cts.utility.Utility.parseLDAPXML(xmlLexGridLDAPString);
             if (username == null || username.length() == 0)
             {
                 username = temp.username;
@@ -159,7 +159,7 @@ public class BrowserOperationsImpl implements org.hl7.CTSVAPI.BrowserOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError("Problem parsing the the XML connection info. "
                     + e.toString()
                     + " "
@@ -226,7 +226,7 @@ public class BrowserOperationsImpl implements org.hl7.CTSVAPI.BrowserOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(e.getMessage());
         }
 
@@ -242,7 +242,7 @@ public class BrowserOperationsImpl implements org.hl7.CTSVAPI.BrowserOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString()));
         }
@@ -257,7 +257,7 @@ public class BrowserOperationsImpl implements org.hl7.CTSVAPI.BrowserOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString()));
         }
@@ -272,7 +272,7 @@ public class BrowserOperationsImpl implements org.hl7.CTSVAPI.BrowserOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString()));
         }
@@ -294,13 +294,18 @@ public class BrowserOperationsImpl implements org.hl7.CTSVAPI.BrowserOperations
                 {
                     temp.add("LuceneQuery");
                 }
-                if (CTSConstants.LUCENE_NORM_SEARCH_ENABLED.getValue())
-                {
-                    temp.add("NormalizedLuceneQuery");
-                }
+//LVG Norm searching has been retired                
+//                if (CTSConstants.LUCENE_NORM_SEARCH_ENABLED.getValue())
+//                {
+//                    temp.add("NormalizedLuceneQuery");
+//                }
                 if (CTSConstants.LUCENE_DOUBLE_METAPHONE_SEARCH_ENABLED.getValue())
                 {
                     temp.add("DoubleMetaphoneLuceneQuery");
+                }
+                if (CTSConstants.LUCENE_STEMMED_SEARCH_ENABLED.getValue())
+                {
+                    temp.add("StemmedLuceneQuery");
                 }
 
                 supportedMatchAlgorithms_ = (String[]) temp.toArray(new String[temp.size()]);
@@ -309,7 +314,7 @@ public class BrowserOperationsImpl implements org.hl7.CTSVAPI.BrowserOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString()));
         }
@@ -1668,9 +1673,9 @@ public class BrowserOperationsImpl implements org.hl7.CTSVAPI.BrowserOperations
                 + " activeConceptOnly: "
                 + activeConceptsOnly
                 + " properties: "
-                + StringArrayUtility.stringArrayToString(properties)
+                + Utility.stringArrayToString(properties)
                 + " mimeTypes: "
-                + StringArrayUtility.stringArrayToString(mimeTypes)
+                + Utility.stringArrayToString(mimeTypes)
                 + " timeout: "
                 + timeout
                 + " sizeLimit: "
@@ -1854,7 +1859,7 @@ public class BrowserOperationsImpl implements org.hl7.CTSVAPI.BrowserOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString()));
         }
@@ -2029,7 +2034,7 @@ public class BrowserOperationsImpl implements org.hl7.CTSVAPI.BrowserOperations
                         : (concept_id.getCodeSystem_id() == null ? "null"
                                 : concept_id.getCodeSystem_id()))
                 + " properties: "
-                + StringArrayUtility.stringArrayToString(properties)
+                + Utility.stringArrayToString(properties)
                 + " textFilter "
                 + (matchText == null ? "null"
                         : matchText)
@@ -2039,7 +2044,7 @@ public class BrowserOperationsImpl implements org.hl7.CTSVAPI.BrowserOperations
                 + (language_code == null ? "null"
                         : language_code)
                 + " mimeTypes: "
-                + StringArrayUtility.stringArrayToString(mimeTypes));
+                + Utility.stringArrayToString(mimeTypes));
         try
         {
             ArrayList resultsToReturn = new ArrayList();
@@ -2209,7 +2214,7 @@ public class BrowserOperationsImpl implements org.hl7.CTSVAPI.BrowserOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString()));
         }

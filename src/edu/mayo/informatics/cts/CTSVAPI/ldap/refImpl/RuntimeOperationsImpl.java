@@ -33,9 +33,13 @@ import javax.naming.SizeLimitExceededException;
 import javax.naming.TimeLimitExceededException;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
 
+import org.LexGrid.util.config.parameter.IntParameter;
+import org.LexGrid.util.ldap.AutoReconnectDirContext;
+import org.LexGrid.util.sql.DBUtility;
 import org.apache.log4j.Logger;
 import org.hl7.CTSVAPI.CTSVersionId;
 import org.hl7.CTSVAPI.CodeSystemIdAndVersions;
@@ -59,10 +63,6 @@ import edu.mayo.informatics.cts.utility.ObjectCache;
 import edu.mayo.informatics.cts.utility.Utility;
 import edu.mayo.informatics.cts.utility.Utility.LDAPConnectionInfo;
 import edu.mayo.informatics.cts.utility.lexGrid.SchemaConstants;
-import edu.mayo.informatics.lexgrid.convert.utility.DBUtility;
-import edu.mayo.mir.utility.AutoReconnectDirContext;
-import edu.mayo.mir.utility.StringArrayUtility;
-import edu.mayo.mir.utility.parameter.IntParameter;
 
 /**
  *  A reference implementation of RuntimeOperationsImpl using an ldap backend.
@@ -71,7 +71,7 @@ import edu.mayo.mir.utility.parameter.IntParameter;
  */
 public class RuntimeOperationsImpl implements RuntimeOperations
 {
-    private AutoReconnectDirContext  codingSchemesContext_;
+    private DirContext               codingSchemesContext_;
     private SearchControls           searchControls;
 
     private ObjectCache              objectCache_                = ObjectCache.instance();
@@ -143,7 +143,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError("Problem parsing the the XML connection info. "
                     + e.toString()
                     + " "
@@ -599,7 +599,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString()));
         }
@@ -716,7 +716,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString()));
         }
@@ -809,7 +809,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (NamingException e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnknownCodeSystem(codeSystemId);
         }
         catch (UnknownLanguageCode e)
@@ -822,7 +822,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString()));
         }
@@ -848,7 +848,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
                 + "relationshipCode="
                 + relationship_code
                 + "relationshipQualifiers="
-                + StringArrayUtility.stringArrayToString(relationQualifiers)
+                + org.LexGrid.util.Utility.stringArrayToString(relationQualifiers)
                 + " directRelationsOnly="
                 + directRelationsOnly);
 
@@ -989,7 +989,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
 
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString()));
         }

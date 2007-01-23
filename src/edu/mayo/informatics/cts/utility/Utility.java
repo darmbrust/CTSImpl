@@ -23,6 +23,7 @@
 package edu.mayo.informatics.cts.utility;
 
 import java.io.StringReader;
+
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -49,7 +50,7 @@ public class Utility
         else if (temp.getName().equals("SQLConnectionInfo"))
         {
             return new SQLConnectionInfo(temp.getChild("username").getValue(), temp.getChild("password").getValue(),
-                    temp.getChild("server").getValue(), temp.getChild("driver").getValue());
+                    temp.getChild("server").getValue(), temp.getChild("driver").getValue(), (temp.getChild("tablePrefix") == null ? "" : temp.getChild("tablePrefix").getValue()));
         }
 
         else
@@ -65,7 +66,7 @@ public class Utility
         Element temp = doc.getRootElement();
 
         return new SQLConnectionInfo(temp.getChild("username").getValue(), temp.getChild("password").getValue(), temp
-                .getChild("server").getValue(), temp.getChild("driver").getValue());
+                .getChild("server").getValue(), temp.getChild("driver").getValue(), (temp.getChild("tablePrefix") == null ? "" : temp.getChild("tablePrefix").getValue()));
 
     }
 
@@ -100,26 +101,15 @@ public class Utility
 
     public static class SQLConnectionInfo extends ConnectionInfo
     {
-        public String server, driver;
+        public String server, driver, tablePrefix;
 
-        public SQLConnectionInfo(String username, String password, String server, String driver)
+        public SQLConnectionInfo(String username, String password, String server, String driver, String tablePrefix)
         {
             this.username = username;
             this.password = password;
             this.server = server;
             this.driver = driver;
+            this.tablePrefix = tablePrefix;
         }
-    }
-     public static void main(String[] args) throws Exception
-    {
-        // System.out.println(escapeLdapDN("Big bear <foobar> bear"));
-        //
-        // LDAPConnectionInfo temp = parseLDAPXML("<?xml version=\"1.0\"
-        // encoding=\"UTF-8\"?><LDAPConnectionInfo><address>ldap://mir04.mayo.edu:31900</address><service>service=CTS,dc=LexGrid,dc=org</service><username>cn=public,dc=Users,service=userValidation,dc=LexGrid,dc=org</username><password>public</password></LDAPConnectionInfo>");
-        //
-        // SQLConnectionInfo temp2 = parseSQLXML("<?xml version=\"1.0\"
-        // encoding=\"UTF-8\"?><SQLConnectionInfo><server>jdbc:mysql://mir04/LexGrid</server><driver>org.gjt.mm.mysql.Driver</driver><username>mirpub</username><password>mirpub</password></SQLConnectionInfo>");
-        //
-        // System.out.println("foo");
     }
 }

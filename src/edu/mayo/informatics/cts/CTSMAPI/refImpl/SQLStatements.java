@@ -22,9 +22,11 @@
  */
 package edu.mayo.informatics.cts.CTSMAPI.refImpl;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.Hashtable;
 
 import org.LexGrid.managedobj.FindException;
@@ -43,8 +45,8 @@ import org.apache.log4j.Logger;
  */
 public class SQLStatements extends JDBCBaseService
 {
-    public final static Logger logger               = Logger.getLogger("edu.mayo.informatics.cts.MAPI_Browser");
-    private boolean            access               = false;
+    public final static Logger logger_               = Logger.getLogger("edu.mayo.informatics.cts.MAPI_Browser");
+    private String dbName_;
 
     private static Hashtable   sqlStatementsHolder_ = new Hashtable();
 
@@ -75,15 +77,31 @@ public class SQLStatements extends JDBCBaseService
         }
         return ss;
     }
+    
+    public void closePrim() 
+    {
+        super.closePrim();
+        //need to remove this object from the static sql statements holder.
+        Enumeration temp = sqlStatementsHolder_.keys();
+        while (temp.hasMoreElements())
+        {
+            Object key = temp.nextElement();
+            if (sqlStatementsHolder_.get(key).equals(this))
+            {
+                sqlStatementsHolder_.remove(key);
+                break;
+            }
+        }
+    }
 
     private static String createKey(String username, String password, String url, String driver)
     {
         return (username + password + url + driver).hashCode() + "";
     }
 
-    private SQLStatements(String username, String password, String url, String driver) throws ClassNotFoundException
+    private SQLStatements(String username, String password, String url, String driver) throws Exception
     {
-        logger.debug("Initializing sql and sql connections");
+        logger_.debug("Initializing sql and sql connections");
 
         JDBCConnectionDescriptor desc = getConnectionDescriptor();
 
@@ -93,7 +111,7 @@ public class SQLStatements extends JDBCBaseService
         }
         catch (ClassNotFoundException e)
         {
-            logger.error("The driver for your sql connection was not found.  I tried to load " + driver);
+            logger_.error("The driver for your sql connection was not found.  I tried to load " + driver);
             throw e;
         }
         desc.setDbUid(username);
@@ -102,15 +120,6 @@ public class SQLStatements extends JDBCBaseService
         desc.setDbUrl(url);
         desc.setUseUTF8(true);
         desc.setAutoRetryFailedConnections(true);
-
-        if (url.indexOf("Microsoft Access") > 0)
-        {
-            access = true;
-        }
-        else
-        {
-            access = false;
-        }
 
         //This sets it up to verify that the connection is up and working before a statement
         // is executed, among other things.
@@ -126,7 +135,19 @@ public class SQLStatements extends JDBCBaseService
         pol.timeBetweenEvictionRunsMillis = -1;
         pol.whenExhaustedAction = GenericObjectPool.WHEN_EXHAUSTED_GROW;
         desc.setPingSQL("Select ModelID from Model");
+        
+        Connection conn = (Connection) getConnectionPool().borrowObject();
+
+        dbName_ = conn.getMetaData().getDatabaseProductName();
+        
+        getConnectionPool().returnObject(conn);
+        
         initStatements();
+    }
+    
+    public String getDBName()
+    {
+        return dbName_;
     }
 
     public PreparedStatement checkOutStatement(String key) throws SQLException
@@ -137,17 +158,6 @@ public class SQLStatements extends JDBCBaseService
     public PreparedStatement getArbitraryStatement(String sql) throws SQLException
     {
         return super.checkOutPreparedStatement(sql);
-    }
-
-    /**
-     * MSAccess has some odditites in its query language, sometimes I need to know when I am connected to access to
-     * create proper queries.
-     * 
-     * @return
-     */
-    public boolean isAccess()
-    {
-        return access;
     }
 
     public final String GET_HL7_RELEASE_VERSION             = "GET_HL7_RELEASE_VERSION";
@@ -172,7 +182,6 @@ public class SQLStatements extends JDBCBaseService
     public final String DOES_CODE_SYSTEM_EXIST              = "DOES_CODE_SYSTEM_EXIST";
     public final String GET_VOCABULARY_DOMAIN_ID            = "GET_VOCABULARY_DOMAIN_ID";
     public final String DOES_CODE_EXIST_IN_CODE_SYSTEM      = "DOES_CODE_EXIST_IN_CODE_SYSTEM";
-    public final String GET_TARGETS_OF_SOURCE_CODE          = "GET_TARGETS_OF_SOURCE_CODE";
     public final String DOES_CONCEPT_CODE_EXIST             = "DOES_CONCEPT_CODE_EXIST";
     public final String DOES_DESIGNATION_EXIST              = "DOES_DESIGNATION_EXIST";
     public final String GET_CODE_DETAILS                    = "GET_CODE_DETAILS";
@@ -186,7 +195,7 @@ public class SQLStatements extends JDBCBaseService
 
     public void initStatements()
     {
-        logger.debug("Registering sql statments");
+        logger_.debug("Registering sql statments");
         registerSQL(GET_HL7_RELEASE_VERSION, "SELECT modelID, lastModifiedDate" + " FROM Model ");
         registerSQL(GET_ACTIVE_ATTRIBUTES, "SELECT modelId, classname, attName, vocDomain, vocStrength, attDataType"
                 + " FROM RIM_attribute" + " WHERE ((outVer is null) or (outVer = ''))" + " AND attTypeCode='code'"
@@ -237,13 +246,6 @@ public class SQLStatements extends JDBCBaseService
         registerSQL(DOES_CODE_EXIST_IN_CODE_SYSTEM, "SELECT Count(VOC_nested_value_set.basevaluesetid) AS found"
                 + " FROM VOC_nested_value_set" + " WHERE (VOC_nested_value_set.basevaluesetid LIKE ?"
                 + " AND VOC_nested_value_set.codesystem LIKE ?" + " AND VOC_nested_value_set.conceptcode LIKE ?)");
-        registerSQL(
-                    GET_TARGETS_OF_SOURCE_CODE,
-                    "SELECT VCS_concept_code_xref_1.conceptCode2 as targetCode"
-                            + " FROM (VCS_concept_code_xref INNER JOIN VCS_concept_relationship ON VCS_concept_code_xref.internalId = VCS_concept_relationship.sourceInternalId)"
-                            + " INNER JOIN VCS_concept_code_xref AS VCS_concept_code_xref_1 ON VCS_concept_relationship.targetInternalId = VCS_concept_code_xref_1.internalId"
-                            + " WHERE ((VCS_concept_code_xref.codeSystemId2=?) AND (VCS_concept_code_xref.conceptCode2=?)"
-                            + " AND (VCS_concept_relationship.relationCode='hasSubtype'))");
         registerSQL(DOES_CONCEPT_CODE_EXIST, "SELECT Count(VCS_concept_code_xref.conceptCode2) as found"
                 + " FROM VCS_concept_code_xref" + " WHERE (VCS_concept_code_xref.codeSystemId2 =?"
                 + " AND VCS_concept_code_xref.conceptCode2=?)");
@@ -252,21 +254,30 @@ public class SQLStatements extends JDBCBaseService
                 + " ON VCS_concept_code_xref.internalId = VCS_concept_designation.internalId"
                 + " WHERE VCS_concept_code_xref.codeSystemId2 LIKE ?" + " AND VCS_concept_designation.designation=?"
                 + " AND VCS_concept_code_xref.conceptCode2=?");
-        registerSQL(
-                    GET_CODE_DETAILS,
-                    "SELECT VCS_code_system.codeSystemName, VCS_code_system.releaseId, VCS_concept_designation.designation"
-                            + " FROM (VCS_concept_code_xref"
-                            + " INNER JOIN VCS_code_system ON VCS_concept_code_xref.codeSystemId2 = VCS_code_system.codeSystemid)"
-                            + " INNER JOIN VCS_concept_designation ON VCS_concept_code_xref.internalId = VCS_concept_designation.internalId"
+        StringBuffer temp = new StringBuffer();
+        temp.append("SELECT VCS_code_system.codeSystemName, VCS_code_system.releaseId, VCS_concept_designation.designation FROM ");
+        if (getDBName().equals("ACCESS"))
+        {
+            //access requires these extra parenthesis
+            temp.append("(");
+        }
+        temp.append("VCS_concept_code_xref INNER JOIN VCS_code_system ON VCS_concept_code_xref.codeSystemId2 = VCS_code_system.codeSystemid");
+        if (getDBName().equals("ACCESS"))
+        {
+            temp.append(")");
+        }
+        temp.append(" INNER JOIN VCS_concept_designation ON VCS_concept_code_xref.internalId = VCS_concept_designation.internalId"
                             + " WHERE VCS_concept_code_xref.codeSystemId2=?"
                             + " AND VCS_concept_designation.language=?" + " AND VCS_concept_code_xref.conceptCode2=?");
-        registerSQL(DOES_LANGUAGE_EXIST_FOR_VALUESET, "SELECT Count(XML_code_system_language.language) AS found"
-                + " FROM VOC_nested_value_set INNER JOIN XML_code_system_language"
-                + " ON VOC_nested_value_set.codeSystem = XML_code_system_language.codeSystemId"
-                + " WHERE VOC_nested_value_set.baseValueSetId=?" + " AND XML_code_system_language.language=?");
-        registerSQL(DOES_LANGUAGE_EXIST_FOR_CODE_SYSTEM, "SELECT Count(XML_code_system_language.language) AS found"
-                + " FROM XML_code_system_language" + " WHERE XML_code_system_language.codeSystemId=?"
-                + " AND XML_code_system_language.language=?");
+        
+        registerSQL(GET_CODE_DETAILS, temp.toString());
+        registerSQL(DOES_LANGUAGE_EXIST_FOR_VALUESET, "SELECT Count(VCS_code_system_language.language) AS found"
+                + " FROM VOC_nested_value_set INNER JOIN VCS_code_system_language"
+                + " ON VOC_nested_value_set.codeSystem = VCS_code_system_language.codeSystemId"
+                + " WHERE VOC_nested_value_set.baseValueSetId=?" + " AND VCS_code_system_language.language=?");
+        registerSQL(DOES_LANGUAGE_EXIST_FOR_CODE_SYSTEM, "SELECT Count(VCS_code_system_language.language) AS found"
+                + " FROM VCS_code_system_language" + " WHERE VCS_code_system_language.codeSystemId=?"
+                + " AND VCS_code_system_language.language=?");
         registerSQL(IS_APPLICATION_CONTEXT_VALID, "SELECT Count(VOC_nested_value_set.conceptCode) AS found"
                 + " FROM VOC_nested_value_set" + " WHERE VOC_nested_value_set.codeSystem='2.16.840.1.113883.5.147'"
                 + " AND VOC_nested_value_set.baseValueSetName='RealmOfUse'"

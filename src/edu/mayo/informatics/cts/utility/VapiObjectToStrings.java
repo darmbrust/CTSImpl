@@ -22,7 +22,16 @@
  */
 package edu.mayo.informatics.cts.utility;
 
-import org.hl7.CTSVAPI.*;
+import org.hl7.CTSVAPI.CTSVersionId;
+import org.hl7.CTSVAPI.CodeSystemIdAndVersions;
+import org.hl7.CTSVAPI.CodeSystemInfo;
+import org.hl7.CTSVAPI.CompleteCodedConceptDescription;
+import org.hl7.CTSVAPI.ConceptDesignation;
+import org.hl7.CTSVAPI.ConceptId;
+import org.hl7.CTSVAPI.ConceptProperty;
+import org.hl7.CTSVAPI.ConceptRelationship;
+import org.hl7.CTSVAPI.RelatedCode;
+import org.hl7.CTSVAPI.StringAndLanguage;
 
 /**
  * toString methods for formatting the vapi objects

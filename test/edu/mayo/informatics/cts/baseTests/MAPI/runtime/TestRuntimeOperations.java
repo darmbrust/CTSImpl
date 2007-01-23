@@ -439,7 +439,7 @@ public class TestRuntimeOperations extends TestCase
         code.setCode("INFO");
         code.setCodeSystem("2.16.840.1.113883.5.6");
 
-        result = roi_.validateCode(Constructors.stm("ActClass"), code, Constructors.stm(""), Constructors.blm(true),
+        result = roi_.validateCode(Constructors.stm("ActClassProcedure"), code, Constructors.stm(""), Constructors.blm(true),
                                    Constructors.blm(false));
 
         if ((result.getNErrors().getV() == 0) || (!validateCodeReturnContains("E005", result))

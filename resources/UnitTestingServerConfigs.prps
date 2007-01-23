@@ -27,16 +27,16 @@ VAPI_SQL_1_USERNAME=
 VAPI_SQL_1_PASSWORD=
 
 VAPI_SQL_2_NAME=MySql
-VAPI_SQL_2_URL=jdbc:mysql://mir04/LexGrid
+VAPI_SQL_2_URL=jdbc:mysql://bmidev/CTS_LexGrid
 VAPI_SQL_2_DRIVER=org.gjt.mm.mysql.Driver
-VAPI_SQL_2_USERNAME=mirpub
-VAPI_SQL_2_PASSWORD=mirpub
+VAPI_SQL_2_USERNAME=lexgrid
+VAPI_SQL_2_PASSWORD=lexgrid
 
 VAPI_SQL_3_NAME=Postgresql
-VAPI_SQL_3_URL=jdbc:postgresql://mir04/LexGrid
+VAPI_SQL_3_URL=jdbc:postgresql://bmidev/CTS_LexGrid
 VAPI_SQL_3_DRIVER=org.postgresql.Driver
-VAPI_SQL_3_USERNAME=mirpub
-VAPI_SQL_3_PASSWORD=mirpub
+VAPI_SQL_3_USERNAME=lexgrid
+VAPI_SQL_3_PASSWORD=lexgrid
 
 VAPI_SQL_4_NAME=HyperSonic
 VAPI_SQL_4_URL=jdbc:hsqldb:file:resources/data/testDBs/HS-LexGridJUnitTestDB/LexGrid
@@ -65,16 +65,16 @@ VAPI_SQLLITE_1_USERNAME=
 VAPI_SQLLITE_1_PASSWORD=
 
 VAPI_SQLLITE_2_NAME=Mysql
-VAPI_SQLLITE_2_URL=jdbc:mysql://mir04/LexGridLite
+VAPI_SQLLITE_2_URL=jdbc:mysql://bmidev/CTS_LexGridLite
 VAPI_SQLLITE_2_DRIVER=org.gjt.mm.mysql.Driver
-VAPI_SQLLITE_2_USERNAME=mirpub
-VAPI_SQLLITE_2_PASSWORD=mirpub
+VAPI_SQLLITE_2_USERNAME=lexgrid
+VAPI_SQLLITE_2_PASSWORD=lexgrid
 
 VAPI_SQLLITE_3_NAME=Postgresql
-VAPI_SQLLITE_3_URL=jdbc:postgresql://mir04/LexGridLite
+VAPI_SQLLITE_3_URL=jdbc:postgresql://bmidev/CTS_LexGridLite
 VAPI_SQLLITE_3_DRIVER=org.postgresql.Driver
-VAPI_SQLLITE_3_USERNAME=mirpub
-VAPI_SQLLITE_3_PASSWORD=mirpub
+VAPI_SQLLITE_3_USERNAME=lexgrid
+VAPI_SQLLITE_3_PASSWORD=lexgrid
 
 VAPI_SQLLITE_4_NAME=HyperSonic
 VAPI_SQLLITE_4_URL=jdbc:hsqldb:file:resources/data/testDBs/HS-LexGridLiteJUnitTestDB/LexGridLite
@@ -99,22 +99,28 @@ VAPI_LDAP_1_PASSWORD=test
 #MAPI Configs
 
 MAPI_SQL_1_NAME=Access
-MAPI_SQL_1_URL=jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=resources/data/rim0202d.mdb
+MAPI_SQL_1_URL=jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=resources/data/rim0215d.mdb
 MAPI_SQL_1_DRIVER=sun.jdbc.odbc.JdbcOdbcDriver
 MAPI_SQL_1_USERNAME=
 MAPI_SQL_1_PASSWORD=
 
 MAPI_SQL_2_NAME=MySQL
-MAPI_SQL_2_URL=jdbc:mysql://mir04/rim0202dv1
+MAPI_SQL_2_URL=jdbc:mysql://bmidev/rim0215d
 MAPI_SQL_2_DRIVER=org.gjt.mm.mysql.Driver
-MAPI_SQL_2_USERNAME=hl7
-MAPI_SQL_2_PASSWORD=hl7
+MAPI_SQL_2_USERNAME=lexgrid
+MAPI_SQL_2_PASSWORD=lexgrid
 
-MAPI_SQL_3_NAME=PostgreSQL
-MAPI_SQL_3_URL=jdbc:postgresql://mir04/rim0202dv1
-MAPI_SQL_3_DRIVER=org.postgresql.Driver
-MAPI_SQL_3_USERNAME=hl7
-MAPI_SQL_3_PASSWORD=hl7
+#MAPI_SQL_3_NAME=PostgreSQL
+#MAPI_SQL_3_URL=jdbc:postgresql://bmidev/rim0215d
+#MAPI_SQL_3_DRIVER=org.postgresql.Driver
+#MAPI_SQL_3_USERNAME=lexgrid
+#MAPI_SQL_3_PASSWORD=lexgrid
+
+MAPI_SQL_4_NAME=HyperSonic
+MAPI_SQL_4_URL=jdbc:hsqldb:file:resources/data/HS-rim0215d/rim0215d
+MAPI_SQL_4_DRIVER=org.hsqldb.jdbcDriver
+MAPI_SQL_4_USERNAME=sa
+MAPI_SQL_4_PASSWORD=
 
 
 

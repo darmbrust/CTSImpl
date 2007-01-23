@@ -22,8 +22,28 @@
  */
 package edu.mayo.informatics.cts.utility;
 
-import org.hl7.CTSMAPI.*;
-import org.hl7.cts.types.*;
+import org.hl7.CTSMAPI.CTSVersionId;
+import org.hl7.CTSMAPI.CodeSystemDescriptor;
+import org.hl7.CTSMAPI.CodeSystemInfo;
+import org.hl7.CTSMAPI.CodeSystemRegistration;
+import org.hl7.CTSMAPI.ConceptId;
+import org.hl7.CTSMAPI.FullValueSetDescription;
+import org.hl7.CTSMAPI.RIMAttributeId;
+import org.hl7.CTSMAPI.RIMCodedAttribute;
+import org.hl7.CTSMAPI.ValidateCodeReturn;
+import org.hl7.CTSMAPI.ValidationDetail;
+import org.hl7.CTSMAPI.ValueSetCodeReference;
+import org.hl7.CTSMAPI.ValueSetConstructor;
+import org.hl7.CTSMAPI.ValueSetDescription;
+import org.hl7.CTSMAPI.ValueSetDescriptor;
+import org.hl7.CTSMAPI.ValueSetExpansion;
+import org.hl7.CTSMAPI.VocabularyDomainDescription;
+import org.hl7.CTSMAPI.VocabularyDomainValueSet;
+import org.hl7.cts.types.BL;
+import org.hl7.cts.types.CD;
+import org.hl7.cts.types.CS;
+import org.hl7.cts.types.ST;
+import org.hl7.cts.types.UID;
 
 /**
  * toString methods for the Mapi objects.

@@ -25,6 +25,8 @@ package edu.mayo.informatics.cts.baseTests.VAPI;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.LexGrid.messaging.impl.NullMessageDirector;
+import org.LexGrid.util.config.parameter.StringParameter;
 import org.hl7.CTSVAPI.BrowserOperations;
 import org.hl7.CTSVAPI.RuntimeOperations;
 import org.hl7.CTSVAPI.UnexpectedError;
@@ -33,16 +35,16 @@ import edu.mayo.informatics.cts.AllTests;
 import edu.mayo.informatics.cts.TestCreationError;
 import edu.mayo.informatics.cts.AllTests.Config;
 import edu.mayo.informatics.cts.baseTests.VAPI.browser.VAPI_BrowserExceptionsSuite;
+import edu.mayo.informatics.cts.baseTests.VAPI.browser.VAPI_BrowserHL7DataSuite;
 import edu.mayo.informatics.cts.baseTests.VAPI.browser.VAPI_BrowserMethodsSuite;
 import edu.mayo.informatics.cts.baseTests.VAPI.lucene.VAPI_LuceneSearchExceptionsSuite;
 import edu.mayo.informatics.cts.baseTests.VAPI.lucene.VAPI_LuceneSearchMethodsSuite;
 import edu.mayo.informatics.cts.baseTests.VAPI.runtime.VAPI_RuntimeExceptionsSuite;
+import edu.mayo.informatics.cts.baseTests.VAPI.runtime.VAPI_RuntimeHL7DataSuite;
 import edu.mayo.informatics.cts.baseTests.VAPI.runtime.VAPI_RuntimeMethodsSuite;
 import edu.mayo.informatics.cts.utility.CTSConstants;
 import edu.mayo.informatics.lexgrid.convert.indexer.LdapIndexer;
 import edu.mayo.informatics.lexgrid.convert.indexer.SQLIndexer;
-import edu.mayo.informatics.lexgrid.convert.utility.NullMessageDirector;
-import edu.mayo.mir.utility.parameter.StringParameter;
 
 /**
  * Class to assist in the JUnit Test Suite setup.
@@ -59,7 +61,7 @@ public class VAPISuite extends TestSuite
             if (config.implementation == AllTests.SQL)
             {
                 bo = edu.mayo.informatics.cts.CTSVAPI.sql.refImpl.BrowserOperationsImpl._interface(config.username, config.password,
-                                                                                  config.url, config.driver, false, false);
+                                                                                  config.url, config.driver, config.tablePrefix, false, false);
             }
 
             else if (config.implementation == AllTests.SQLLITE)
@@ -80,6 +82,7 @@ public class VAPISuite extends TestSuite
 
             suite.addTest(new VAPI_BrowserExceptionsSuite(name + " - Browser Exceptions", bo).suite());
             suite.addTest(new VAPI_BrowserMethodsSuite(name + " - Browser Methods", bo).suite());
+            suite.addTest(new VAPI_BrowserHL7DataSuite(name + " - Browser HL7 Data Tests", bo).suite());
         }
         catch (UnexpectedError e)
         {
@@ -101,7 +104,7 @@ public class VAPISuite extends TestSuite
             if (config.implementation == AllTests.SQL)
             {
                 ro = edu.mayo.informatics.cts.CTSVAPI.sql.refImpl.RuntimeOperationsImpl._interface(config.username, config.password,
-                                                                                  config.url, config.driver, false, false);
+                                                                                  config.url, config.driver, config.tablePrefix, false, false);
             }
 
             else if (config.implementation == AllTests.SQLLITE)
@@ -122,6 +125,7 @@ public class VAPISuite extends TestSuite
 
             suite.addTest(new VAPI_RuntimeExceptionsSuite(name + " - Runtime Exceptions", ro).suite());
             suite.addTest(new VAPI_RuntimeMethodsSuite(name + " - Runtime Methods", ro).suite());
+            suite.addTest(new VAPI_RuntimeHL7DataSuite(name + " - Runtime HL7 Data Tests", ro).suite());
 
         }
         catch (UnexpectedError e)
@@ -153,13 +157,13 @@ public class VAPISuite extends TestSuite
 
                 // create the index in the temp folder - index our test coding schemes.
 
-                new SQLIndexer(indexName, indexLocation, config.username, config.password, config.url, config.driver,
-                        new String[]{"Automobiles", "German Made Parts"}, new NullMessageDirector(), false, true, true);
+                new SQLIndexer(indexName, indexLocation, config.username, config.password, config.url, config.driver, config.tablePrefix,
+                        new String[]{"Automobiles", "German Made Parts"}, new NullMessageDirector(), false, true, true, true);
 
                 CTSConstants.LUCENE_INDEX_LOCATION = new StringParameter(indexLocation);
 
                 bo = edu.mayo.informatics.cts.CTSVAPI.sql.refImpl.BrowserOperationsImpl._interface(config.username, config.password,
-                                                                                  config.url, config.driver, false, false);
+                                                                                  config.url, config.driver, config.tablePrefix, false, false);
 
                 // do a quick search to get the Lucene Index initialized with the proper variables
                 // (it initializes on demand - and assumes the variables are constant - which they aren't in
@@ -188,7 +192,7 @@ public class VAPISuite extends TestSuite
                 CTSConstants.LUCENE_INDEX_LOCATION = new StringParameter(indexLocation);
 
                 new LdapIndexer(indexName, indexLocation, config.username, config.password, config.url, config.service,
-                        new String[]{"Automobiles", "German Made Parts"}, new NullMessageDirector(), false, true, true);
+                        new String[]{"Automobiles", "German Made Parts"}, new NullMessageDirector(), false, true, true, true);
 
                 bo = edu.mayo.informatics.cts.CTSVAPI.ldap.refImpl.BrowserOperationsImpl._interface(config.username, config.password,
                                                                               config.url, config.service, false, false);
@@ -217,7 +221,7 @@ public class VAPISuite extends TestSuite
         }
         catch (Exception e)
         {
-            suite.addTest(new TestCreationError(name + " - Error creating the lexgrid index or creating the suite - " + e));
+            suite.addTest(new TestCreationError(name + " - Error creating the lexgrid index or creating the suite - " + e + e.getCause()));
             return suite;
         }
 

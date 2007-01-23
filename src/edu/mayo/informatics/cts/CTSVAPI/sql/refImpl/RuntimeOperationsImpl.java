@@ -27,6 +27,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.LexGrid.util.Utility;
+import org.LexGrid.util.config.parameter.IntParameter;
 import org.apache.log4j.Logger;
 import org.hl7.CTSVAPI.CTSVersionId;
 import org.hl7.CTSVAPI.CodeSystemIdAndVersions;
@@ -47,10 +49,7 @@ import org.hl7.CTSVAPI.UnknownRelationshipCode;
 import edu.mayo.informatics.cts.utility.CTSConfigurator;
 import edu.mayo.informatics.cts.utility.CTSConstants;
 import edu.mayo.informatics.cts.utility.ObjectCache;
-import edu.mayo.informatics.cts.utility.Utility;
 import edu.mayo.informatics.cts.utility.Utility.SQLConnectionInfo;
-import edu.mayo.mir.utility.StringArrayUtility;
-import edu.mayo.mir.utility.parameter.IntParameter;
 
 /**
  * A reference implementation of RuntimeOperationsImpl that uses a sql backend instead of ldap.
@@ -73,7 +72,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
      */
     static public synchronized RuntimeOperations _interface() throws UnexpectedError
     {
-        RuntimeOperationsImpl svc = new RuntimeOperationsImpl(null, null, null, null, false, false);
+        RuntimeOperationsImpl svc = new RuntimeOperationsImpl(null, null, null, null, null, false, false);
         return (RuntimeOperations) svc;
     }
     
@@ -88,9 +87,9 @@ public class RuntimeOperationsImpl implements RuntimeOperations
      * @return
      */
     static public synchronized RuntimeOperations _interface(String userName, String userPassword, String server,
-            String driver, boolean loadProps, boolean initLogger) throws UnexpectedError
+            String driver, String tablePrefix, boolean loadProps, boolean initLogger) throws UnexpectedError
     {
-        RuntimeOperationsImpl svc = new RuntimeOperationsImpl(userName, userPassword, server, driver, loadProps, initLogger);
+        RuntimeOperationsImpl svc = new RuntimeOperationsImpl(userName, userPassword, server, driver, tablePrefix, loadProps, initLogger);
         return (RuntimeOperations) svc;
     }
 
@@ -109,7 +108,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         RuntimeOperationsImpl svc;
         try
         {
-            SQLConnectionInfo temp = Utility.parseSQLXML(xmlLexGridSQLString);
+            SQLConnectionInfo temp = edu.mayo.informatics.cts.utility.Utility.parseSQLXML(xmlLexGridSQLString);
             if (username == null || username.length() == 0)
             {
                 username = temp.username;
@@ -118,7 +117,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
             {
                 password = temp.password;
             }
-            svc = new RuntimeOperationsImpl(username, password, temp.server, temp.driver, loadProps, initLogger);
+            svc = new RuntimeOperationsImpl(username, password, temp.server, temp.driver, temp.tablePrefix, loadProps, initLogger);
         }
         catch (UnexpectedError e)
         {
@@ -126,7 +125,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError("Problem parsing the the XML connection info. "
                     + e.toString()
                     + " "
@@ -145,7 +144,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         {
             CTSConfigurator._instance().initialize();
             logger.debug("CTSMAPI.RuntimeOperationImpl SQL Constructor called");
-            queries_ = SQLStatements.instance(null, null, null, null);
+            queries_ = SQLStatements.instance(null, null, null, null, null);
             objectCache_ = ObjectCache.instance();
         }
         catch (Exception e)
@@ -155,7 +154,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
     }
 
     protected RuntimeOperationsImpl(String username, String password, String server, String driver, 
-            boolean loadProps, boolean initLogger)
+            String tablePrefix, boolean loadProps, boolean initLogger)
             throws UnexpectedError
     {
         try
@@ -165,7 +164,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
                 CTSConfigurator._instance().initialize(initLogger);
             }
             logger.debug("CTSMAPI.RuntimeOperationImpl Constructor called");
-            queries_ = SQLStatements.instance(username, password, server, driver);
+            queries_ = SQLStatements.instance(username, password, server, driver, tablePrefix);
             objectCache_ = ObjectCache.instance();
         }
         catch (Exception e)
@@ -190,7 +189,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
                 + "relationshipCode="
                 + relationship_code
                 + "relationshipQualifiers="
-                + StringArrayUtility.stringArrayToString(relationQualifiers)
+                + Utility.stringArrayToString(relationQualifiers)
                 + " directRelationsOnly="
                 + directRelationsOnly);
 
@@ -323,7 +322,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
 
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString()));
         }
@@ -433,7 +432,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString()));
         }
@@ -463,7 +462,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
 
             while (results.next())
             {
-                result.add(results.getString("attributeValue"));
+                result.add(results.getString(queries_.supports2006Model() ? "qualifierName" : "attributeValue"));
             }
         }
         catch (SQLException e)
@@ -593,7 +592,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (SQLException e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             // throw the timeout exception if appropriate
             timeup(startTime, timeout);
             throw new UnexpectedError(e.toString() + " " + (e.getCause() == null ? ""
@@ -913,7 +912,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
             ArrayList temp = new ArrayList();
             while (results.next())
             {
-                temp.add(results.getString("supportedAttributeValue"));
+                temp.add(results.getString((queries_.supports2006Model() ? "id" : "supportedAttributeValue")));
             }
             results.close();
 

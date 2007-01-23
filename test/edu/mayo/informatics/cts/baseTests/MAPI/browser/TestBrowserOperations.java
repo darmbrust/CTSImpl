@@ -313,6 +313,17 @@ public class TestBrowserOperations extends TestCase
         try
         {
             boi_.lookupCodeSystem(Constructors.uidm("foofnar"), Constructors.stm("DataType"));
+            fail("Didn't throw CodeSystemNameIdMismatch");
+        }
+
+        catch (CodeSystemNameIdMismatch e)
+        {
+            // supposed to happen
+        }
+        
+        try
+        {
+            boi_.lookupCodeSystem(Constructors.uidm("foofnar"), Constructors.stm("fred"));
             fail("Didn't throw UnknownCodeSystem");
         }
 

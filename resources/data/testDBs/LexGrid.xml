@@ -3,7 +3,7 @@
     This file was created using LexGrid.  You can find out more about LexGrid at http://informatics.mayo.edu/
 -->
 <codingSchemes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:schemaLocation="http://LexGrid.org/schema/2005/01/LexGrid/codingSchemes http://LexGrid.org/schema/2005/01/LexGrid/codingSchemes.xsd" xmlns="http://LexGrid.org/schema/2005/01/LexGrid/codingSchemes" xmlns:lgBuiltin="http://LexGrid.org/schema/2005/01/LexGrid/builtins" xmlns:lgCommon="http://LexGrid.org/schema/2005/01/LexGrid/commonTypes" xmlns:lgCon="http://LexGrid.org/schema/2005/01/LexGrid/concepts" xmlns:lgCS="http://LexGrid.org/schema/2005/01/LexGrid/codingSchemes" xmlns:lgLDAP="http://LexGrid.org/schema/2005/01/LexGrid/ldap" xmlns:lgNaming="http://LexGrid.org/schema/2005/01/LexGrid/naming" xmlns:lgRel="http://LexGrid.org/schema/2005/01/LexGrid/relations" xmlns:lgService="http://LexGrid.org/schema/2005/01/LexGrid/service" xmlns:lgVD="http://LexGrid.org/schema/2005/01/LexGrid/valueDomains" xmlns:lgVer="http://LexGrid.org/schema/2005/01/LexGrid/versions" dc="CodingSchemes">
-  <codingScheme codingScheme="German Made Parts" defaultLanguage="ge" formalName="testing" isNative="false" registeredName="urn:iso:11.11.0.2" representsVersion="1.0">
+  <codingScheme codingScheme="German Made Parts" defaultLanguage="ge" formalName="testing" isNative="false" registeredName="urn:oid:11.11.0.2" representsVersion="1.0">
     <lgCommon:entityDescription>German Made Parts</lgCommon:entityDescription>
     <localName>11.11.0.2</localName>
     <localName>German Made Parts</localName>
@@ -50,7 +50,7 @@
       </lgRel:association>
     </relations>
   </codingScheme>
-  <codingScheme approxNumConcepts="5" codingScheme="Automobiles" defaultLanguage="en" formalName="test2" isNative="true" registeredName="urn:iso:11.11.0.1" representsVersion="1.0">
+  <codingScheme approxNumConcepts="5" codingScheme="Automobiles" defaultLanguage="en" formalName="test2" isNative="true" registeredName="urn:oid:11.11.0.1" representsVersion="1.0">
     <lgCommon:entityDescription>Automobiles</lgCommon:entityDescription>
     <localName>SomeOtherValue</localName>
     <localName>11.11.0.1</localName>
@@ -62,9 +62,9 @@
     <supportedFormat>test/html</supportedFormat>
     <supportedProperty>textualPresentation</supportedProperty>
     <supportedProperty>definition</supportedProperty>
-    <supportedCodingScheme urn="urn:iso:11.11.0.50">Expendable Parts</supportedCodingScheme>
-    <supportedCodingScheme urn="urn:iso:11.11.0.1">Automobiles</supportedCodingScheme>
-    <supportedCodingScheme urn="urn:iso:11.11.0.2">German Made Parts</supportedCodingScheme>
+    <supportedCodingScheme urn="urn:oid:11.11.0.50">Expendable Parts</supportedCodingScheme>
+    <supportedCodingScheme urn="urn:oid:11.11.0.1">Automobiles</supportedCodingScheme>
+    <supportedCodingScheme urn="urn:oid:11.11.0.2">German Made Parts</supportedCodingScheme>
     <supportedSource>11.11.0.1</supportedSource>
     <supportedAssociation>hasSubtype</supportedAssociation>
     <supportedAssociationQualifier urn="www.something.com">hasEngine</supportedAssociationQualifier>
@@ -169,9 +169,7 @@
         <lgCommon:entityDescription>hasSubtype</lgCommon:entityDescription>
         <lgRel:sourceConcept sourceCodingScheme="Automobiles" sourceConcept="A0001">
           <lgRel:targetConcept firstVersion="true" lastVersion="true" targetCodingScheme="Automobiles" targetConcept="C0001">
-            <lgRel:associationQualification associationQualifier="hasEngine" dataType="text/plain">
-              <lgRel:associationQualifierValue>true</lgRel:associationQualifierValue>
-            </lgRel:associationQualification>
+            <lgRel:associationQualification associationQualifier="hasEngine" dataType="text/plain">true</lgRel:associationQualification>
           </lgRel:targetConcept>
           <lgRel:targetConcept firstVersion="true" lastVersion="true" targetCodingScheme="Automobiles" targetConcept="T0001"/>
         </lgRel:sourceConcept>
@@ -189,9 +187,7 @@
         </lgRel:sourceConcept>
         <lgRel:sourceConcept sourceCodingScheme="Automobiles" sourceConcept="Ford">
           <lgRel:targetConcept targetCodingScheme="Automobiles" targetConcept="Jaguar">
-            <lgRel:associationQualification associationQualifier="since">
-              <lgRel:associationQualifierValue>1989</lgRel:associationQualifierValue>
-            </lgRel:associationQualification>
+            <lgRel:associationQualification associationQualifier="since">1989</lgRel:associationQualification>
           </lgRel:targetConcept>
         </lgRel:sourceConcept>
       </lgRel:association>
@@ -204,5 +200,1204 @@
         </lgRel:sourceConcept>
       </lgRel:association>
     </relations>
+  </codingScheme>
+    <codingScheme codingScheme="ActCode" formalName="ActCode" registeredName="urn:oid:2.16.840.1.113883.5.4" defaultLanguage="en" representsVersion="139">
+    <lgCommon:entityDescription>&lt;p>&lt;p>A code specifying the particular kind of Act that the Act-instance represents within its class.&lt;/p>&lt;p>&lt;/p>&lt;p>&lt;i>Constraints:&lt;/i> The kind of Act (e.g. physical examination, serum potassium, inpatient encounter, charge financial transaction, etc.) is specifie&lt;/p></lgCommon:entityDescription>
+    <localName>2.16.840.1.113883.5.4</localName>
+    <localName>ActCode</localName>
+    <copyright></copyright>
+    <supportedLanguage>en</supportedLanguage>
+    <supportedLanguage>ge</supportedLanguage>
+    <supportedFormat>text/plain</supportedFormat>
+    <supportedProperty>definition</supportedProperty>
+    <supportedProperty>textualPresentation</supportedProperty>
+    <supportedAssociation>hasSubtype</supportedAssociation>
+    <supportedCodingScheme urn="urn:oid:2.16.840.1.113883.5.4">ActCode</supportedCodingScheme>
+    <concepts dc="Concepts">
+      <lgCon:concept conceptCode="12">
+        <lgCommon:entityDescription>Temporarily Suspended Concurrent Therapy</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Temporarily Suspended Concurrent Therapy</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Suspended existing therapy that triggered interaction for the duration of this therapy</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="13">
+        <lgCommon:entityDescription>Stopped Concurrent Therapy</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Stopped Concurrent Therapy</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Aborted existing therapy that triggered interaction.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="14">
+        <lgCommon:entityDescription>Supply Appropriate</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Supply Appropriate</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Confirmed supply action appropriate</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="15">
+        <lgCommon:entityDescription>Replacement</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Replacement</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Patient's existing supply was lost/wasted</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="16">
+        <lgCommon:entityDescription>Vacation Supply</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Vacation Supply</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Supply date is due to patient vacation</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      
+      <lgCon:concept conceptCode="AE">
+        <lgCommon:entityDescription>American Express</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>American Express</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="AELEC">
+        <lgCommon:entityDescription>alternate electronic</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>alternate electronic</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Payment initiated by the payor as the result of adjudicating a submitted invoice that arrived to the payor from an electronic source that did not provide a conformant set of HL7 messages (e.g. web claim submission).</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="AFTHRS">
+        <lgCommon:entityDescription>non-normal hours</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>non-normal hours</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Premium paid on service fees in compensation for practicing outside of normal working hours.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="AGE">
+        <lgCommon:entityDescription>Age Alert</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Age Alert</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Proposed therapy may be inappropriate or contraindicated due to patient age</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="AUTH">
+        <lgCommon:entityDescription>Authorized</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Authorized</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Authorization approved and funds have been set aside to pay for specified healthcare service(s) and/or product(s) within defined criteria for the authorization.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="DIET">
+        <lgCommon:entityDescription>Diet</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Diet</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Code set to define specialized/allowed diets</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="I">
+        <lgCommon:entityDescription>Isolation</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Isolation</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Accommodations used in the care of diseases that are transmitted through casual contact or respiratory transmission.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="ICTERUS">
+        <lgCommon:entityDescription>Icterus</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Icterus</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>An observation that describes the icterus index of the specimen.  It is recommended to use mMol/L of bilirubin</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="ID">
+        <lgCommon:entityDescription>Identified</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Identified</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Used by one system to inform another that it has received a container.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="IMP">
+        <lgCommon:entityDescription>inpatient encounter</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>inpatient encounter</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>An inpatient encounter is an encounter in which the patient is admitted to a hospital or equivalent facility.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="INITIAL">
+        <lgCommon:entityDescription>Initial Volume</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Initial Volume</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>The initial quantity of the specimen in inventory</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="INT">
+        <lgCommon:entityDescription>Intolerance Alert</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Intolerance Alert</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Proposed therapy may be inappropriate or contraindicated because of a recorded patient intolerance to the proposed product.  (Intolerances are non-immune based sensitivities.)</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="INTDX">
+        <lgCommon:entityDescription>intermediate diagnosis</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>intermediate diagnosis</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Intermediate diagnoses are those diagnoses documented for administrative purposes during the course of a hospital stay.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="INTFR">
+        <lgCommon:entityDescription>ActSpecObsInterferenceCode</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>ActSpecObsInterferenceCode</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>An observation that relates to factors that may potentially cause interference with the observation</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="INTOLIST">
+        <lgCommon:entityDescription>intolerance list</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>intolerance list</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>List of intolerance observations.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="INVOICE">
+        <lgCommon:entityDescription>submitted invoice</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>submitted invoice</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Payment is based on a payment intent for a previously submitted Invoice, based on formal adjudication results..</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="INVTYPE">
+        <lgCommon:entityDescription>invoice type</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>invoice type</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Transaction counts and value totals by invoice type (e.g. RXDINV - Pharmacy Dispense)</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="IP">
+        <lgCommon:entityDescription>In Position</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>In Position</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Used by one system to inform another that the container is in position for specimen transfer (e.g., container removal from track, pipetting, etc.).</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="ISOL">
+        <lgCommon:entityDescription>isolation allowance</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>isolation allowance</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Premium paid on service fees in compensation for practicing in a remote location.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="PAR">
+        <lgCommon:entityDescription>parenteral</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>parenteral</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Patient is supplied with parenteral nutrition, typically described in terms of i.v. medications.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="SBPDELAT">
+        <lgCommon:entityDescription>submitted pending electronic amount</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>submitted pending electronic amount</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Identifies the total net amount billed for all submitted  Invoice Groupings that are pended or held by the payor, within a time period and submitted electronically.  Adjudicated invoice elements are not included.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="SBPDELCT">
+        <lgCommon:entityDescription>submitted pending electronic count</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>submitted pending electronic count</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Identifies the total number of submitted  Invoice Groupings that are pended or held by the payor, within a time period and submitted electronically.  Adjudicated invoice elements are not included.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="SCH">
+        <lgCommon:entityDescription>schonkost (GE)</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-2" language="en" isPreferred="true">
+          <lgCon:text>schonkost (GE)</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="ge" isPreferred="true">
+          <lgCon:text>schonkost</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>A diet that avoids ingredients that might cause digestion problems, e.g., avoid excessive fat, avoid too much fiber (cabbage, peas, beans).</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="SCHOOL">
+        <lgCommon:entityDescription>School Accident</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>School Accident</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Incident or accident is the result of a school place accident.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="SENDAPP">
+        <lgCommon:entityDescription>sending application</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>sending application</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Transaction counts and value totals by each instance of a messaging application on a single processor. It is a registered identifier known to the receivers.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="SESS">
+        <lgCommon:entityDescription>sessional funding</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>sessional funding</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>A billing arrangement where a Provider charges a sum to provide a group (volume) of interventions/procedures to one or more patients within a defined period of time, typically on the same date.  Interventions/procedures included in the session may vary.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="SEV">
+        <lgCommon:entityDescription>Severity Observation</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Severity Observation</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Indicates a subjective evaluation of the criticality associated with another observation.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="SBADM">
+        <lgCommon:entityDescription>substance administration</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>substance administration</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>&lt;p>The act of introducing or otherwise applying a substance to the subject.&lt;/p>&lt;p>&lt;i>Discussion:&lt;/i> The effect of the substance is typically established on a biochemical basis, however, that is not a requirement. For example, radiotherapy can largely be described in the same way, especially if it is a systemic therapy such as radio-iodine.  This class also includes the application of chemical treatments to an area.&lt;/p>&lt;p>&lt;i>Examples:&lt;/i> Chemotherapy protocol; Drug prescription; Vaccination record&lt;/p></lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="SO">
+        <lgCommon:entityDescription>Script Owing</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Script Owing</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>An emergency supply where the expectation is that a formal order authorizing the supply will be provided at a later date.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="SP">
+        <lgCommon:entityDescription>Semi-private</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Semi-private</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Accommodations in which there are 2 beds.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="SPT">
+        <lgCommon:entityDescription>Sporting Accident</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Sporting Accident</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Incident or accident is the result of a sporting accident.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="STRTLATE">
+        <lgCommon:entityDescription>Start Too Late Alert</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Start Too Late Alert</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Proposed therapy may be inappropriate or ineffective because the start of administration is too late after the onset of the condition</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="SURG">
+        <lgCommon:entityDescription>Surgical</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Surgical</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Provision of surgical treatment.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="_HL7DefinedActCodes">
+        <lgCommon:entityDescription>HL7DefinedActCodes</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>HL7DefinedActCodes</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Domain provides the root for HL7-defined detailed or rich codes for the Act classes.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="_ActCoverageConfirmationCode">
+        <lgCommon:entityDescription>ActCoverageConfirmationCode</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>ActCoverageConfirmationCode</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Response to an insurance coverage eligibility query or authorization request.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="@" conceptStatus="Active">
+        <lgCommon:entityDescription>Root node for all subtypes</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="P-1" language="en" isPreferred="true">
+          <lgCon:text>Root node for all subtypes</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="_ObservationType">
+        <lgCommon:entityDescription>ObservationType</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>ObservationType</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Identifies the kinds of observations that can be performed</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="_ExternallyDefinedActCodes">
+        <lgCommon:entityDescription>ExternallyDefinedActCodes</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>ExternallyDefinedActCodes</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="DOSEHINDA">
+        <lgCommon:entityDescription>High Dose for Age Alert</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>High Dose for Age Alert</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Proposed dosage exceeds standard practice for the patient's age</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="DOSELINDA">
+        <lgCommon:entityDescription>Low Dose for Age Alert</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Low Dose for Age Alert</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Proposed dosage is below suggested therapeutic levels for the patient's age</lgCon:text>
+      </lgCon:definition>
+    </lgCon:concept>
+    <lgCon:concept conceptCode="_ActCoverageEligibilityConfirmationCode">
+        <lgCommon:entityDescription>ActCoverageEligibilityConfirmationCode</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>ActCoverageEligibilityConfirmationCode</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Indication of eligibility coverage for healthcare service(s) and/or product(s).</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+    </concepts>
+    <relations dc="Relations" isNative="true">
+      <lgCommon:entityDescription>MISSING</lgCommon:entityDescription>
+      <lgRel:association association="hasSubtype" forwardName="hasSubtype" reverseName="isSubtypeOf" isTransitive="true" isReflexive="true">
+        <lgRel:sourceConcept sourceCodingScheme="ActCode" sourceConcept="@">
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ExternallyDefinedActCodes"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_HL7DefinedActCodes"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ObservationType"/>
+        </lgRel:sourceConcept>
+        <lgRel:sourceConcept sourceCodingScheme="ActCode" sourceConcept="AA">
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="ANF"/>
+        </lgRel:sourceConcept>
+        <lgRel:sourceConcept sourceCodingScheme="ActCode" sourceConcept="AGE">
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="DOSEHINDA"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="DOSELINDA"/>
+        </lgRel:sourceConcept>
+        <lgRel:sourceConcept sourceCodingScheme="ActCode" sourceConcept="DIET">
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="PAR"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="SCH"/>
+        </lgRel:sourceConcept>
+        <lgRel:sourceConcept sourceCodingScheme="ActCode" sourceConcept="_HL7DefinedActCodes">
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="DIET"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActAccountCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActAdjudicationCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActAdjudicationGroupCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActAdjudicationInformationCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActAdjudicationResultActionCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActBillableTreatmentPlanCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActBillingArrangementCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActBoundedROICode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActClaimAttachmentCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActContainerRegistrationCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActControlVariable"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActCoverageConfirmationCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActCoverageLimitCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActDetectedIssueCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActDetectedIssueManagementCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActEncounterAccommodationCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActEncounterCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActFinancialTransactionCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActIncidentCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActInsurancePolicyCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActInvoiceElementCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActInvoiceElementSummaryCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActInvoiceOverrideCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActListCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActMonitoringProtocolCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActOrderCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActPaymentCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActPharmacySupplyType"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActProcedureCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActProductAcquisitionCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActRegistryCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActSpecObsCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActSpecimenTreatmentCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_HL7TriggerEventCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ROIOverlayShape"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_SubstanceAdministrationActCode"/>
+        </lgRel:sourceConcept>
+        <lgRel:sourceConcept sourceCodingScheme="ActCode" sourceConcept="_ActCoverageConfirmationCode">
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActCoverageAuthorizationConfirmationCode"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="_ActCoverageEligibilityConfirmationCode"/>
+        </lgRel:sourceConcept>
+        <lgRel:sourceConcept sourceCodingScheme="ActCode" sourceConcept="_ActCoverageAuthorizationConfirmationCode">
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="AUTH"/>
+          <lgRel:targetConcept targetCodingScheme="ActCode" targetConcept="NAUTH"/>
+        </lgRel:sourceConcept>
+      </lgRel:association>
+    </relations>
+  </codingScheme>
+  <codingScheme codingScheme="ActClass" formalName="ActClass" registeredName="urn:oid:2.16.840.1.113883.5.6" defaultLanguage="en" representsVersion="145">
+    <lgCommon:entityDescription>MISSING</lgCommon:entityDescription>
+    <localName>2.16.840.1.113883.5.6</localName>
+    <localName>ActClass</localName>
+    <copyright></copyright>
+    <supportedLanguage>en</supportedLanguage>
+    <supportedFormat>text/plain</supportedFormat>
+    <supportedProperty>definition</supportedProperty>
+    <supportedProperty>textualPresentation</supportedProperty>
+    <supportedAssociation>hasSubtype</supportedAssociation>
+    <supportedCodingScheme urn="urn:oid:2.16.840.1.113883.5.6">ActClass</supportedCodingScheme>
+    <concepts dc="Concepts">
+      <lgCon:concept conceptCode="@" conceptStatus="Active">
+        <lgCommon:entityDescription>Root node for all subtypes</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="P-1" language="en" isPreferred="true">
+          <lgCon:text>Root node for all subtypes</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="SPCTRT">
+        <lgCommon:entityDescription>specimen treatment</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>specimen treatment</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>A procedure or treatment performed on a specimen to prepare it for analysis</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="SPLY">
+        <lgCommon:entityDescription>supply</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>supply</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Supply orders and deliveries are simple Acts that focus on the delivered product. The product is associated with the Supply Act via Participation.typeCode=&quot;product&quot;. With general Supply Acts, the precise identification of the Material (manufacturer, serial numbers, etc.) is important.  Most of the detailed information about the Supply should be represented using the Material class.  If delivery needs to be scheduled, tracked, and billed separately, one can associate a Transportation Act with the Supply Act.  Pharmacy dispense services are represented as Supply Acts, associated with a SubstanceAdministration  Act. The SubstanceAdministration class represents the administration of medication, while dispensing is supply.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="STC">
+        <lgCommon:entityDescription>state transition control</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>state transition control</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Sender transmits a status change pertaining to the focal act of the payload.  This status of the focal act is the final state of the state transition.   This can be either a request or a command, according to the mood of the control act.</lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="SUBST">
+        <lgCommon:entityDescription>Substitution</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Substitution</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>&lt;p>&lt;p>Definition: Indicates that the subject Act has undergone or should undergo&lt;/p>&lt;p>substitution of a type indicated by Act.code.&lt;/p>&lt;p>Rationale: Used to specify &amp;quot;allowed&amp;quot; substitution when creating orders,&lt;/p>&lt;p>&amp;quot;actual&amp;quot; susbstitution when sending events, as well as the reason for the&lt;/p>&lt;p>substitution and who was responsible for it.&lt;/p>&lt;/p></lgCon:text>
+        </lgCon:definition>
+      </lgCon:concept>
+    </concepts>
+    <relations dc="Relations" isNative="true">
+      <lgCommon:entityDescription>MISSING</lgCommon:entityDescription>
+      <lgRel:association association="hasSubtype" forwardName="hasSubtype" reverseName="isSubtypeOf" isTransitive="true" isReflexive="true">
+        <lgRel:sourceConcept sourceCodingScheme="ActClass" sourceConcept="@">
+          <lgRel:targetConcept targetCodingScheme="ActClass" targetConcept="ACT"/>
+        </lgRel:sourceConcept>
+        <lgRel:sourceConcept sourceCodingScheme="ActClass" sourceConcept="SPLY">
+          <lgRel:targetConcept targetCodingScheme="ActClass" targetConcept="DIET"/>
+        </lgRel:sourceConcept>
+      </lgRel:association>
+    </relations>
+  </codingScheme>
+  <codingScheme codingScheme="Race" formalName="Race" registeredName="urn:oid:2.16.840.1.113883.5.104" defaultLanguage="en" representsVersion="55">
+    <lgCommon:entityDescription>In the United States, federal standards for classifying data on race determine the categories used by federal agencies and exert a strong influence on categorization by state and local agencies and private sector organizations.  The federal standards do n</lgCommon:entityDescription>
+    <localName>2.16.840.1.113883.5.104</localName>
+    <localName>Race</localName>
+    <copyright></copyright>
+    <supportedLanguage>en</supportedLanguage>
+    <supportedFormat>text/plain</supportedFormat>
+    <supportedProperty>definition</supportedProperty>
+    <supportedProperty>textualPresentation</supportedProperty>
+    <supportedAssociation>hasSubtype</supportedAssociation>
+    <concepts dc="Concepts">
+      <lgCon:concept conceptCode="1002-5">
+        <lgCommon:entityDescription>American Indian or Alaska Native</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>American Indian or Alaska Native</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1004-1">
+        <lgCommon:entityDescription>American Indian</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>American Indian</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1006-6">
+        <lgCommon:entityDescription>Abenaki</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Abenaki</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1008-2">
+        <lgCommon:entityDescription>Algonquian</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Algonquian</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1010-8">
+        <lgCommon:entityDescription>Apache</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Apache</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1011-6">
+        <lgCommon:entityDescription>Chiricahua</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Chiricahua</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1012-4">
+        <lgCommon:entityDescription>Fort Sill Apache</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Fort Sill Apache</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1013-2">
+        <lgCommon:entityDescription>Jicarilla Apache</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Jicarilla Apache</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1014-0">
+        <lgCommon:entityDescription>Lipan Apache</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Lipan Apache</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1015-7">
+        <lgCommon:entityDescription>Mescalero Apache</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Mescalero Apache</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1016-5">
+        <lgCommon:entityDescription>Oklahoma Apache</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Oklahoma Apache</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1017-3">
+        <lgCommon:entityDescription>Payson Apache</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Payson Apache</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1018-1">
+        <lgCommon:entityDescription>San Carlos Apache </lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>San Carlos Apache </lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1019-9">
+        <lgCommon:entityDescription>White Mountain Apache</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>White Mountain Apache</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1021-5">
+        <lgCommon:entityDescription>Arapaho</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Arapaho</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1022-3">
+        <lgCommon:entityDescription>Northern Arapaho</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Northern Arapaho</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1023-1">
+        <lgCommon:entityDescription>Southern Arapaho </lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Southern Arapaho </lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1024-9">
+        <lgCommon:entityDescription>Wind River Arapaho</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Wind River Arapaho</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1026-4">
+        <lgCommon:entityDescription>Arikara</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Arikara</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1028-0">
+        <lgCommon:entityDescription>Assiniboine</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Assiniboine</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1030-6">
+        <lgCommon:entityDescription>Assiniboine Sioux</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Assiniboine Sioux</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1031-4">
+        <lgCommon:entityDescription>Fort Peck Assiniboine Sioux</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Fort Peck Assiniboine Sioux</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1033-0">
+        <lgCommon:entityDescription>Bannock</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Bannock</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1035-5">
+        <lgCommon:entityDescription>Blackfeet</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Blackfeet</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1037-1">
+        <lgCommon:entityDescription>Brotherton</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Brotherton</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1039-7">
+        <lgCommon:entityDescription>Burt Lake Band</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Burt Lake Band</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1041-3">
+        <lgCommon:entityDescription>Caddo</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Caddo</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1042-1">
+        <lgCommon:entityDescription>Oklahoma Cado</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Oklahoma Cado</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1044-7">
+        <lgCommon:entityDescription>Cahuilla</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Cahuilla</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1045-4">
+        <lgCommon:entityDescription>Agua Caliente Cahuilla</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Agua Caliente Cahuilla</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1046-2">
+        <lgCommon:entityDescription>Augustine</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Augustine</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1047-0">
+        <lgCommon:entityDescription>Cabazon</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Cabazon</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1048-8">
+        <lgCommon:entityDescription>Los Coyotes</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Los Coyotes</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1049-6">
+        <lgCommon:entityDescription>Morongo</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Morongo</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1050-4">
+        <lgCommon:entityDescription>Santa Rosa Cahuilla</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Santa Rosa Cahuilla</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1051-2">
+        <lgCommon:entityDescription>Torres-Martinez</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Torres-Martinez</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1053-8">
+        <lgCommon:entityDescription>California Tribes</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>California Tribes</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1054-6">
+        <lgCommon:entityDescription>Cahto</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Cahto</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1055-3">
+        <lgCommon:entityDescription>Chimariko</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Chimariko</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1056-1">
+        <lgCommon:entityDescription>Coast Miwok</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Coast Miwok</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1057-9">
+        <lgCommon:entityDescription>Digger</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Digger</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1058-7">
+        <lgCommon:entityDescription>Kawaiisu</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Kawaiisu</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1059-5">
+        <lgCommon:entityDescription>Kern River</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Kern River</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1060-3">
+        <lgCommon:entityDescription>Mattole</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Mattole</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1061-1">
+        <lgCommon:entityDescription>Red Wood</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Red Wood</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1062-9">
+        <lgCommon:entityDescription>Santa Rosa</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Santa Rosa</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1063-7">
+        <lgCommon:entityDescription>Takelma</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Takelma</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1064-5">
+        <lgCommon:entityDescription>Wappo</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Wappo</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1065-2">
+        <lgCommon:entityDescription>Yana</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Yana</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1066-0">
+        <lgCommon:entityDescription>Yuki</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Yuki</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1068-6">
+        <lgCommon:entityDescription>Canadian and Latin American Indian</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Canadian and Latin American Indian</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1069-4">
+        <lgCommon:entityDescription>Canadian Indian</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Canadian Indian</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1070-2">
+        <lgCommon:entityDescription>Central American Indian</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Central American Indian</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1071-0">
+        <lgCommon:entityDescription>French American Indian</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>French American Indian</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1072-8">
+        <lgCommon:entityDescription>Mexican American Indian</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Mexican American Indian</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1073-6">
+        <lgCommon:entityDescription>South American Indian</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>South American Indian</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1074-4">
+        <lgCommon:entityDescription>Spanish American Indian</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Spanish American Indian</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1076-9">
+        <lgCommon:entityDescription>Catawba</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Catawba</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1078-5">
+        <lgCommon:entityDescription>Cayuse</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Cayuse</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="1080-1">
+        <lgCommon:entityDescription>Chehalis</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>Chehalis</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="@" conceptStatus="Active">
+        <lgCommon:entityDescription>Root node for all subtypes</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="P-1" language="en" isPreferred="true">
+          <lgCon:text>Root node for all subtypes</lgCon:text>
+        </lgCon:presentation>
+      </lgCon:concept>
+    </concepts>
+    <relations dc="Relations" isNative="true">
+      <lgCommon:entityDescription>MISSING</lgCommon:entityDescription>
+      <lgRel:association association="hasSubtype" forwardName="hasSubtype" reverseName="isSubtypeOf" isTransitive="true" isReflexive="true">
+        <lgRel:sourceConcept sourceCodingScheme="Race" sourceConcept="1002-5">
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1004-1"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1735-0"/>
+        </lgRel:sourceConcept>
+        <lgRel:sourceConcept sourceCodingScheme="Race" sourceConcept="1004-1">
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1006-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1008-2"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1010-8"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1021-5"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1026-4"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1028-0"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1030-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1033-0"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1035-5"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1037-1"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1039-7"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1041-3"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1044-7"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1053-8"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1068-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1074-4"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1076-9"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1078-5"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1080-1"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1082-7"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1086-8"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1088-4"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1100-7"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1102-3"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1106-4"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1108-0"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1112-2"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1114-8"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1123-9"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1150-2"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1153-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1155-1"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1162-7"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1165-0"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1167-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1169-2"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1171-8"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1173-4"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1175-9"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1178-3"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1180-9"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1182-5"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1184-1"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1186-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1189-0"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1191-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1193-2"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1207-0"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1209-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1211-2"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1214-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1222-9"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1233-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1250-0"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1252-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1254-2"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1256-7"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1258-3"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1260-9"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1262-5"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1264-1"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1267-4"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1269-0"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1271-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1275-7"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1277-3"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1279-9"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1281-5"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1285-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1297-1"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1299-7"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1301-1"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1303-7"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1305-2"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1309-4"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1312-8"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1317-7"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1319-3"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1321-9"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1323-5"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1325-0"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1331-8"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1340-9"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1342-5"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1344-1"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1348-2"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1350-8"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1352-4"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1354-0"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1356-5"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1358-1"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1363-1"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1365-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1368-0"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1370-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1372-2"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1374-8"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1376-3"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1378-9"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1380-5"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1382-1"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1387-0"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1389-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1391-2"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1403-5"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1405-0"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1407-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1409-2"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1411-8"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1416-7"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1439-9"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1441-5"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1445-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1448-0"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1450-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1453-0"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1456-3"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1460-5"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1462-1"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1464-7"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1474-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1478-7"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1487-8"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1489-4"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1518-0"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1541-2"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1543-8"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1545-3"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1547-9"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1549-5"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1551-1"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1556-0"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1558-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1560-2"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1562-8"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1564-4"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1566-9"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1573-5"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1576-8"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1578-4"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1582-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1584-2"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1586-7"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1602-2"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1607-1"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1609-7"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1643-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1645-1"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1647-7"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1649-3"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1651-9"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1653-5"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1659-2"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1661-8"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1663-4"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1665-9"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1667-5"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1670-9"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1675-8"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1677-4"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1679-0"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1683-2"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1685-7"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1687-3"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1692-3"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1694-9"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1696-4"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1700-4"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1702-0"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1704-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1707-9"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1709-5"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1711-1"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1715-2"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1717-8"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1722-8"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1724-4"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1732-7"/>
+        </lgRel:sourceConcept>
+        <lgRel:sourceConcept sourceCodingScheme="Race" sourceConcept="1010-8">
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1011-6"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1012-4"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1013-2"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1014-0"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1015-7"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1016-5"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1017-3"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1018-1"/>
+          <lgRel:targetConcept targetCodingScheme="Race" targetConcept="1019-9"/>
+        </lgRel:sourceConcept>
+      </lgRel:association>
+    </relations>
+  </codingScheme>
+    <codingScheme codingScheme="CompressionAlgorithm" formalName="CompressionAlgorithm" registeredName="urn:oid:2.16.840.1.113883.5.1009" defaultLanguage="en" representsVersion="134">
+    <lgCommon:entityDescription>MISSING</lgCommon:entityDescription>
+    <localName>2.16.840.1.113883.5.1009</localName>
+    <localName>CompressionAlgorithm</localName>
+    <copyright></copyright>
+    <supportedLanguage>en</supportedLanguage>
+    <supportedFormat>text/plain</supportedFormat>
+    <supportedProperty>definition</supportedProperty>
+    <supportedProperty>howApplies</supportedProperty>
+    <supportedProperty>textualPresentation</supportedProperty>
+    <concepts dc="Concepts">
+      <lgCon:concept conceptCode="DF">
+        <lgCommon:entityDescription>deflate</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>deflate</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>The deflate compressed data format as specified in RFC 1951 [ftp://ftp.isi.edu/in-notes/rfc1951.txt].</lgCon:text>
+        </lgCon:definition>
+        <lgCon:property property="howApplies" propertyId="P-1">
+          <lgCon:text>mandatory</lgCon:text>
+        </lgCon:property>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="GZ">
+        <lgCommon:entityDescription>gzip</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>gzip</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>A compressed data format that is compatible with the widely used GZIP utility as specified in RFC 1952 [ftp://ftp.isi.edu/in-notes/rfc1952.txt] (uses the deflate algorithm).</lgCon:text>
+        </lgCon:definition>
+        <lgCon:property property="howApplies" propertyId="P-1">
+          <lgCon:text>other</lgCon:text>
+        </lgCon:property>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="Z">
+        <lgCommon:entityDescription>compress</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>compress</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>Original UNIX compress algorithm and file format using the LZC algorithm (a variant of LZW).  Patent encumbered and less efficient than deflate.</lgCon:text>
+        </lgCon:definition>
+        <lgCon:property property="howApplies" propertyId="P-1">
+          <lgCon:text>deprecated</lgCon:text>
+        </lgCon:property>
+      </lgCon:concept>
+      <lgCon:concept conceptCode="ZL">
+        <lgCommon:entityDescription>zlib</lgCommon:entityDescription>
+        <lgCon:presentation property="textualPresentation" propertyId="T-1" language="en" isPreferred="true">
+          <lgCon:text>zlib</lgCon:text>
+        </lgCon:presentation>
+        <lgCon:definition property="definition" propertyId="D-1" language="en" isPreferred="true">
+          <lgCon:text>A compressed data format that also uses the deflate algorithm.  Specified as RFC 1950 [ftp://ftp.isi.edu/in-notes/rfc1950.txt]</lgCon:text>
+        </lgCon:definition>
+        <lgCon:property property="howApplies" propertyId="P-1">
+          <lgCon:text>other</lgCon:text>
+        </lgCon:property>
+      </lgCon:concept>
+    </concepts>
   </codingScheme>
 </codingSchemes>

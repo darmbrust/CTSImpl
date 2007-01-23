@@ -27,6 +27,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.LexGrid.util.Utility;
+import org.LexGrid.util.config.parameter.IntParameter;
 import org.apache.log4j.Logger;
 import org.hl7.CTSVAPI.CTSVersionId;
 import org.hl7.CTSVAPI.CodeSystemIdAndVersions;
@@ -47,10 +49,7 @@ import org.hl7.CTSVAPI.UnknownRelationshipCode;
 import edu.mayo.informatics.cts.utility.CTSConfigurator;
 import edu.mayo.informatics.cts.utility.CTSConstants;
 import edu.mayo.informatics.cts.utility.ObjectCache;
-import edu.mayo.informatics.cts.utility.Utility;
 import edu.mayo.informatics.cts.utility.Utility.SQLConnectionInfo;
-import edu.mayo.mir.utility.StringArrayUtility;
-import edu.mayo.mir.utility.parameter.IntParameter;
 
 /**
  * A reference implementation of RuntimeOperationsImpl that uses a sql backend instead of ldap.
@@ -109,7 +108,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         RuntimeOperationsImpl svc;
         try
         {
-            SQLConnectionInfo temp = Utility.parseSQLXML(xmlLexGridSQLString);
+            SQLConnectionInfo temp = edu.mayo.informatics.cts.utility.Utility.parseSQLXML(xmlLexGridSQLString);
             if (username == null || username.length() == 0)
             {
                 username = temp.username;
@@ -126,7 +125,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError("Problem parsing the the XML connection info. "
                     + e.toString()
                     + " "
@@ -190,7 +189,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
                 + "relationshipCode="
                 + relationship_code
                 + "relationshipQualifiers="
-                + StringArrayUtility.stringArrayToString(relationQualifiers)
+                + Utility.stringArrayToString(relationQualifiers)
                 + " directRelationsOnly="
                 + directRelationsOnly);
 
@@ -303,7 +302,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
 
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString()));
         }
@@ -385,7 +384,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString()));
         }
@@ -510,7 +509,7 @@ public class RuntimeOperationsImpl implements RuntimeOperations
         }
         catch (SQLException e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             // throw the timeout exception if appropriate
             timeup(startTime, timeout);
             throw new UnexpectedError(e.toString() + " " + (e.getCause() == null ? ""

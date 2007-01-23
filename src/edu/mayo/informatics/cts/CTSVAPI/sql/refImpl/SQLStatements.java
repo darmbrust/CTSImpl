@@ -33,14 +33,14 @@ import org.LexGrid.managedobj.ManagedObjIF;
 import org.LexGrid.managedobj.jdbc.JDBCBaseService;
 import org.LexGrid.managedobj.jdbc.JDBCConnectionDescriptor;
 import org.LexGrid.managedobj.jdbc.JDBCConnectionPoolPolicy;
+import org.LexGrid.util.sql.DBUtility;
+import org.LexGrid.util.sql.GenericSQLModifier;
+import org.LexGrid.util.sql.lgTables.SQLTableConstants;
+import org.LexGrid.util.sql.lgTables.SQLTableUtilities;
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.log4j.Logger;
 
 import edu.mayo.informatics.cts.utility.CTSConstants;
-import edu.mayo.informatics.lexgrid.convert.utility.DBUtility;
-import edu.mayo.informatics.lexgrid.convert.utility.GenericSQLModifier;
-import edu.mayo.informatics.lexgrid.convert.utility.SQLTableConstants;
-import edu.mayo.informatics.lexgrid.convert.utility.SQLTableUtilities;
 
 /**
  * All of the sql statements used in the vapi implementation are defined here.
@@ -49,13 +49,13 @@ import edu.mayo.informatics.lexgrid.convert.utility.SQLTableUtilities;
  */
 public class SQLStatements extends JDBCBaseService
 {
-    public final static Logger logger               = Logger.getLogger("edu.mayo.informatics.cts.VAPI_sql_queries");
+    public final static Logger logger_               = Logger.getLogger("edu.mayo.informatics.cts.VAPI_sql_queries");
 
     private static Hashtable   sqlStatementsHolder_ = new Hashtable();
     private GenericSQLModifier gSQLMod_;
     private SQLTableConstants  stc_;
 
-    public static SQLStatements instance(String username, String password, String url, String driver) throws Exception
+    public static SQLStatements instance(String username, String password, String url, String driver, String tablePrefix) throws Exception
     {
         if (username == null || username.length() == 0)
         {
@@ -73,23 +73,27 @@ public class SQLStatements extends JDBCBaseService
         {
             driver = CTSConstants.VAPI_SQL_DRIVER.getValue();
         }
-        SQLStatements ss = (SQLStatements) sqlStatementsHolder_.get(createKey(username, password, url, driver));
+        if (tablePrefix == null || tablePrefix.length() == 0)
+        {
+            tablePrefix = CTSConstants.VAPI_SQL_TABLE_PREFIX.getValue();
+        }
+        SQLStatements ss = (SQLStatements) sqlStatementsHolder_.get(createKey(username, password, url, driver, tablePrefix));
         if (ss == null)
         {
-            ss = new SQLStatements(username, password, url, driver);
-            sqlStatementsHolder_.put(createKey(username, password, url, driver), ss);
+            ss = new SQLStatements(username, password, url, driver, tablePrefix);
+            sqlStatementsHolder_.put(createKey(username, password, url, driver, tablePrefix), ss);
         }
         return ss;
     }
 
-    private static String createKey(String username, String password, String url, String driver)
+    private static String createKey(String username, String password, String url, String driver, String tablePrefix)
     {
-        return (username + password + url + driver).hashCode() + "";
+        return (username + password + url + driver + tablePrefix).hashCode() + "";
     }
 
-    private SQLStatements(String username, String password, String url, String driver) throws Exception
+    private SQLStatements(String username, String password, String url, String driver, String tablePrefix) throws Exception
     {
-        logger.debug("Initializing sql and sql connections");
+        logger_.debug("Initializing sql and sql connections");
 
         JDBCConnectionDescriptor desc = getConnectionDescriptor();
 
@@ -99,7 +103,7 @@ public class SQLStatements extends JDBCBaseService
         }
         catch (ClassNotFoundException e)
         {
-            logger.error("The driver for your sql connection was not found.  I tried to load " + driver);
+            logger_.error("The driver for your sql connection was not found.  I tried to load " + driver);
             throw e;
         }
         desc.setDbUid(username);
@@ -128,10 +132,13 @@ public class SQLStatements extends JDBCBaseService
         Connection conn = (Connection) getConnectionPool().borrowObject();
 
         String databaseName = conn.getMetaData().getDatabaseProductName();
-        stc_ = new SQLTableConstants(new SQLTableUtilities(conn).getExistingTableVersion());
+        stc_ = new SQLTableUtilities(conn, tablePrefix).getSQLTableConstants();
         
         getConnectionPool().returnObject(conn);
 
+        //need to override the like since the converter now creates case sensitive tables 
+        //this forces a case insensitive search
+        GenericSQLModifier.mySqlLikeOverride = "COLLATE latin1_swedish_ci LIKE";
         gSQLMod_ = new GenericSQLModifier(databaseName, false);
         initStatements();
     }
@@ -155,7 +162,6 @@ public class SQLStatements extends JDBCBaseService
     {
         return gSQLMod_.modifySQL(query);
     }
-    
 
     public final String GET_CODE_SYSTEM_DETAILS             = "GET_CODE_SYSTEM_DETAILS";
     public final String GET_CODE_SYSTEM_NAME                = "GET_CODE_SYSTEM_NAME";
@@ -184,7 +190,7 @@ public class SQLStatements extends JDBCBaseService
 
     private void initStatements()
     {
-        logger.debug("Registering sql statments");
+        logger_.debug("Registering sql statments");
         registerSQL(
                     GET_CODE_SYSTEM_DETAILS,
                     "SELECT codingSchemeName, registeredName, copyright, formalName, entityDescription, representsVersion"
@@ -192,7 +198,7 @@ public class SQLStatements extends JDBCBaseService
                             + " WHERE codingSchemeName Like ?");
 
         registerSQL(GET_CODE_SYSTEM_SUPPORTED_PROPERTYS,
-                    "SELECT supportedAttributeValue"
+                    "SELECT " + (supports2006Model() ? "id" : "supportedAttributeValue")
                             + " FROM " + stc_.getTableName(SQLTableConstants.CODING_SCHEME_SUPPORTED_ATTRIBUTES)
                             + " WHERE codingSchemeName=?"
                             + " AND supportedAttributeTag=?");
@@ -202,7 +208,7 @@ public class SQLStatements extends JDBCBaseService
                             + " FROM " + stc_.getTableName(SQLTableConstants.CODING_SCHEME_SUPPORTED_ATTRIBUTES)
                             + " WHERE codingSchemeName=?"
                             + " AND supportedAttributeTag='CodingScheme'"
-                            + " AND supportedAttributeValue=?");
+                            + " AND " + (supports2006Model() ? "id" : "supportedAttributeValue") + "=?");
 
         registerSQL(IS_CONCEPT_VALID, modifySQL("SELECT count(codingSchemeName) AS found"
                 + " FROM " + stc_.getTableName(SQLTableConstants.CONCEPT)
@@ -212,7 +218,7 @@ public class SQLStatements extends JDBCBaseService
 
         registerSQL(GET_CODE_SYSTEM_NAME, "SELECT codingSchemeName"
                 + " FROM " + stc_.getTableName(SQLTableConstants.CODING_SCHEME_MULTI_ATTRIBUTES)
-                + " WHERE attributeName = 'localName'"
+                + " WHERE " + (stc_.supports2006Model() ? "typeName" : "attributeName") + "= 'localName'"
                 + " AND attributeValue=? ");
         
         registerSQL(GET_CODE_SYSTEM_NAME2, modifySQL("SELECT codingSchemeName"
@@ -222,7 +228,7 @@ public class SQLStatements extends JDBCBaseService
         registerSQL(GET_CODE_SYSTEM_ID, "SELECT attributeValue"
                 + " FROM " + stc_.getTableName(SQLTableConstants.CODING_SCHEME_MULTI_ATTRIBUTES)
                 + " WHERE codingSchemeName=? "
-                + " AND attributeName = 'localName'");
+                + " AND " + (stc_.supports2006Model() ? "typeName" : "attributeName") + " = 'localName'");
         
         registerSQL(GET_CODE_SYSTEM_ID2, "SELECT registeredName"
                     + " FROM " + stc_.getTableName(SQLTableConstants.CODING_SCHEME)
@@ -236,22 +242,22 @@ public class SQLStatements extends JDBCBaseService
                 + " FROM " + stc_.getTableName(SQLTableConstants.CONCEPT_PROPERTY)
                 + " WHERE conceptCode=?"
                 + " AND codingSchemeName=?"
-                + " AND property='textualPresentation'"
+                + " AND " + (supports2006Model() ? "propertyType='presentation'" : "property='textualPresentation'")
                 + " AND language=?");
 
         registerSQL(GET_DESIGNATION_NULL_STRING, "SELECT language, propertyValue, isPreferred"
                 + " FROM " + stc_.getTableName(SQLTableConstants.CONCEPT_PROPERTY)
                 + " WHERE conceptCode=?"
                 + " AND codingSchemeName=?"
-                + " AND property='textualPresentation'"
+                + " AND " + (supports2006Model() ? "propertyType='presentation'" : "property='textualPresentation'")
                 + " AND (language is Null OR language='')");
 
         registerSQL(IS_PROPERTY_VALID,
-                    "SELECT count(supportedAttributeValue) as found"
+                    "SELECT count(" + (supports2006Model() ? "id" : "supportedAttributeValue") + ") as found"
                             + " FROM " + stc_.getTableName(SQLTableConstants.CODING_SCHEME_SUPPORTED_ATTRIBUTES)
                             + " WHERE codingSchemeName=?"
                             + " AND supportedAttributeTag=?"
-                            + " AND supportedAttributeValue=?");
+                            + " AND " + (supports2006Model() ? "id" : "supportedAttributeValue")+ "=?");
 
         registerSQL(GET_ASSOCIATION_PROPERTIES,
                     "SELECT isTransitive, isSymmetric, isReflexive"
@@ -331,7 +337,7 @@ public class SQLStatements extends JDBCBaseService
 
         registerSQL(GET_NATIVE_RELATION, modifySQL("SELECT relationName"
                 + " FROM " + stc_.getTableName(SQLTableConstants.RELATION)
-                + " WHERE relation.codingSchemeName=?"
+                + " WHERE codingSchemeName=?"
                 + " AND isNative = {true}"));
 
         registerSQL(GET_SUPPORTED_ASSOCIATIONS, modifySQL("SELECT DISTINCT association"
@@ -340,11 +346,11 @@ public class SQLStatements extends JDBCBaseService
                 + " AND relationName = ?"));
 
         registerSQL(GET_CONCEPT_ASSOCIATIONS_TOC_QUALS,
-                    modifySQL("SELECT attributeValue, dataType, associationQualifierValue"
-                            + " FROM " + stc_.getTableName(SQLTableConstants.CONCEPT_ASSOCIATION_TO_C_MULTI_ATTRIB)
+                    modifySQL("SELECT " + (supports2006Model() ? "qualifierName" : "attributeValue")
+                            + " FROM " + stc_.getTableName(SQLTableConstants.CONCEPT_ASSOCIATION_TO_C_QUALS)
                             + " WHERE codingSchemeName = ?"
                             + " AND multiAttributesKey= ?"
-                            + " AND attributeName='qualifier'"));
+                            + (supports2006Model() ? "" : " AND attributeName='qualifier'")));
     }
 
     public static void setBooleanOnPreparedStatment(PreparedStatement statement, int colNumber, Boolean value)
@@ -361,6 +367,11 @@ public class SQLStatements extends JDBCBaseService
     public String getTableName(String tableKey)
     {
         return stc_.getTableName(tableKey);
+    }
+    
+    public boolean supports2006Model()
+    {
+        return stc_.supports2006Model();
     }
 
     // The following methods are all abstract, so they have to be here, but I don't need them.

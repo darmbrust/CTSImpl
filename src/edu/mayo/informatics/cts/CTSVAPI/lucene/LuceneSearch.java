@@ -22,18 +22,6 @@
  */
 package edu.mayo.informatics.cts.CTSVAPI.lucene;
 
-import edu.mayo.informatics.cts.utility.CTSConstants;
-import edu.mayo.informatics.indexer.api.IndexerService;
-import edu.mayo.informatics.indexer.api.SearchServiceInterface;
-import edu.mayo.informatics.indexer.api.exceptions.InternalErrorException;
-import edu.mayo.informatics.indexer.api.exceptions.InternalIndexerErrorException;
-import edu.mayo.informatics.indexer.api.generators.QueryGenerator;
-import edu.mayo.informatics.indexer.lucene.IDFNeutralSimilarity;
-import edu.mayo.informatics.indexer.lucene.analyzers.FieldSkippingAnalyzer;
-import edu.mayo.informatics.indexer.lucene.analyzers.NormAnalyzer;
-import edu.mayo.informatics.indexer.lucene.analyzers.PhonetixAnalyzer;
-import edu.mayo.informatics.indexer.lucene.analyzers.WhiteSpaceLowerCaseAnalyzer;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -41,6 +29,7 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
 
+import org.apache.commons.codec.language.DoubleMetaphone;
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
@@ -56,7 +45,17 @@ import org.hl7.CTSVAPI.UnexpectedError;
 import org.hl7.CTSVAPI.UnknownCodeSystem;
 import org.hl7.CTSVAPI.UnknownMatchAlgorithm;
 
-import com.tangentum.phonetix.DoubleMetaphone;
+import edu.mayo.informatics.cts.utility.CTSConstants;
+import edu.mayo.informatics.indexer.api.IndexerService;
+import edu.mayo.informatics.indexer.api.SearchServiceInterface;
+import edu.mayo.informatics.indexer.api.exceptions.InternalErrorException;
+import edu.mayo.informatics.indexer.api.exceptions.InternalIndexerErrorException;
+import edu.mayo.informatics.indexer.api.generators.QueryGenerator;
+import edu.mayo.informatics.indexer.lucene.IDFNeutralSimilarity;
+import edu.mayo.informatics.indexer.lucene.analyzers.EncoderAnalyzer;
+import edu.mayo.informatics.indexer.lucene.analyzers.FieldSkippingAnalyzer;
+import edu.mayo.informatics.indexer.lucene.analyzers.SnowballAnalyzer;
+import edu.mayo.informatics.indexer.lucene.analyzers.WhiteSpaceLowerCaseAnalyzer;
 
 /**
  * This class implements certain search operations from VAPI with Lucene.
@@ -129,28 +128,36 @@ public class LuceneSearch
 
 			    if (CTSConstants.LUCENE_DOUBLE_METAPHONE_SEARCH_ENABLED.getValue())
 			    {
-			        PhonetixAnalyzer temp = new PhonetixAnalyzer(new DoubleMetaphone(-1), new String[]{},
+			        EncoderAnalyzer temp = new EncoderAnalyzer(new DoubleMetaphone(), new String[]{},
 			                WhiteSpaceLowerCaseAnalyzer.getDefaultCharRemovalSet(), WhiteSpaceLowerCaseAnalyzer
 			                        .getDefaultWhiteSpaceSet());
 			        analyzer.addAnalyzer("dm_propertyValue", temp);
 			    }
+                
+                if (CTSConstants.LUCENE_STEMMED_SEARCH_ENABLED.getValue())
+                {
+                    SnowballAnalyzer sa = new SnowballAnalyzer(false, "English", new String[]{},
+                            WhiteSpaceLowerCaseAnalyzer.getDefaultCharRemovalSet(), WhiteSpaceLowerCaseAnalyzer.getDefaultWhiteSpaceSet());
+                    analyzer.addAnalyzer("stem_propertyValue", sa);
+                }
 
-			    if (CTSConstants.LUCENE_NORM_SEARCH_ENABLED.getValue())
-			    {
-			        try
-			        {
-			            NormAnalyzer temp = new NormAnalyzer(false, new String[]{}, WhiteSpaceLowerCaseAnalyzer
-			                    .getDefaultCharRemovalSet(), WhiteSpaceLowerCaseAnalyzer.getDefaultWhiteSpaceSet());
-			            // indexerService_.createIndex(normIndexName_, temp);
-			            analyzer.addAnalyzer("norm_propertyValue", temp);
-			        }
-			        catch (NoClassDefFoundError e)
-			        {
-			            // norm is not available
-			            CTSConstants.LUCENE_NORM_SEARCH_ENABLED.setValue(false);
-			            logger.error("LuceneNormSearch could not be initialized.  Is Norm (lvg) on the classpath?", e);
-			        }
-			    }
+// LVG Norm searching has been retired.
+// if (CTSConstants.LUCENE_NORM_SEARCH_ENABLED.getValue())
+//			    {
+//			        try
+//			        {
+//			            NormAnalyzer temp = new NormAnalyzer(false, new String[]{}, WhiteSpaceLowerCaseAnalyzer
+//			                    .getDefaultCharRemovalSet(), WhiteSpaceLowerCaseAnalyzer.getDefaultWhiteSpaceSet());
+//			            // indexerService_.createIndex(normIndexName_, temp);
+//			            analyzer.addAnalyzer("norm_propertyValue", temp);
+//			        }
+//			        catch (NoClassDefFoundError e)
+//			        {
+//			            // norm is not available
+//			            CTSConstants.LUCENE_NORM_SEARCH_ENABLED.setValue(false);
+//			            logger.error("LuceneNormSearch could not be initialized.  Is Norm (lvg) on the classpath?", e);
+//			        }
+//			    }
 
 			    parser_ = new QueryParser("propertyValue", analyzer);
 
@@ -438,7 +445,14 @@ public class LuceneSearch
                     break;
                 }
                 ConceptId temp = new ConceptId();
-                temp.setCodeSystem_id(docs[i].get("codingSchemeId"));
+                
+                //chop off any urn:oid: prefix stuff
+                String tempId = docs[i].get("codingSchemeId");
+                if (tempId.toLowerCase().startsWith("urn:oid:"))
+                {
+                    tempId = tempId.substring("urn:oid:".length());
+                }
+                temp.setCodeSystem_id(tempId);
                 temp.setConcept_code(docs[i].get("conceptCode"));
 
                 if (!resultsDupeRemover.contains(temp.getCodeSystem_id() + ":" + temp.getConcept_code()))
@@ -478,7 +492,7 @@ public class LuceneSearch
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString()));
         }
@@ -561,7 +575,14 @@ public class LuceneSearch
                     break;
                 }
                 ConceptId temp = new ConceptId();
-                temp.setCodeSystem_id(docs[i].get("codingSchemeId"));
+                
+                //chop off any urn:oid: prefix stuff
+                String tempId = docs[i].get("codingSchemeId");
+                if (tempId.toLowerCase().startsWith("urn:oid:"))
+                {
+                    tempId = tempId.substring("urn:oid:".length());
+                }
+                temp.setCodeSystem_id(tempId);
                 temp.setConcept_code(docs[i].get("conceptCode"));
 
                 if (!resultsDupeRemover.contains(temp.getCodeSystem_id() + ":" + temp.getConcept_code()))
@@ -601,7 +622,7 @@ public class LuceneSearch
         }
         catch (Exception e)
         {
-            logger.error(e);
+            logger.error("Unexpected Error", e);;
             throw new UnexpectedError(e.toString() + " " + (e.getCause() == null ? ""
                     : e.getCause().toString()));
         }
@@ -806,17 +827,21 @@ public class LuceneSearch
     private String makeMatchTextQueryPortion(String matchAlgoritm_code, String matchText) throws UnknownMatchAlgorithm
     {
         String modifiedMatchText = handleWhiteSpaceCharacters(matchText);
-        if (matchAlgoritm_code.equals("LuceneQuery"))
+        if (matchAlgoritm_code.toLowerCase().equals("lucenequery"))
         {
             return "propertyValue:(" + modifiedMatchText + ")";
         }
-        else if (matchAlgoritm_code.equals("NormalizedLuceneQuery"))
+        else if (matchAlgoritm_code.toLowerCase().equals("normalizedlucenequery"))
         {
             return "norm_propertyValue:(" + modifiedMatchText + ")";
         }
-        else if (matchAlgoritm_code.equals("DoubleMetaphoneLuceneQuery"))
+        else if (matchAlgoritm_code.toLowerCase().equals("doublemetaphonelucenequery"))
         {
             return "dm_propertyValue:(" + modifiedMatchText + ")";
+        }
+        else if (matchAlgoritm_code.toLowerCase().equals("stemmedlucenequery"))
+        {
+            return "stem_propertyValue:(" + modifiedMatchText + ")";
         }
         else
         {

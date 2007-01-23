@@ -26,9 +26,9 @@ package edu.mayo.informatics.cts.CTSVAPI.sql.refImpl.test;
 import org.hl7.CTSVAPI.ConceptId;
 import org.hl7.CTSVAPI.RuntimeOperations;
 
-import edu.mayo.informatics.cts.CTSVAPI.*;
-import edu.mayo.informatics.cts.CTSVAPI.sql.refImpl.*;
-import edu.mayo.informatics.cts.utility.*;
+import edu.mayo.informatics.cts.CTSVAPI.sql.refImpl.RuntimeOperationsImpl;
+import edu.mayo.informatics.cts.utility.CTSConfigurator;
+import edu.mayo.informatics.cts.utility.VapiObjectToStrings;
 
 /**
  * Class for doing simple tests on the sql vapi runtime backend.

@@ -80,9 +80,9 @@ public class TestBrowserOperationsMethods extends TestCase
         {
             temp.add("LuceneQuery");
         }
-        if ((boi_ instanceof edu.mayo.informatics.cts.CTSVAPI.sql.refImpl.BrowserOperationsImpl || boi_ instanceof edu.mayo.informatics.cts.CTSVAPI.ldap.refImpl.BrowserOperationsImpl) && CTSConstants.LUCENE_NORM_SEARCH_ENABLED.getValue())
+        if ((boi_ instanceof edu.mayo.informatics.cts.CTSVAPI.sql.refImpl.BrowserOperationsImpl || boi_ instanceof edu.mayo.informatics.cts.CTSVAPI.ldap.refImpl.BrowserOperationsImpl) && CTSConstants.LUCENE_STEMMED_SEARCH_ENABLED.getValue())
         {
-            temp.add("NormalizedLuceneQuery");
+            temp.add("StemmedLuceneQuery");
         }
         if ((boi_ instanceof edu.mayo.informatics.cts.CTSVAPI.sql.refImpl.BrowserOperationsImpl || boi_ instanceof edu.mayo.informatics.cts.CTSVAPI.ldap.refImpl.BrowserOperationsImpl) && CTSConstants.LUCENE_DOUBLE_METAPHONE_SEARCH_ENABLED.getValue())
         {

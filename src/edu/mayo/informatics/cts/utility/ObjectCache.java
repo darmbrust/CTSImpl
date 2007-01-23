@@ -22,7 +22,7 @@
  */
 package edu.mayo.informatics.cts.utility;
 
-import org.apache.commons.collections.map.*;
+import org.apache.commons.collections.map.LRUMap;
 
 /**
  * A class to aid in the caching of often used info, to save trips to the database.

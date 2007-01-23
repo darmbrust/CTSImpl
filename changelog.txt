@@ -1,5 +1,36 @@
 CTS Reference Implementation Changelog
 *****************************
+Release 1.2.13	01/23/07    *
+*****************************
+* CTS Value Set nesting depth level change.
+* Updated to handle a slight change in the index format (full registered name is now stored, 
+  instead of just the value after the urn:oid:.
+* Updated the test data to have a proper urn:oid instead of urn:iso.
+* Added the lvg jar file to the distribution.
+* Updated some SQL libraries - fixed a bug that was causing a prepared statement leak.
+* Added supported for Prefixed LexGrid SQL Tables.
+* hacked code to make MAPI work on newer HL7 DB.  Still a bug that needs to be cleaned up.
+* Upgraded to Lucene 2.0.
+* Fixed a bug in mapi browser - lookupCodeSystem that wasn't allowing you to pass in null
+  for one of the parameters.
+* Fixed some of the logger calls that were losing the stack trace information.
+* Replaced the phonetix encoder with one from apache commons for doubleMetaphone searches.
+* Updated (almost) all libraries to current.
+* Updates to match up with the rest of our internal LexGrid environment better.
+* Removed LVG Norm - replaced with a Stemming Algorithm that is easier to deploy.
+* Upgraded the RIM database to version 0215d.  Updated JUnit tests as necessary.
+* Merged the "old" and "new" JUnit tests into the master combined JUnit test suite.
+  All VAPI tests now run against the sample data in the LexGrid.xml file.
+  All MAPI tests run against the provided RIM database(s).
+* Now ship a RIM database in Hypersonic format.  Default MAPI configuration uses the Hypersonic
+  database, rather than Access.
+* Bug fixes to MAPI implementation to support Hypersonic, MySQL, and Access.
+* Underlying LexBIG related code has been updated to the 2006 model format.  CTS has been updated
+  so that it can read version 2006 or 2005 XML or SQL tables.  By default, content is loaded into 
+  2006 table formats now.
+* Added close() methods to the MAPI implementation for internal use.
+
+*****************************
 Release 1.2.12	04/11/06    *
 *****************************
 * Updated EMF / SQL / Converter / Indexer libraries.

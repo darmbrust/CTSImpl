@@ -24,6 +24,7 @@ package edu.mayo.informatics.cts.baseTests.VAPI.lucene;
 
 import junit.framework.TestCase;
 
+import org.LexGrid.util.config.parameter.BooleanParameter;
 import org.hl7.CTSVAPI.BrowserOperations;
 import org.hl7.CTSVAPI.ConceptDesignation;
 import org.hl7.CTSVAPI.ConceptId;
@@ -31,7 +32,6 @@ import org.hl7.CTSVAPI.ConceptProperty;
 
 import edu.mayo.informatics.cts.baseTests.VAPI.TestUtility;
 import edu.mayo.informatics.cts.utility.CTSConstants;
-import edu.mayo.mir.utility.parameter.BooleanParameter;
 
 /**
  * JUnit test cases for BrowserOperationsImpl.
