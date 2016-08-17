@@ -1,0 +1,1 @@
+This content was migrated from http://informatics.mayo.edu/svn/trunk/bmi.lexgrid/commons/CTS/CTS/
