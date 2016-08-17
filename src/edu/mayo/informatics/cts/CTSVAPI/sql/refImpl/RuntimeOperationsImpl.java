@@ -59,7 +59,7 @@ import edu.mayo.informatics.cts.utility.Utility.SQLConnectionInfo;
 public class RuntimeOperationsImpl implements RuntimeOperations
 {
     public final static Logger       logger                      = Logger.getLogger("edu.mayo.informatics.cts.VAPI_sql_Runtime");
-    public static final IntParameter MAX_CODES_RELATED_RECURSION = new IntParameter(10);
+    public final IntParameter MAX_CODES_RELATED_RECURSION = new IntParameter(10);
 
     private SQLStatements            queries_;
 
